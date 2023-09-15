@@ -19,9 +19,7 @@ module.exports = {
       xl: { min: "1441px" },
       // => @media (min-width: 1536px) { ...
     },
-    fontFamily: {
-      Mukta: "Mukta",
-    },
+  
 
     extend: {
       colors: {
@@ -47,4 +45,5 @@ module.exports = {
     prefix: "", // prefix for daisyUI classnames (components, modifiers and responsive class names. Not colors)
     logs: true, // Shows info about daisyUI version and used config in the console when building your CSS
   },
+
 };
