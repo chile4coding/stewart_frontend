@@ -1,28 +1,71 @@
 import React from "react";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
+
 export default function Hero() {
+ const router  =  useRouter()
+  const isDark  = useSelector(state=>state.store.toggleMode.isDark)
+
+    function handleShopNav() {
+      router.replace("/shop");
+    }
+    function handleCreateAccountNav() {
+      router.replace("/signup");
+    }
+
   return (
-    <section className="grid  grid-cols-2 md:grid-cols-1   sm:grid-cols-1      mt-32 sm:mt-8">
-      <div className=" self-start md:order-2 sm:order-2">
-        <h2 className="text-[48px]    font-semibold sm:text-[30px]">
+    <section
+      className={`grid  grid-cols-2 md:grid-cols-1   sm:grid-cols-1   p-10      sm:px-5 ${
+        isDark ? "" : " bg-[#D9D9D9]"
+      }`}>
+      <div className="  md:order-2 sm:order-2  self-center">
+        <h2 className="text-[48px]    font-semibold sm:text-[30px] sm:text-center sm:font-normal md:text-center">
           Modern Fashion
           <br /> Redefined
         </h2>
-        <p className="text-[18px] l leading-7 mt-6 sm:text-sm">
-          Welcome to Stewart Collection, where fashion meets <br /> passion and
-          individuality. Get ready to redefine your <br /> style with us!
+        <p className="text-[18px]  leading-7 mt-6 sm:text-sm sm:text-center md:text-center">
+          Welcome to Stewart Collection, where fashion meets passion and
+          individuality. Get ready to redefine your style with us!
         </p>
-        <button className="btn normal-case  font-semibold mt-6 px-6">
-          Start shopping
-        </button>
+        <div className=" flex  items-center gap-4 sm:flex-col sm:gap-0 sm:mx-auto md:justify-center ">
+          <button
+            className={`sm:block   btn normal-case  font-semibold mt-6 px-6 sm:btn-sm sm:text-xs
+         ${
+           isDark
+             ? "hover:border-white hover:bg-black hover:text-white"
+             : " bg-black text-white hover:border-black"
+         } `}
+            onClick={handleShopNav}>
+            Start shopping
+          </button>
+          <button
+            className={`  btn normal-case  sm:mt-2  font-normal mt-6 px-6 sm:btn-sm sm:text-xs sm:block   ${
+              isDark
+                ? "hover:border-white hover:bg-black hover:text-white"
+                : " bg-black text-white hover:border-black"
+            }  `}
+            onClick={handleCreateAccountNav}>
+            Create Account
+          </button>
+        </div>
       </div>
-      <div className=" lg:justify-self-center   xl:justify-self-center xs:order-1 md:order-1 sm:order-1">
-        <Image
-          src="/triangle.png"
-          alt="hero triangle"
-          width={456}
-          height={425}
-        />
+      <div className=" lg:justify-self-center  self-center  xl:justify-self-center xs:order-1 md:order-1 sm:order-1 sm:hidden">
+        {isDark ? (
+          <Image
+            src="/triangle.png"
+            alt="hero triangle"
+            width={456}
+            height={425}
+          />
+        ) : (
+          <Image
+            src="/triangledark.png"
+            alt="hero triangle"
+            width={456}
+            height={425}
+          />
+        )}
       </div>
     </section>
   );

@@ -26,6 +26,9 @@ font-style: normal;
 line-height: normal;
 text-transform: capitalize;
 }
+.nput[type="date"]::-webkit-calendar-picker-indicator{
+  filter: invert(1);
+}
 
 .active{
 
@@ -48,9 +51,15 @@ border-image: linear-gradient(45deg,  rgb(13, 88, 175) , rgb(111, 234, 226)) 1;
 }
 
 .turndark{
-  transition: 4s all ease;
+  transition: 2s all ease;
   background-color: black;
   color: white;
+
+}
+.turnlight{
+  transition: 2s all ease;
+  background-color: #f0eded;
+  color: black;
 
 }
 
@@ -60,19 +69,22 @@ border-image: linear-gradient(45deg,  rgb(13, 88, 175) , rgb(111, 234, 226)) 1;
   height: 100%;
 }
 
-.swiper-button-next {
-  color: black; /* Change text color */
-  border-radius: 50%; /* Apply rounded corners */
-  font-size: 24px; /* Change font size */
-  ;
+.swiperNavNext , .swiperNavPrev{
+cursor: pointer;
+
+ color: red !important;
+ fill: red !important;
+}
+.swiperNavPrev{
+
+
+}
+.swiperNavNext{
+
+ 
 }
 
-.swiper-button-prev {
- 
-  color: black; /* Change text color */
-  border-radius: 50%; /* Apply rounded corners */
-  font-size: 60px; /* Change font size */
-}
+
 .item-category{
 background: rgb(78,78,80);
 background: linear-gradient(180deg, rgba(78,78,80,1) 0%, rgba(0,7,9,1) 100%);
@@ -98,7 +110,7 @@ background: linear-gradient(180deg, rgba(78,78,80,1) 0%, rgba(0,7,9,1) 100%);
 }
 
 .input{
-  color: rgba(255, 255, 255, 0.59);
+  /* color: rgba(255, 255, 255, 0.59); */
 font-size: 16px;
 font-style: normal;
 font-weight: 400;

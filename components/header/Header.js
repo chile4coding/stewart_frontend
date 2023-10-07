@@ -4,44 +4,44 @@ import { BsFillCartFill } from "react-icons/bs";
 import { BiSolidUser } from "react-icons/bi";
 import ActiveLink from "../ActiveLink";
 import Modal from "../modal/Modal";
+import {AiOutlineMenu} from "react-icons/ai"
+import { toggler } from "@/redux/storeSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { colors } from "@mui/material";
 
 export default function Header() {
   const [dark, seDark] = useState(true);
+const isDark = useSelector((state) => state.store.toggleMode.isDark);
+const dispatch = useDispatch();
 
+const toggle = () => {
+  dispatch(toggler());
+};
   const handleShowModal = () => {
     window.my_modal_2.showModal();
   };
   return (
     <>
-    <Modal/>
+      <Modal />
       <div
-        className={`navbar     sticky top-0   opacity-95 w-full   py-4  `}
+        className={`navbar  lg:px-10  md:px-5 sm:px-4  sticky top-0   opacity-95 w-full   py-4 ${
+          isDark ? "" : " bg-[#fff] text-black"
+        } `}
         style={{ zIndex: 500 }}>
-        <div className="navbar-start sm:navbar-end">
+        <div className="navbar-start sm:navbar-end   ">
           <label
             tabIndex={0}
-            className="btn-circle drawer-button btn lg:hidden  xl:hidden"
+            className="drawer-button  lg:hidden  xl:hidden sm:mr-4 md:mr-4"
             htmlFor="my-drawer-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h7"
-              />
-            </svg>
+            <AiOutlineMenu className=" font-semibold text-2xl hover:cursor-pointer" />
           </label>
 
           {/* <div className=" w-24 sm:hidden ">
             <img src="" />
           </div> */}
-
-          <h2 className="text-[24px] font-semibold  w-full">Stewart Collections</h2>
+          <h2 className="text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
+            Stewart Collections
+          </h2>
         </div>
 
         <nav className="navbar-center sm:hidden md:hidden   gap-6">
@@ -53,23 +53,42 @@ export default function Header() {
           <div className=" w-24 lg:hidden md:hidden ">
             <img src="" />
           </div>
-          <div className="flex gap-6 items-center">
-            <div className=" ]  xl:w-[322px] ">
+          <div className="flex gap-6 items-center ">
+            <div className=" ]  xl:w-[322px]  sm:hidden ">
               <input
                 type="text"
                 placeholder="search "
-                className={`input  input-bordered border-collapse bg-transparent w-full   sm:hidden ${dark? "border-white":""}`}
+                className={`input  md:hidden input-bordered border-collapse  w-full   sm:hidden ${
+                  isDark
+                    ? "border-white bg-transparent"
+                    : " border-[black] "
+                }`}
+             style={{color: !isDark && "black !important" }}
               />
             </div>
-            <div className="indicator sm:hidden ">
+            <div className="indicator ">
               <span className="indicator-item badge  bg-[red]  text-[#fff]  ">
                 2
               </span>
 
-              <BsFillCartFill className=" text-[24px] " htmlFor="my_modal_6 btn  " style={{cursor:"pointer"}}  onClick={handleShowModal}/>
+              <BsFillCartFill
+                className=" text-[24px] "
+                htmlFor="my_modal_6 btn  "
+                style={{ cursor: "pointer" }}
+                onClick={handleShowModal}
+              />
             </div>
             <div className="sm:hidden md:hidden">
               <BiSolidUser className="text-[24px]" />
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                className="toggle"
+                checked={isDark}
+                onClick={toggle}
+              />
+              <h2>{isDark ? "Light" : "Dark"}</h2>
             </div>
           </div>
         </div>

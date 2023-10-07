@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import { BiCross, BiMinus, BiPlus, BiTime } from "react-icons/bi";
 import { GrClose } from "react-icons/gr";
@@ -48,6 +49,14 @@ function ItemsDesc() {
   );
 }
 export default function Modal() {
+
+  const router  = useRouter()
+  function handleCheckoutNav(){
+    router.replace("/checkout")
+  }
+  function handleShopNav(){
+    router.replace("/shop")
+  }
   return (
     <>
       <dialog id="my_modal_2" className="modal modal-left">
@@ -103,10 +112,12 @@ export default function Modal() {
               <h2 className=" justify-self-end">Total</h2>
             </div>
             <div className=" flex justify-center gap-4 normal-case">
-              <button className=" btn btn-outline border normal-case  border-white text-white">
+              <button
+                className=" btn btn-outline border normal-case  border-white text-white"
+                onClick={handleCheckoutNav}>
                 Proceed to Checkout
               </button>
-              <button className="btn btn-outline border normal-case   border-white text-white">
+              <button className="btn btn-outline border normal-case   border-white text-white" onClick={handleShopNav}>
                 Continue Shopping
               </button>
             </div>
