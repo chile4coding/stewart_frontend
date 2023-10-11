@@ -161,7 +161,7 @@ background: rgba(255, 255, 255, 0.30)
 }
 .bg{
   background-image: url(/bg.png);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)), url(/bg.png);
+  background: url(/bg.png);
 
   min-height: 689px;
   background-repeat: no-repeat;

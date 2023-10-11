@@ -15,7 +15,7 @@ export default function Hero() {
     }
 
   return (
-    <section 
+    <section
       className={`grid  grid-cols-2 md:grid-cols-1 sm:min-h-[200px]  bg  sm:grid-cols-1   p-10       sm:px-5 ${
         isDark ? " bg-[#D9D9D9]" : " bg-[#D9D9D9]"
       }`}>
@@ -30,21 +30,12 @@ export default function Hero() {
         </p>
         <div className="  flex items-center gap-8   sm:gap-4 sm:mt-4  ">
           <button
-            className={`   btn normal-case  font-semibold mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs
-         ${
-           isDark
-             ? "hover:border-white hover:bg-black hover:text-white"
-             : " bg-black text-white hover:border-black"
-         } `}
+            className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs   bg-transparent text-white hover:bg-white  hover:text-black`}
             onClick={handleShopNav}>
             Start shopping
           </button>
           <button
-            className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
-              isDark
-                ? "hover:border-white hover:bg-black hover:text-white"
-                : " bg-black text-white hover:border-black"
-            }  `}
+            className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs   bg-transparent text-white hover:bg-white  hover:text-black`}
             onClick={handleCreateAccountNav}>
             Create Account
           </button>

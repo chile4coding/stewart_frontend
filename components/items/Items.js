@@ -2,16 +2,22 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useSelector } from "react-redux";
 export function ItemCategory() {
+    const isDark = useSelector((state) => state.store.toggleMode.isDark);
   return (
     <div className="card relative rounded-md ">
       <figure className="    ">
         <img
           src="/tshirt.png"
           alt="Shoes"
-          className="rounded-md w-full  lg:m-8 xl:m-8 md-m-8 item-category "
+          className={`rounded-md w-full  lg:m-8 xl:m-8 md-m-8 ${
+            isDark ? "item-category" : "bg-[#D9D9D9]"
+          }`}
         />
       </figure>
-      <span className="   break-before-all flex-wrap  sm:text-[9px] text-white  font-semibold sm:text-sm sm:py-0 sm:my-0 absolute bottom-10   sm:bottom-2 md:bottom-2  ">
+      <span
+        className={`break-before-all flex-wrap  sm:text-[9px]   font-semibold sm:text-sm sm:py-0 sm:my-0 absolute bottom-10   sm:bottom-2 md:bottom-2 ${
+          isDark ? "text-white" : "text-black"
+        }`}>
         Hoodies
       </span>
     </div>

@@ -299,7 +299,7 @@ export default function Home() {
             isDark ? "turndark" : "turnlight"
           }`}>
           <div className=" self-center sm:order-1">
-            <h2 className="text-[48px]  sm:text-center font-semibold   sm:text-[36px] sm:font-normal flex  max-w-md  md:text-lg">
+            <h2 className="text-[48px]  sm:text-center font-semibold text-white   sm:text-[36px] sm:font-normal flex  max-w-md  md:text-lg">
               Sign up now to get 10% off your first order
             </h2>
 
