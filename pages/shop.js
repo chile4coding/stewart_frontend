@@ -41,40 +41,50 @@ export default function Shop() {
   const handleShowState = () => setShow((prev) => !prev);
   return (
     <AppLayoout>
-      <div className="flex  justify-between  items-center mt-10 flex-wrap relative px-10">
-        <h2>Showing 7 products</h2>
-        <button
-          onClick={handleShowState}
-          className={` btn btn-outline flex normal-case  ${isDark?" border-white text-white":""}`}>
-          Sort <AiOutlineDownCircle />
-        </button>
+      <main className=" px-10 sm:px-4">
+        <div className="flex  justify-between  items-center mt-10 flex-wrap relative ">
+          <h2>Showing 15 products</h2>
+          <button
+            onClick={handleShowState}
+            className={` btn btn-outline flex normal-case  ${
+              isDark ? " border-white text-white" : ""
+            }`}>
+            Sort <AiOutlineDownCircle />
+          </button>
 
-        {show && <SortComponent />}
-      </div>
-      <div
-        className={`grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2  gap-10 my-8 px-10`}>
-        <Items />
-        <Items />
-        <Items />
+          {show && <SortComponent />}
+        </div>
+        <div
+          className={`grid xl:grid-cols-4 lg:grid-cols-5 md:grid-cols-4 md:gap-4 sm:grid-cols-3  gap-5  sm:gap-3 my-8 `}>
+          <Items />
+          <Items />
+          <Items />
 
-        <Items />
-        <Items />
-        <Items />
+          <Items />
+          <Items />
+          <Items />
 
-        <Items />
-        <Items />
-        <Items />
-      </div>
-      <div className=" flex justify-center ">
-        <button
-          className={` my-4 btn btn-outline  mx-auto normal-case sm:btn-sm ${
-            isDark
-              ? "  border-white text-white hover:bg-white  hover:text-black"
-              : " bg-black text-white hover:border-black hover:bg-white hover:text-black"
-          } `}>
-          Load More
-        </button>
-      </div>
+          <Items />
+          <Items />
+          <Items />
+          <Items />
+          <Items />
+          <Items />
+          <Items />
+          <Items />
+          <Items />
+        </div>
+        <div className=" flex justify-center ">
+          <button
+            className={` my-4 btn btn-outline  mx-auto normal-case sm:btn-sm ${
+              isDark
+                ? "  border-white text-white hover:bg-white  hover:text-black"
+                : " bg-black text-white hover:border-black hover:bg-white hover:text-black"
+            } `}>
+            Load More
+          </button>
+        </div>
+      </main>
     </AppLayoout>
   );
 }

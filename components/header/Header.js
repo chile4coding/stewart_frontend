@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { BsFillCartFill } from "react-icons/bs";
+import { BsFillCartFill, BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { BiSolidUser } from "react-icons/bi";
 import ActiveLink from "../ActiveLink";
 import Modal from "../modal/Modal";
@@ -59,11 +59,9 @@ const toggle = () => {
                 type="text"
                 placeholder="search "
                 className={`input  md:hidden input-bordered border-collapse  w-full   sm:hidden ${
-                  isDark
-                    ? "border-white bg-transparent"
-                    : " border-[black] "
+                  isDark ? "border-white bg-transparent" : " border-[black] "
                 }`}
-             style={{color: !isDark && "black !important" }}
+                style={{ color: !isDark && "black !important" }}
               />
             </div>
             <div className="indicator ">
@@ -82,13 +80,13 @@ const toggle = () => {
               <BiSolidUser className="text-[24px]" />
             </div>
             <div>
-              <input
-                type="checkbox"
-                className="toggle"
-                checked={isDark}
-                onClick={toggle}
-              />
-              <h2>{isDark ? "Light" : "Dark"}</h2>
+              {isDark ? (
+                <BsFillSunFill onClick={toggle} className=" cursor-pointer" />
+              ) : (
+                <BsFillMoonFill onClick={toggle} className=" cursor-pointer" />
+              )}
+
+              {/* <input type="checkbox" className="toggle" checked={isDark} /> */}
             </div>
           </div>
         </div>

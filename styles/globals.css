@@ -2,12 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap");
 
-
-*{
+* {
   padding: 0;
-  margin:  0;
+  margin: 0;
   box-sizing: border-box;
 }
 :root {
@@ -17,111 +16,156 @@
 }
 
 body {
-  background-color: #FAFAFA;
-  
-  color: #F8F8F8;
-font-family: 'Inter', sans-serif;
-font-size: 16px;
-font-style: normal;
-line-height: normal;
-text-transform: capitalize;
+  background-color: #fafafa;
+
+  color: #f8f8f8;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  line-height: normal;
+  text-transform: capitalize;
 }
-.nput[type="date"]::-webkit-calendar-picker-indicator{
+.nput[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
 
-.active{
+.activeuser {
+  border-radius: 10px;
+  background: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
+  padding: 0.5rem;
+  color: white;
+  /* background-color:  linear-gradient(180deg, #0D58AF 0%, #6FEAE2 100%); */
+}
+.comment {
+  background: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
 
-stroke-width: 3px;
-stroke: #6FEAE2;
-border-bottom: 3px solid;
-border-image: linear-gradient(45deg,  rgb(13, 88, 175) , rgb(111, 234, 226)) 1;
+}
+.activeuserhover:hover {
+  border-radius: 10px;
+  background: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
+  padding: 0.5rem;
+  transition: 1s;
+  /* background-color:  linear-gradient(180deg, #0D58AF 0%, #6FEAE2 100%); */
+}
+.activeuserhover {
+  border-radius: 10px;
+  /* background: linear-gradient(180deg, #0D58AF 0%, #6FEAE2 100%); */
+  padding: 0.5rem;
+  /* background-color:  linear-gradient(180deg, #0D58AF 0%, #6FEAE2 100%); */
+}
+.btn-weekly{
+   background: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
+   color: white;
+}
 
+.active {
+  stroke-width: 3px;
+
+  stroke: #6feae2;
+  border-bottom: 3px solid;
+  border-image: linear-gradient(45deg, rgb(13, 88, 175), rgb(111, 234, 226)) 1;
+  background-color: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
+}
+.active_label {
+  color: rgba(158, 152, 152, 0.5) !important;
 }
 
 .modal-box {
   @apply p-0;
-  
 }
 
-.input{
-
+.input {
   @apply outline-none;
   @border-0;
 }
 
-.turndark{
+.turndark {
   transition: 2s all ease;
   background-color: black;
   color: white;
-
 }
-.turnlight{
+.turnlight {
   transition: 2s all ease;
   background-color: #f0eded;
   color: black;
-
 }
-
 
 .swiper {
   width: 100%;
   height: 100%;
 }
 
-.swiperNavNext , .swiperNavPrev{
-cursor: pointer;
+.swiperNavNext,
+.swiperNavPrev {
+  cursor: pointer;
 
- color: red !important;
- fill: red !important;
+  color: red !important;
+  fill: red !important;
 }
-.swiperNavPrev{
-
-
+.swiperNavPrev {
 }
-.swiperNavNext{
-
- 
+.swiperNavNext {
 }
 
-
-.item-category{
-background: rgb(78,78,80);
-background: linear-gradient(180deg, rgba(78,78,80,1) 0%, rgba(0,7,9,1) 100%);
-
-
+.item-category {
+  background: rgb(78, 78, 80);
+  background: linear-gradient(
+    180deg,
+    rgba(78, 78, 80, 1) 0%,
+    rgba(0, 7, 9, 1) 100%
+  );
 }
 
-.item-category:hover{
+.item-category:hover {
   opacity: 0.5;
-  
+
+  cursor: pointer;
+}
+.items-category:hover {
+  opacity: 0.8;
+
   cursor: pointer;
 }
 
-.accountbg{
+.accountbg {
   background-image: url(/accountbg.png);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-
 }
-.radio-info{
-  @apply bg-slate-500
+.radio-info {
+  @apply bg-slate-500;
 }
 
-.input{
+.input {
   /* color: rgba(255, 255, 255, 0.59); */
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
 }
 
-
-.btn:hover{
+.btn:hover {
   color: black;
   background-color: white;
-
 }
 
+*::-webkit-scrollbar {
+  width: 15px;
+}
 
+.adminweeklyselect{
+  color: white;
+  border-radius: 5px;
+background: rgba(255, 255, 255, 0.30)
+}
+.bg{
+  background-image: url(/bg.png);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)), url(/bg.png);
+
+  min-height: 689px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  max-width: 1440px;
+}
