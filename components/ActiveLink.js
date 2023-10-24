@@ -8,7 +8,7 @@ const ActiveLink = ({ href, children }) => {
   const isActive = router.pathname === href;
 
   // Define the class names based on isActive
-  const className = isActive ? "active" : "";
+  const className = isActive  ? "active" : "";
 
   return (
     <Link

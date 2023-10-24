@@ -3,8 +3,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 export function ItemCategory() {
     const isDark = useSelector((state) => state.store.toggleMode.isDark);
+    const router = useRouter();
+
+
+    function handleCategory(itemName) {
+      router.push("/shop" ,`/shop/category-${itemName}`);
+    }
+
   return (
-    <div className="card relative rounded-md ">
+    <div className="card relative rounded-md " onClick={handleCategory.bind(this, "joggers")}>
       <figure className="    ">
         <img
           src="/tshirt.png"
@@ -27,9 +34,7 @@ export function ItemCategory() {
 
 export default function Items() {
      const isDark = useSelector((state) => state.store.toggleMode.isDark);
-     const router  = useRouter()
-     
-
+ const router  = useRouter()
      function handleSingleItemDetailNav(){
 router.push("/item/1")
      }
@@ -37,27 +42,26 @@ router.push("/item/1")
     <div
       className={` items-category rounded-md  hover:cursor-pointer card  shadow-xl ${
         isDark ? " bg-[#212121]" : "bg-[#D9D9D9]"
-      }`}>
-      <div className=" card-body sm:p-2 lg:p-4 md:p-3 xl:p-4">
-      <figure className="  ">
-        <img
-          src="/tshirt.png"
-          alt="Shoes"
-          className={`  sm:w-full  ${
-            isDark
-              ? "bg-[white]  rounded-md"
-              : "bg-[#e4e1e1] border-0 rounded-none"
-          }`}
-        />
-      </figure>
-      <div className="  mx-auto text-center">
-        <h2 className=" font-normal  text-center text-[14px] sm:text-sm sm:py-0 sm:my-0 sm:text-[7px]  sm:font-normal">
-          Cotton T-shirt
-        </h2>
-        <p className="my-3 sm:text-[10px] sm:my-0 ">₦10000.00</p>
-   
-      </div>
-
+      }`}
+      onClick={handleSingleItemDetailNav}>
+      <div className=" card-body sm:p-2 lg:p-4 md:p-3 xl:p-4 ">
+        <figure className="  ">
+          <img
+            src="/tshirt.png"
+            alt="Shoes"
+            className={`  sm:w-full  ${
+              isDark
+                ? "bg-[white]  rounded-md"
+                : "bg-[#e4e1e1] border-0 rounded-none"
+            }`}
+          />
+        </figure>
+        <div className="  mx-auto text-center">
+          <h2 className=" font-normal  text-center text-[14px] sm:text-sm sm:py-0 sm:my-0 sm:text-[7px]  sm:font-normal">
+            Cotton T-shirt
+          </h2>
+          <p className="my-3 sm:text-[10px] sm:my-0 ">₦10000.00</p>
+        </div>
       </div>
     </div>
   );

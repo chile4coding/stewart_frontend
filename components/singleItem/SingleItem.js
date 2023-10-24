@@ -516,7 +516,8 @@ export default function () {
         <h2 className="   text-[24px] font-semibold pb-4 pt-8 my-8 ">
           You May Also Like
         </h2>
-        <div className=" grid grid-cols-3 my-8 gap-6 md:grid-cols-3 sm:grid-cols-2">
+        <div className=" grid grid-cols-4 my-8 gap-6 md:grid-cols-3 sm:grid-cols-2">
+          <Items />
           <Items />
           <Items />
           <Items />

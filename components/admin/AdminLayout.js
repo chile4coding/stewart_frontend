@@ -4,33 +4,69 @@ import AppFooter from "../Footer/Footer";
 import { GrClose } from "react-icons/gr";
 import { UserActiveLink } from "../ActiveLink";
 import { AiFillStar, AiOutlineMenu } from "react-icons/ai";
-import { BsFillCartFill, BsFillCreditCard2FrontFill } from "react-icons/bs";
+import { BsFillCartFill, BsFillCreditCard2FrontFill, BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { HiShoppingBag, HiUserGroup } from "react-icons/hi2";
 import {
   BiMessageSquareDetail,
   BiSolidDashboard,
   BiSolidUser,
 } from "react-icons/bi";
-import { toggler } from "@/redux/storeSlice";
+import { getShop, toggler, storeGetProducts, getSizes } from "@/redux/storeSlice";
 import { useRouter } from "next/router";
 import { MdFavorite } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
 import { IoIosNotifications } from "react-icons/io";
 import { FaCog } from "react-icons/fa";
+import { getCookie, getProductSizes, getProducts, getShopProducts } from "@/services/request";
+
 
 function AdminHeader() {
   const [title, setTitle] = useState("");
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const {shop, toggleMode} = useSelector((state) => state.store);
+  const  {isDark} = toggleMode
   const dispatch = useDispatch();
-
   const router = useRouter();
+
+
+  
   useEffect(() => {
+    const cookie = getCookie()
+
+    if(cookie){
+      async function getCategory(cookie){
+  
+     const data = await getProducts(cookie);
+     const products = await getShopProducts(cookie);
+  
+   
+     
+     
+  
+     if(data){
+  dispatch(getShop(data?.category));
+     }
+     if(products){
+      dispatch(storeGetProducts(products.products));
+     }
+  
+  
+  
+      }
+  getCategory()
+
+    }
+
+
     if (router.pathname === "/admin") {
       setTitle("Dashboard Overview");
     } else if (router.pathname.includes("/admin/products")) {
       setTitle("Products");
-    } else if (router.pathname === "/admin/order") {
+    } else if (router.pathname === "/admin/orders") {
       setTitle("Orders");
+    } else if (router.pathname === "/admin/orders/[id]") {
+      setTitle("Order Details");
+    } else if (router.pathname === "/admin/customers/details") {
+      setTitle("Customers");
     } else if (router.pathname === "/saved_items") {
       setTitle("Saved Items");
     } else if (router.pathname === "/admin/reviews") {
@@ -72,20 +108,21 @@ function AdminHeader() {
           </h2>
         </div>
 
-        {title === "Orders" && (
-          <div className="w-full ">
-            <div className="    w-full  ">
-              <input
-                type="text"
-                placeholder="search "
-                className={`input   input-bordered border-collapse  w-full  input-sm  ${
-                  isDark ? "border-white bg-transparent" : " border-[black] "
-                }`}
-                style={{ color: !isDark && "black !important" }}
-              />
+        {title === "Orders" ||
+          ("admin/customers/details" && (
+            <div className="w-full ">
+              <div className="    w-full  ">
+                <input
+                  type="text"
+                  placeholder="search "
+                  className={`input   input-bordered border-collapse  w-full  input-sm  ${
+                    isDark ? "border-white bg-transparent" : " border-[black] "
+                  }`}
+                  style={{ color: !isDark && "black !important" }}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          ))}
 
         <div className="navbar-end ">
           <div className="flex gap-6 items-center  ">
@@ -104,13 +141,13 @@ function AdminHeader() {
               <BiSolidUser className="text-[24px]" />
             </div>
             <div>
-              <input
-                type="checkbox"
-                className="toggle"
-                checked={isDark}
-                onClick={toggle}
-              />
-              <h2>{isDark ? "Light" : "Dark"}</h2>
+              {isDark ? (
+                <BsFillSunFill onClick={toggle} className=" cursor-pointer" />
+              ) : (
+                <BsFillMoonFill onClick={toggle} className=" cursor-pointer" />
+              )}
+
+              {/* <input type="checkbox" className="toggle" checked={isDark} /> */}
             </div>
           </div>
         </div>
@@ -161,7 +198,7 @@ export default function AdminLayout({ children }) {
               <h2 className="text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
                 Stewart Collections
               </h2>
-              <UserActiveLink href="/admin">
+              <UserActiveLink href="/admin/home">
                 {" "}
                 <BiSolidDashboard />
                 Overview

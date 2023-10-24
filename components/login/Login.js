@@ -10,6 +10,11 @@ export default function LoginDetails() {
     router.replace("/signup")
   }
 
+
+    function handleForgottenPassword() {
+      router.push("/forgotten-password");
+    }
+
   return (
     <div className=" flex flex-col justify-center">
       <h2 className="text-center text-[18px] font-semibold">
@@ -35,13 +40,15 @@ export default function LoginDetails() {
       </div>
       <div className="flex justify-between">
         <div>
-          <input type="checkbox" /> <span>Remember me</span>
+          <input type="checkbox" />{" "}
+          <span className=" normal-case">Remember me</span>
         </div>
 
         <span
           className={` cursor-pointer hover:underline ${
             isDark ? "text-[#6FEAE2]" : "text-[blue]"
-          }`}>
+          }`}
+          onClick={handleForgottenPassword}>
           Forgot password?
         </span>
       </div>

@@ -19,8 +19,9 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { GrNext, GrPrevious } from "react-icons/gr";
 import { useRouter } from "next/router";
+import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef }) {
-    const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
     <div className="   w-full flex flex-wrap ">
@@ -50,24 +51,24 @@ function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef }) {
           },
         }}
         rewind={true}
-        // navigation={{
-        //   prevEl: swiperNavNexRef.current,
-        //   nextEl: swiperNavPrevRef.current,
-        // }}
-        navigation={true}
+        navigation={{
+          prevEl: swiperNavNexRef.current,
+          nextEl: swiperNavPrevRef.current,
+        }}
+     
         Pagination={{
           clickable: true,
         }}
         loop
         modules={[Autoplay, Navigation]}
         // slidesPerView={2}
-        // onInit={(swiper) => {
-        //   swiper.params.navigation.prevEl = swiperNavPrevRef.current;
-        //   swiper.params.navigation.nextEl = swiperNavNexRef.current;
-        //   swiper.navigation.init();
-        //   swiper.navigation.update();
-        // }}
-        // slidesPerView={2}
+        onInit={(swiper) => {
+          swiper.params.navigation.prevEl = swiperNavPrevRef.current;
+          swiper.params.navigation.nextEl = swiperNavNexRef.current;
+          swiper.navigation.init();
+          swiper.navigation.update();
+        }}
+    
 
         className={`mySwiper   mx-auto ${isDark ? "" : " bg-[white]"}`}>
         <SwiperSlide className=" ">
@@ -99,12 +100,97 @@ function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef }) {
   );
 }
 
-export default function Home() {
-  const router  = useRouter()
-    const swiperNavPrevRef = useRef(null);
-    const swiperNavNexRef = useRef(null);
+
+function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
+  return (
+    <div className="   w-full flex flex-wrap  ">
+      <Swiper
+        spaceBetween={50}
+        slidesPerView={1}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: false,
+        }}
+        breakpoints={{
+          // Define breakpoints for different screen sizes
+          320: {
+            slidesPerView: 3,
+            spaceBetween: 10,
+          },
+          760: {
+            slidesPerView: 4,
+            spaceBetween: 20,
+          },
+          1100: {
+            slidesPerView: 6,
+            spaceBetween: 20,
+          },
+        }}
+        rewind={true}
+        navigation={{
+          prevEl: swiperNavNexRef.current,
+          nextEl: swiperNavPrevRef.current,
+        }}
+        modules={[Autoplay, Navigation]}
+        loop
+    
+        onInit={(swiper) => {
+          swiper.params.navigation.prevEl = swiperNavPrevRef.current;
+          swiper.params.navigation.nextEl = swiperNavNexRef.current;
+          swiper.navigation.init();
+          swiper.navigation.update();
+        }}
+        // slidesPerView={2}
+
+        className={`mySwiper    mx-auto ${isDark ? "" : " bg-[white]"}`}>
+        <SwiperSlide className=" ">
+          <Items />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Items />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Items />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Items />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Items />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Items />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Items />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Items />
+        </SwiperSlide>
+      </Swiper>
+    </div>
+  );
+}
+
+export default function Home() {
+  const router = useRouter();
+  const swiperNavPrevRef = useRef(null);
+  const swiperNavNexRef = useRef(null);
+  const swiperNavSecondPrevRef = useRef(null);
+  const swiperNavSecondNexRef = useRef(null);
+  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+
+  function handleSeeAllNewIn(){
+    router.push("/shop" , "/shop/new-in")
+  }
+  function handleSeeAllBestSelling(){
+    router.push("/shop/", "/shop/best-selling");
+  }
   return (
     <AppLayoout>
       <main className="px-10 sm:px-4">
@@ -129,15 +215,38 @@ export default function Home() {
                 isDark
                   ? "hover:border-white hover:bg-black hover:text-white"
                   : " bg-black text-white hover:border-black"
-              }  `}>
+              }  `}
+              onClick={handleSeeAllNewIn}>
               See All
             </button>
           </div>
 
-          <ItemSwiper
-          // swiperNavPrevRef={swiperNavPrevRef}
-          // swiperNavNexRef={swiperNavNexRef}
-          />
+          <div className="  icon-nav-container ">
+            <div>
+              <ItemSwiper
+                swiperNavPrevRef={swiperNavPrevRef}
+                swiperNavNexRef={swiperNavNexRef}
+              />
+            </div>
+            <div ref={swiperNavNexRef} className="swiperNavPrev">
+              <MdNavigateBefore
+                className={` text-2xl font-bold ${
+                  isDark
+                    ? "text-black  bg-white rounded-full"
+                    : "text-white bg-black rounded-full"
+                }`}
+              />
+            </div>
+            <div ref={swiperNavPrevRef} className="swiperNavNext">
+              <MdNavigateNext
+                className={` text-2xl font-bold ${
+                  isDark
+                    ? "text-black  bg-white rounded-full"
+                    : "text-white bg-black rounded-full"
+                }`}
+              />
+            </div>
+          </div>
         </section>
         <section className="   lg:my-16 xl:my-14">
           <div className="flex  justify-center items-center   gap-8  sm:gap-5  ">
@@ -160,67 +269,35 @@ export default function Home() {
                 isDark
                   ? "hover:border-white hover:bg-black hover:text-white"
                   : " bg-black text-white hover:border-black"
-              }  `}>
+              }  `}
+              onClick={handleSeeAllBestSelling}>
               See All
             </button>
           </div>
-          <div className="   w-full flex flex-wrap  ">
-            <Swiper
-              spaceBetween={50}
-              slidesPerView={1}
-              autoplay={{
-                delay: 2500,
-                disableOnInteraction: false,
-              }}
-              pagination={{
-                clickable: false,
-              }}
-              breakpoints={{
-                // Define breakpoints for different screen sizes
-                320: {
-                  slidesPerView: 3,
-                  spaceBetween: 10,
-                },
-                760: {
-                  slidesPerView: 4,
-                  spaceBetween: 20,
-                },
-                1100: {
-                  slidesPerView: 6,
-                  spaceBetween: 20,
-                },
-              }}
-              rewind={true}
-              navigation={true}
-              modules={[Autoplay, Navigation]}
-              // slidesPerView={2}
+          <div className="icon-nav-container">
+            <BestSellingSwippper
+              swiperNavPrevRef={swiperNavSecondPrevRef}
+              swiperNavNexRef={swiperNavSecondNexRef}
+            />
 
-              className={`mySwiper    mx-auto ${isDark ? "" : " bg-[white]"}`}>
-              <SwiperSlide className=" ">
-                <Items />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Items />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Items />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Items />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Items />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Items />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Items />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Items />
-              </SwiperSlide>
-            </Swiper>
+            <div ref={swiperNavSecondPrevRef} className="swiperNavPrev">
+              <MdNavigateBefore
+                className={` text-2xl font-bold ${
+                  isDark
+                    ? "text-black  bg-white rounded-full"
+                    : "text-white bg-black rounded-full"
+                }`}
+              />
+            </div>
+            <div ref={swiperNavSecondNexRef} className="swiperNavNext">
+              <MdNavigateNext
+                className={` text-2xl font-bold ${
+                  isDark
+                    ? "text-black  bg-white rounded-full"
+                    : "text-white bg-black rounded-full"
+                }`}
+              />
+            </div>
           </div>
         </section>
         <section className=" mb-16 ">

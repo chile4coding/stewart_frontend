@@ -1,10 +1,9 @@
-import AdminLogin from '@/components/admin/auth/Login';
 import AdminSignup from '@/components/admin/auth/Signup'
 import React from 'react'
 
-export default function Login() {
+export default function signup() {
   return (
-    <div className=" grid grid-cols-2 sm:grid-cols-1 px-10 gap-6  h-[100vh] bg-[#dbd9d9]">
+     <div className=" grid grid-cols-2 sm:grid-cols-1 px-10 gap-6  h-[100vh] bg-[#dbd9d9]">
       <div
         className="login_bg  self-center max-w-[588px] h-[509px] w-full sm:hidden  rounded-lg flex justify-center items-center   "
         style={{
@@ -21,7 +20,7 @@ export default function Login() {
         </p>
       </div>
       
-      <AdminLogin/>
+      <AdminSignup />
     </div>
-  );
+  )
 }

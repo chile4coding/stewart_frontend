@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Items from "@/components/items/Items";
 import AppLayoout from "@/components/Layout/AppLayoout";
 import { AiOutlineDownCircle } from "react-icons/ai";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 function SortComponent() {
     const isDark = useSelector((state) => state.store.toggleMode.isDark);
+
+
 
   return (
     <div
@@ -37,6 +40,8 @@ function SortComponent() {
 export default function Shop() {
   const [show, setShow] = useState(false);
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const router   = useRouter()
+
 
   const handleShowState = () => setShow((prev) => !prev);
   return (

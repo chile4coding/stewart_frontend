@@ -2,9 +2,11 @@ import AppLayoout from "@/components/Layout/AppLayoout";
 import { ImageComponent } from "@/components/image/Imagecomponent";
 import LoginDetails from "@/components/login/Login";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 
 export default function Login() {
+
   return (
     <AppLayoout>
       <div className=" grid grid-cols-2 sm:grid-cols-1 px-10 gap-6 my-10">
