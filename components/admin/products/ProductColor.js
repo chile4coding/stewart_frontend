@@ -3,29 +3,51 @@ import { AiFillCloseSquare } from "react-icons/ai";
 import { IoIosArrowForward } from "react-icons/io";
 import { MdModeEdit } from "react-icons/md";
 import SizeModal from "./SizeModal";
-import { getColors, getSingleProduct, getSingleProductColor, getSizes } from "@/redux/storeSlice";
-import { getProductColors } from "@/services/request";
+import { getColors, getSingleProduct, getSingleProductColor, getSizes, storeGetProducts } from "@/redux/storeSlice";
+import { deleteColor, getCookie, getProductColors, getShopProducts } from "@/services/request";
+import toast from "react-hot-toast";
 
 const { useRouter } = require("next/router");
 const { useSelector, useDispatch } = require("react-redux");
 
 function SingleProductList() {
   const [showcategoryModal, setCategoryModal] = useState(false);
+  const  [productColortable, setProductColorTable] =  useState(null)
 
   const { shop, toggleMode, singleProduct } = useSelector(
     (state) => state.store
   );
+
+  
   const dispatch  = useDispatch()
   const { isDark } = toggleMode;
   const router = useRouter();
 useEffect(()=>{
-if(singleProduct){
+if (singleProduct) {
   dispatch(getSizes(singleProduct?.size));
 }
+const cookie  =  getCookie()
+  async function update(){
+      const products = await getShopProducts(cookie);
+
+  dispatch(storeGetProducts(products.products));
+      const product = await getProductColors();
+      dispatch(getSingleProduct(singleProduct.id));
+      if (product) {
+        dispatch(getColors(product.colors));
+
+      }
+  }
+
+  update()
+
+
 
 async function getColor(){
 const data  = await getProductColors()
 if(data){
+
+  setProductColorTable(prev=>data.colors)
 
   dispatch(getColors(data.colors));
 
@@ -38,15 +60,21 @@ getColor()
 
 
 
-  function handleNavigation(id, productId) {
+  async function handleNavigation(id, productId) {
 
+     const product = await getProductColors();
+
+     dispatch(getColors(product.colors));
    
     if(productId){
       dispatch(getSingleProductColor(productId));
     }
     router.push(`/admin/products/colors/${id}`);
   }
-   function handleNavigationProduct(id, productId) {
+   async function handleNavigationProduct(id, productId) {
+      const product = await getProductColors();
+
+     dispatch(getColors(product.colors));
      dispatch(getSingleProduct(productId));
      router.push(`/admin/products/${id}`);
    }
@@ -56,6 +84,26 @@ getColor()
   }
   function handleCloseCategoryModal() {
     setCategoryModal(false);
+  }
+
+  async function handleDeleteProduct(id) {
+    const cookie = getCookie();
+
+    const response = await deleteColor(id, cookie);
+
+    if (response.status === 200) {
+
+  const products = await getShopProducts(cookie);
+
+  dispatch(storeGetProducts(products.products));
+      const product = await getProductColors();
+      dispatch(getSingleProduct(singleProduct.id));
+      if (product) {
+        dispatch(getColors(product.colors));
+
+      }
+      toast.success("product deleted successfully");
+    }
   }
 
   return (
@@ -209,7 +257,10 @@ getColor()
                             )}>
                             <MdModeEdit /> <span>Edit</span>
                           </div>
-                          <AiFillCloseSquare className=" text-xl hover:cursor-pointer" />
+                          <AiFillCloseSquare
+                            onClick={handleDeleteProduct.bind(this, color.id)}
+                            className=" text-xl hover:cursor-pointer"
+                          />
                         </div>
                       </td>
                     </tr>

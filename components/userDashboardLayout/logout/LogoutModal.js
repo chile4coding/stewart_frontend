@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import  { useRouter,  } from "next/router";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 
 
@@ -23,7 +24,13 @@ const style = {
 
 export default function LogoutModal({handleOpen, open}) {
          const isDark = useSelector((state) => state.store.toggleMode.isDark);
+const router  = useRouter()
+           function signOut() {
+             Cookies.remove("_stewart_collection_token");
 
+             router.push("/")
+        
+           }
 
   return (
     <div className=" card">
@@ -34,7 +41,10 @@ export default function LogoutModal({handleOpen, open}) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <Box sx={style}>
-          <h2 className=" text-center font-bold lg:text-[24px] xl:text-[24px]"> Logout? </h2>
+          <h2 className=" text-center font-bold lg:text-[24px] xl:text-[24px]">
+            {" "}
+            Logout?{" "}
+          </h2>
 
           <p className="  text-center normal-case my-2 lg:text-[18px] xl:text-[18px] leading-6">
             Are you sure you want to log out? You won’t be able to access your
@@ -42,13 +52,15 @@ export default function LogoutModal({handleOpen, open}) {
           </p>
 
           <div className=" flex justify-center items-center gap-4 mt-6">
-            <button onClick={handleOpen}
+            <button
+              onClick={handleOpen}
               className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px] bg-black text-white hover:border-black `}>
-             Cancel
+              Cancel
             </button>
             <button
+              onClick={signOut}
               className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  bg-black text-white hover:border-black`}>
-              Log out 
+              Log out
             </button>
           </div>
         </Box>

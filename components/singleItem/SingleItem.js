@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Rating } from "@mui/material";
 import { useSwiper } from "swiper/react";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { ImageComponent } from "../image/Imagecomponent";
 import { useSelector, useDispatch } from "react-redux";
-
+import { addToCart } from "@/redux/storeSlice";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -22,28 +22,12 @@ import { toggler } from "@/redux/storeSlice";
 import { BiMinus } from "react-icons/bi";
 import Items from "../items/Items";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-
-const size = [
-  { id: 1, s: "S", active: false },
-  { id: 2, s: "M", active: false },
-  { id: 3, s: "L", active: false },
-  { id: 4, s: "XL", active: false },
-  { id: 5, s: "2XL", active: false },
-  { id: 6, s: "3XL", active: false },
-];
-const colors = [
-  { id: 1, color: "White", active: false },
-  { id: 2, color: "Blue", active: false },
-  { id: 3, color: "Black", active: false },
-  { id: 4, color: "Gray", active: false },
-  { id: 5, color: "Navy", active: false },
-  { id: 6, color: "Green", active: false },
-  { id: 7, color: "Red", active: false },
-];
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 function Color({ id, color, active, handleColor }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
-  c;
+
   return (
     <>
       <button
@@ -65,7 +49,7 @@ function Sizes({ id, size, active, handleSize }) {
   return (
     <>
       <button
-        className={` btn p-3 px-4   rounded-md border   font-semibold ${
+        className={` btn p-3 px-4   rounded-md border   font-semibold lowercase ${
           isDark
             ? " bg-black  hover:text-black  "
             : "border border-black hover:bg-black hover:text-white  "
@@ -79,42 +63,28 @@ function Sizes({ id, size, active, handleSize }) {
   );
 }
 
-function ClothDescription() {
+function ClothDescription({ desc, size, singleProduct }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const [color, setColor] = useState([]);
+  const [sizeName, setSizeName] = useState([]);
+  useEffect(() => {
+    const f = size.map((si) => ({
+      name: si.name,
+      waist: si.waist,
+      legnth: si.length,
+      sleave: si.sleaves,
+    }));
+    setColor(f);
+    const s = f.map((si) => Object.keys(si)).flat();
+    const uniq = new Set(s);
+    const arr = Array.from(uniq).slice(1);
+    setSizeName(arr);
+  }, [size]);
 
   return (
     <>
-      <p className="py-3  leading-6 text-justify sm:text-xs  sm:leading-4">
-        ntroducing the Stewart Collection Unisex Heavy Blend™ Crewneck
-        Sweatshirt: Stay Cozy in Style! Embrace the perfect combination of
-        comfort and fashion with our Stewart Collection Unisex Heavy Blend™
-        Crewneck Sweatshirt. Crafted with meticulous attention to detail, this
-        premium sweatshirt is designed to keep you warm and stylish all year
-        round
-      </p>
-      <p className="py-3  leading-6 text-justify sm:text-xs  sm:leading-4">
-        ntroducing the Stewart Collection Unisex Heavy Blend™ Crewneck
-        Sweatshirt: Stay Cozy in Style! Embrace the perfect combination of
-        comfort and fashion with our Stewart Collection Unisex Heavy Blend™
-        Crewneck Sweatshirt. Crafted with meticulous attention to detail, this
-        premium sweatshirt is designed to keep you warm and stylish all year
-        round
-      </p>
-      <p className="py-3  leading-6 text-justify sm:text-xs  sm:leading-4">
-        ntroducing the Stewart Collection Unisex Heavy Blend™ Crewneck
-        Sweatshirt: Stay Cozy in Style! Embrace the perfect combination of
-        comfort and fashion with our Stewart Collection Unisex Heavy Blend™
-        Crewneck Sweatshirt. Crafted with meticulous attention to detail, this
-        premium sweatshirt is designed to keep you warm and stylish all year
-        round
-      </p>
-      <p className="py-3  leading-6 text-justify sm:text-xs  sm:leading-4">
-        ntroducing the Stewart Collection Unisex Heavy Blend™ Crewneck
-        Sweatshirt: Stay Cozy in Style! Embrace the perfect combination of
-        comfort and fashion with our Stewart Collection Unisex Heavy Blend™
-        Crewneck Sweatshirt. Crafted with meticulous attention to detail, this
-        premium sweatshirt is designed to keep you warm and stylish all year
-        round
+      <p className=" py-3  leading-6 text-justify sm:text-xs  sm:leading-4 normal-case">
+        {desc}
       </p>
 
       <h2
@@ -134,69 +104,53 @@ function ClothDescription() {
               className={`border-b-black font-bold  text-[18px] ${
                 isDark ? " text-black" : " text-black"
               }`}>
-              <th></th>
-              <th>S</th>
-              <th>M</th>
-              <th>L</th>
-              <th>XL</th>
-              <th>2XL</th>
-              <th>3Xl</th>
+              <th className=" lowercase">sizes</th>
+              {sizeName?.map((s, i) => (
+                <th key={i} className=" lowercase">
+                  {s}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
-            <tr className={isDark ? " border-b-black" : " border-b-black"}>
-              <th>Waist (cm)</th>
-
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-            </tr>
-            <tr className={isDark ? " border-b-black" : " border-b-black"}>
-              <th>Waist (cm)</th>
-
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-            </tr>
-            <tr className={isDark ? " border-b-black" : " border-b-black"}>
-              <th>Waist (cm)</th>
-
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-              <td>Blue</td>
-            </tr>
+            {color.map((s) => (
+              <tr className={isDark ? " border-b-black" : " border-b-black"}>
+                <th className=" lowercase">{s.name}</th>
+                <td className=" lowercase">{s.waist}</td>
+                <td className=" lowercase">{s.legnth}</td>
+                <td className=" lowercase">{s.sleave}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
     </>
   );
 }
-function Clothes() {
+function Clothes({ cloth, handleSlideImageDisplay }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
-  return (
-    <Image
-      src="/polo.png"
-      height={85}
-      width={85}
-      alt="polo"
-      className={`rounded-lg cursor-pointer  ${
-        isDark ? "bg-[#e4e1e1]" : "bg-[#e4e1e1]"
-      }`}
-    />
-  );
+  if (cloth) {
+    return (
+      <img
+        src={cloth?.image}
+        onClick={handleSlideImageDisplay?.bind(this, cloth.id)}
+        alt="polo"
+        className={`max-w-[85px] w-full rounded-lg cursor-pointer  ${
+          isDark ? "bg-[#e4e1e1]" : "bg-[#e4e1e1]"
+        }`}
+      />
+    );
+  }
 }
-function SimilarClothes({ swiperNavNexRef, swiperNavPrevRef }) {
+function SimilarClothes({
+  swiperNavNexRef,
+  swiperNavPrevRef,
+  similar,
+  singleCloth,
+  image,
+  handleSlideImageDisplay,
+}) {
   return (
     <Swiper
       spaceBetween={5}
@@ -223,47 +177,27 @@ function SimilarClothes({ swiperNavNexRef, swiperNavPrevRef }) {
         swiper.navigation.update();
       }}
       className="mySwiper  mx-auto flex  items-center justify-between mr-6">
-      <SwiperSlide className="">
-        <Clothes />
-      </SwiperSlide>
-      <SwiperSlide className="">
-        <Clothes />
-      </SwiperSlide>
-      <SwiperSlide className="">
-        <Clothes />
-      </SwiperSlide>
-      <SwiperSlide className="">
-        <Clothes />
-      </SwiperSlide>
-      <SwiperSlide className="">
-        <Clothes />
-      </SwiperSlide>
-      <SwiperSlide className="">
-        <Clothes />
-      </SwiperSlide>
-      <SwiperSlide className="">
-        <Image
-          src="/polo.png"
-          height={85}
-          width={85}
-          alt="polo"
-          className="bg-white rounded-lg"
-        />
-      </SwiperSlide>
-      <SwiperSlide className="">
-        <Image
-          src="/polo.png"
-          height={85}
-          width={85}
-          alt="polo"
-          className="bg-white rounded-lg"
+      {similar.map((s) =>
+        s.colors.map((col) => (
+          <SwiperSlide className="" key={col.id}>
+            <Clothes
+              cloth={col}
+              handleSlideImageDisplay={handleSlideImageDisplay}
+            />
+          </SwiperSlide>
+        ))
+      )}
+      <SwiperSlide className="" key={singleCloth.id}>
+        <Clothes
+          cloth={{ id: singleCloth.id, image: image }}
+          handleSlideImageDisplay={handleSlideImageDisplay}
         />
       </SwiperSlide>
     </Swiper>
   );
 }
 
-function ClethReviews() {
+function ClethReviews({ review }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
@@ -279,7 +213,7 @@ function ClethReviews() {
             fill: "green",
           }}
           className="my-4"
-          defaultValue={5}
+          defaultValue={Number(review?.rating)}
           precision={0.5}
           readOnly
         />
@@ -287,73 +221,163 @@ function ClethReviews() {
           <div className=" flex gap-4 items-center">
             <div className=" w-[50px] h-[50px] rounded-full ">
               <ImageComponent
-                imageUrl="https://imgv3.fotor.com/images/slider-image/Female-portrait-photo-enhanced-with-clarity-and-higher-quality-using-Fotors-free-online-AI-photo-enhancer.jpg"
+                imageUrl={review?.avatar}
                 rounded="rounded-full"
               />
             </div>
             <div>
-              <h2 className=" text-[ 18px]  font-semibold">Chile Omereji</h2>
+              <h2 className=" text-[ 18px]  font-semibold">{review?.user?.name}</h2>
               <p className=" text-[14px] italic font-normal leading-6">
                 Verified purchase
               </p>
             </div>
           </div>
 
-          <p className="text-[ 18px] font-normal leading-6">
-            I love the sweatshirt, it’s very comfy and the material is of good
-            quality. I will definitely recommend this brand to anyone.
+          <p className="text-[ 18px] font-normal leading-6 normal-case">
+            {review?.comment}
           </p>
         </div>
-        <p className="justify-self-end">2023-10-56</p>
+        <p className="justify-self-end">
+          {new Date(review?.date).toLocaleDateString("en-UK")}
+        </p>
       </div>
     </>
   );
 }
-export default function () {
-  const [clotheSize, setClotheSize] = useState(size);
-  const [clotheColor, setColor] = useState(colors);
+export default function SingleItem({ singleItem, similarProduct }) {
+  const { toggleMode,cart } = useSelector((state) => state.store);
+  const [clotheSize, setClotheSize] = useState(
+    singleItem?.size.map((s) => ({ ...s, active: false }))
+  );
+  const [clotheColor, setColor] = useState([
+    {
+      id: singleItem?.id,
+      color: singleItem?.initial_color,
+      active: true,
+    },
+  ]);
+  const [singleProduct, setSingleProduct] = useState(singleItem);
+  const [specialCoth, setSpecialCloth] = useState("");
+
   const [descAndReviewDisplay, setDescAndReviewDisplay] = useState(false);
   const [value, setValue] = useState(1);
+  const  dispatch = useDispatch()
+
+
+
+
+
+
   const swiperNavPrevRef = useRef(null);
   const swiperNavNexRef = useRef(null);
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const router = useRouter();
+
+  const { isDark } = toggleMode;
+
+  useEffect(() => {
+    setSpecialCloth(singleItem.image);
+
+    setSingleProduct(singleItem);
+  }, [router.asPath, specialCoth]);
 
   function handleSize(id) {
+    const clothColors = singleProduct.size
+      .map((s) => s.colors.filter((col) => col.size_id === id))
+      .flat();
+    if (clothColors.length < 1) {
+      return;
+    }
+
     setClotheSize((prev) => {
       return prev.map((s) => {
         if (s.id === id) {
-          s.active = true;
+          return { ...s, active: true };
         } else {
-          s.active = false;
+          return { ...s, active: false };
         }
         return s;
       });
     });
+
+    setColor((prev) => clothColors);
   }
 
   function handleColor(id) {
     setColor((prev) => {
       return prev.map((color) => {
         if (color.id === id) {
-          color.active = true;
+          return { ...color, active: true };
         } else {
-          color.active = false;
+          return { ...color, active: false };
         }
         return color;
       });
     });
+
+    const clothColors = singleProduct.size
+      .map((s) => s.colors.filter((col) => col.id === id))
+      .flat(1);
+    if (clothColors.length > 0) {
+      const [color] = clothColors;
+      const clothSize = singleProduct.size.find((s) => s.id === color.size_id);
+
+      setSingleProduct({
+        ...singleProduct,
+        price: color.price,
+        image: color.image,
+        initial_color: color.name,
+        initial_size: clothSize?.name,
+        
+      });
+    }
+  }
+
+  function handleSlideImageDisplay(id) {
+    const singleCloth = singleItem.id === id;
+
+    if (singleCloth) {
+      setSingleProduct({
+        ...singleProduct,
+        price: singleItem.price,
+        image: singleItem.image,
+        initial_color: singleItem.initial_color,
+        initial_size: singleItem.initial_size,
+      });
+
+      return;
+    }
+
+    const clothColors = singleProduct.size
+      .map((s) => s.colors.filter((col) => col.id === id))
+      .flat(1);
+    if (clothColors.length > 0) {
+      const [color] = clothColors;
+      const clothSize = singleProduct.size.find((s) => s.id === color.size_id);
+
+      setSingleProduct({
+        ...singleProduct,
+        price: color.price,
+        image: color.image,
+        initial_color: color.name,
+        initial_size: clothSize?.name,
+      });
+    }
   }
 
   function handleIncreaseValue() {
     if (value > 0) {
       setValue((prev) => prev + 1);
+
     }
   }
 
   function handleDecreaseValue() {
     if (value > 1) {
       setValue((prev) => prev - 1);
+
+
     }
+
   }
 
   function handeDescriptionDisplay() {
@@ -363,21 +387,55 @@ export default function () {
   function handleReviewsDisplay() {
     setDescAndReviewDisplay(true);
   }
+
+
+  
+
+  function handleCart(checkouts){
+    const {name, id, category_id, price, initial_size, initial_color, image} =  singleProduct
+    const cartqty  =  value
+   const activeCart = {
+     name,
+     id,
+     category_id,
+     price,
+     initial_size,
+     initial_color,
+     image,
+     qty: cartqty,
+     subTotal: price * cartqty
+   };
+   dispatch(addToCart(activeCart))
+
+   toast.success(<h2 className=" normal-case">Your item has been added to cart</h2>);
+
+   if (Boolean(checkouts)) {
+     router.replace("/checkout");
+   }
+
+   
+
+
+  }
+  
+
+ 
+
   return (
     <main className=" mb-20">
-      <div className="  grid grid-cols-2 sm:grid-cols-1 text-[18px] gap-6  md:grid-cols-1">
-        <div className="">
-          <Image
-            src="/polo.png"
-            height={588}
-            width={588}
+      <div className="  grid grid-cols-2 sm:grid-cols-1 text-[18px] gap-6  md:grid-cols-1 sm:gap-16  md:gap-16 ">
+        <div className=" sm:max-h-[300px] max-h-[410px]   sm:mb-20 md:mb-24">
+          <img
+            src={singleProduct?.image}
             alt="polo"
-            className={`rounded-lg ${isDark ? "bg-[#e4e1e1]" : "bg-[#e4e1e1]"}`}
+            className={` object-cover h-full w-full rounded-lg image_ani ${
+              isDark ? "bg-[#e4e1e1]" : "bg-[#9c9a9a]"
+            }`}
           />
           <div className=" my-6 flex justify-center items-center">
-            <div ref={swiperNavNexRef} className="swiperNavPrev">
+            <div ref={swiperNavNexRef} className="">
               <MdNavigateBefore
-                className={` text-2xl font-bold ${
+                className={` text-2xl font-bold  cursor-pointer ${
                   isDark
                     ? "text-black  bg-white rounded-full"
                     : "text-white bg-black rounded-full"
@@ -385,12 +443,16 @@ export default function () {
               />
             </div>
             <SimilarClothes
+              handleSlideImageDisplay={handleSlideImageDisplay}
+              similar={singleProduct.size}
+              image={specialCoth}
+              singleCloth={singleProduct}
               swiperNavPrevRef={swiperNavPrevRef}
               swiperNavNexRef={swiperNavNexRef}
             />
-            <div ref={swiperNavPrevRef} className="swiperNavNext">
+            <div ref={swiperNavPrevRef} className="">
               <MdNavigateNext
-                className={` text-2xl font-bold ${
+                className={` text-2xl font-bold cursor-pointer ${
                   isDark
                     ? "text-black  bg-white rounded-full"
                     : "text-white bg-black rounded-full"
@@ -400,11 +462,12 @@ export default function () {
           </div>
         </div>
         <div>
-          <h2 className="text-[36px] sm:text-[20px] font-semibold  leading-snug">
-            Stewart Collection Unisex <br /> Heavy Blend™ Crewneck Sweatshirt{" "}
+          <h2 className="lg:text-[36px] xl:text-[36px] sm:text-[16px] font-semibold  leading-snug">
+            Stewart Collection{" "}
+            {`${singleProduct?.name} - ${singleProduct?.initial_color}`}
           </h2>
-          <h4 className="text-[36px] font-semibold leading-snug sm:text-[20px]">
-            ₦0.00
+          <h4 className="text-[36px] font-semibold leading-snug sm:text-[12px]">
+            ₦{singleProduct?.price.toFixed(2)}
           </h4>
           {/* <Rating name="half-rating" defaultValue={2.5} precision={0.5} /> */}
           <Rating
@@ -416,36 +479,34 @@ export default function () {
             defaultValue={2.5}
             precision={0.5}
           />
-          <h2 className=" text-[18px]  font- leading-6 sm:text-xs">
-            Embrace the perfect combination of comfort and fashion with our
-            Unisex Heavy Blend™ Crewneck Sweatshirt. Crafted with meticulo us
-            attention to detail, this premium sweatshirt is designed to keep you
-            warm and stylish all year round.
+          <h2 className=" text-[18px]  font- leading-6 sm:text-xs normal-case">
+            {singleProduct?.short_desc}
           </h2>
           <h2 className="  font-semibold my-4">Sizes</h2>
           <div className="flex gap-2 flex-wrap">
             {clotheSize.map((btn) => (
               <Sizes
                 key={btn.id}
-                size={btn.s}
+                size={btn.name}
                 id={btn.id}
-                active={btn.active}
+                active={btn?.active}
                 handleSize={handleSize}
               />
             ))}
           </div>
           <h2 className="  font-semibold my-4 ">Colors</h2>
           <div className="flex gap-2 flex-wrap">
-            {clotheColor.map((btn) => (
-              <Sizes
-                key={btn.id}
-                size={btn.color}
-                id={btn.id}
-                active={btn.active}
-                color={btn.color}
-                handleSize={handleColor}
-              />
-            ))}
+            {clotheColor?.length > 0 &&
+              clotheColor.map((btn) => (
+                <Sizes
+                  key={btn.id}
+                  size={btn.color || btn.name}
+                  id={btn.id}
+                  active={btn.active}
+                  color={btn.name}
+                  handleSize={handleColor}
+                />
+              ))}
           </div>
 
           <h2 className="  font-semibold my-4 ">Quantity</h2>
@@ -463,23 +524,35 @@ export default function () {
               onClick={handleIncreaseValue}
             />
           </div>
-          <button
-            className={`my-6 btn  btn-outline border normal-case    px-8 py-4 w-full ${
-              isDark
-                ? "border-white text-white  hover:bg-white hover:text-black "
-                : " hover:bg-black hover:text-white "
-            }`}>
-            Add to cart
-          </button>
+          <div className="  grid grid-cols-2 gap-5">
+            <button
+              className={`my-6 btn  btn-outline border normal-case    px-8 py-4 ${
+                isDark
+                  ? "border-white text-white  hover:bg-white hover:text-black "
+                  : " hover:bg-black hover:text-white "
+              }`}
+              onClick={handleCart.bind(this, false)}>
+              Add to cart
+            </button>
+            <button
+              className={`my-6 btn  btn-outline border normal-case    px-8 py-4  ${
+                isDark
+                  ? "border-white text-white  hover:bg-white hover:text-black "
+                  : " hover:bg-black hover:text-white "
+              }`}
+              onClick={handleCart.bind(this, true)}>
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
       <div>
         <h2
-          className={` border-b  text-[24px] font-semibold pb-4 pt-8 ${
+          className={`  border-b  text-[24px] font-semibold pb-4 pt-8 ${
             isDark ? "" : " border-b-black"
           }`}>
           <span>
-            <div className=" flex gap-8 items-center">
+            <div className=" flex gap-8 items-center ">
               <span
                 className={` sm:text-sm hover:cursor-pointer hover:bg-[#212121] hover:text-white  p-2 rounded-md ${
                   !descAndReviewDisplay &&
@@ -506,21 +579,25 @@ export default function () {
               <h2 className="  justify-self-center">Reveiws</h2>
               <h2 className=" justify-self-end">Date </h2>
             </div>
-            <ClethReviews /> <ClethReviews /> <ClethReviews /> <ClethReviews />{" "}
-            <ClethReviews />{" "}
+            {singleProduct.reviews.map((rev) => (
+              <ClethReviews key={rev.id} review={rev} />
+            ))}
           </div>
         ) : (
-          <ClothDescription />
+          <ClothDescription
+            desc={singleProduct?.description}
+            singleProduct={singleProduct}
+            size={singleProduct?.size}
+          />
         )}
 
         <h2 className="   text-[24px] font-semibold pb-4 pt-8 my-8 ">
           You May Also Like
         </h2>
         <div className=" grid grid-cols-4 my-8 gap-6 md:grid-cols-3 sm:grid-cols-2">
-          <Items />
-          <Items />
-          <Items />
-          <Items />
+          {similarProduct &&
+            similarProduct.length > 0 &&
+            similarProduct.map((item) => <Items items={item} />)}
         </div>
       </div>
     </main>

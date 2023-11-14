@@ -1,8 +1,10 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-const ActiveLink = ({ href, children }) => {
+const ActiveLink = ({ href, children, onclick }) => {
   const router = useRouter();
+
+ 
 
   // Check if the current route matches the link's href
   const isActive = router.pathname === href;
@@ -11,9 +13,7 @@ const ActiveLink = ({ href, children }) => {
   const className = isActive  ? "active" : "";
 
   return (
-    <Link
-      href={href}
-      className={` ${className} text-[18px]`}>
+    <Link href={href}  className={` ${className} text-[18px]`}>
       {children}
     </Link>
   );

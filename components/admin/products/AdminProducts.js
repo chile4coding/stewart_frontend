@@ -5,7 +5,10 @@ import { IoIosArrowForward } from "react-icons/io";
 import { MdModeEdit } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import CategoryModal from "./CategoryModal";
-import { getSingleProduct } from "@/redux/storeSlice";
+import { getSingleProduct, storeGetProducts } from "@/redux/storeSlice";
+import { deleteProduct, getCookie, getShopProducts } from "@/services/request";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 
 function ProductList({ products }) {
@@ -31,7 +34,23 @@ function ProductList({ products }) {
   function handleCloseCategoryModal() {
     setCategoryModal(false);
   }
+async function handleDeleteProduct(id){
+const cookie = getCookie()
 
+const response= await deleteProduct( id, cookie)
+
+if(response.status===200){
+const products = await getShopProducts()
+  if (products) {
+    dispatch(storeGetProducts(products.products));
+  }
+  toast.success("product deleted successfully")
+
+}
+
+
+
+}
   return (
     <div
       className={`  pb-3 mb-6  rounded-md ${
@@ -125,7 +144,10 @@ function ProductList({ products }) {
                           )}>
                           <MdModeEdit /> <span>Edit</span>
                         </div>
-                        <AiFillCloseSquare className=" text-xl hover:cursor-pointer" />
+                        <AiFillCloseSquare
+                          className=" text-xl hover:cursor-pointer"
+                          onClick={handleDeleteProduct.bind(this, product.id)}
+                        />
                         <h2
                           className="hover:underline hover:cursor-pointer"
                           onClick={handleProductDetailsNavigation.bind(

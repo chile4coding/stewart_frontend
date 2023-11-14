@@ -1,18 +1,77 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import { BsFacebook } from "react-icons/bs";
 import { useRouter } from "next/router";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { userSignup } from "@/services/request";
+import toast from "react-hot-toast";
+import Spinner from "../spinner/Spinner";
+import { setCurrentUserEmail } from "@/redux/storeSlice";
+
 
 export default function SignupForm() {
   const router = useRouter();
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
+    const [showPassword, setShowPassword] = useState(false);
+
+  const [user, setUserDetails] = useState({
+    name: "",
+    email: "",
+    password: "",
+    gender: "",
+    dob: "",
+    confirmPassword: "",
+    loading:false,
+    passwordSame:false
+  });
+
+  const dispatch = useDispatch()
+  function handleInputChage(e){
+const {name, value} = e.target
+setUserDetails({...user, [name]:value, passwordSame:false})
+
+  }
+    const handleShowPassword = () => setShowPassword((password) => !password);
+
 
   function handleLoginNav() {
     router.replace("/login");
   }
+
+  function formatDateToDayMonthYear(date) {
+    const options = { day: "numeric", month: "numeric", year: "numeric" };
+    return new Date(date).toLocaleDateString("en-US", options);
+  }
+
+  async function handleSignup(e) {
+    e.preventDefault();
+   const dateDOB = formatDateToDayMonthYear(user.dob);
+
+
+    if(user.password !== user.confirmPassword){
+      setUserDetails({ ...user, passwordSame:true });
+return
+    }
+setUserDetails({...user, loading:true
+}) 
+    const response = await userSignup({ ...user, dob: dateDOB });
+    const data  = await response.json()
+
+    if(response.status === 201){
+      dispatch(setCurrentUserEmail(user.email))
+      toast.success(<h  className=" normal-case">Sign up successful, verify your account</h>);
+      router.push("/otp");
+    }else{
+            toast.error(<h1 className="  lowercase">{data.message} </h1>);
+
+    }
+setUserDetails({ ...user, loading: false }); 
+   
+    // router.push("/otp");
+  }
   return (
-    <div className=" flex flex-col justify-center">
+    <form onSubmit={handleSignup} className=" flex flex-col justify-center">
       <h2 className="text-center text-[18px] font-semibold leading-6 mb-1 normal-case">
         Welcome to Stewart Collection!
       </h2>
@@ -21,7 +80,11 @@ export default function SignupForm() {
       </h2>
       <div className="my-6">
         <input
+          onChange={handleInputChage}
+          value={user.name}
+          name="name"
           type="text"
+          required
           placeholder="Name"
           className={`input input-bordered  w-full  ${
             isDark ? " bg-black border-white " : " text-black  border-black"
@@ -31,6 +94,10 @@ export default function SignupForm() {
       <div className="my-6">
         <input
           type="email"
+          onChange={handleInputChage}
+          value={user.email}
+          name="email"
+          required
           placeholder="Email"
           className={`input input-bordered  w-full  ${
             isDark ? " bg-black border-white " : " text-black  border-black"
@@ -40,16 +107,23 @@ export default function SignupForm() {
 
       <div className="grid my-6 grid-cols-2 gap-4 sm:grid-cols-1">
         <select
+          onChange={handleInputChage}
+          value={user.gender}
+          name="gender"
+          required
           className={`input input-bordered  w-full max-w-xs sm:max-w-full ${
             isDark ? " bg-black border-white " : " text-black  border-black"
           }`}>
           <option selected>Gender</option>
-          <option>Male</option>
-          <option>Female</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
         </select>
         <input
           type="date"
-          placeholder="Surname"
+          onChange={handleInputChage}
+          required
+          value={user.dob}
+          name="dob"
           className={`input input-bordered  w-full max-w-xs sm:max-w-full ${
             isDark
               ? " bg-black border-white nput  "
@@ -58,36 +132,81 @@ export default function SignupForm() {
         />
       </div>
 
-      <div className="my-6">
-        <input
-          type="password"
-          placeholder="Password"
-          className={`input input-bordered  w-full  ${
-            isDark ? " bg-black border-white " : " text-black  border-black"
-          }`}
-        />
-      </div>
-      <div className="my-6">
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          className={`input input-bordered  w-full  ${
-            isDark ? " bg-black border-white " : " text-black  border-black"
-          }`}
-        />
-      </div>
-      <div className="flex justify-between">
-        <div>
-          <input type="checkbox" /> <span>Remember me</span>
+      <div
+        className="my-4 sm:my-2"
+    >
+        <div
+          class={`flex items-center w-full   md:max-w-lg border   rounded-lg ${
+            isDark ? "" : "border border-black "
+          } `}
+          style={{
+            border: user.passwordSame ? "1px solid red" : "",
+          }}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter password"
+            required
+            name="password"
+            value={user.password}
+            onChange={handleInputChage}
+            className="  text-[16px] p-4 bg-transparent w-full  border-0 outline-0 outline-none border-none sm:text-xs sm:p-3  "
+          />
+          <div class="flex items-center   ">
+            {showPassword ? (
+              <AiOutlineEye
+                className="text-2xl text-gray-400  cursor-pointer  mr-2 sm:text-sm "
+                onClick={handleShowPassword}
+              />
+            ) : (
+              <AiOutlineEyeInvisible
+                className="text-2xl text-gray-400  cursor-pointer  mr-2 sm:text-sm "
+                onClick={handleShowPassword}
+              />
+            )}
+          </div>
         </div>
       </div>
+      <div className="my-4 sm:my-2 ">
+        <div
+          class={`flex items-center w-full   md:max-w-lg border   rounded-lg ${
+            isDark ? "" : "border border-black "
+          }`}
+          style={{
+            border: user.passwordSame ? "1px solid red" : "",
+          }}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Confirm your password"
+            required
+            name="confirmPassword"
+            value={user.confirmPassword}
+            onChange={handleInputChage}
+            className="  text-[16px] p-4 bg-transparent w-full  border-0 outline-0 outline-none border-none sm:text-xs sm:p-3  "
+          />
+          <div class="flex items-center   ">
+            {showPassword ? (
+              <AiOutlineEye
+                className="text-2xl text-gray-400  cursor-pointer  mr-2 sm:text-sm "
+                onClick={handleShowPassword}
+              />
+            ) : (
+              <AiOutlineEyeInvisible
+                className="text-2xl text-gray-400  cursor-pointer  mr-2 sm:text-sm "
+                onClick={handleShowPassword}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+    
       <button
         className={` my-6 btn  btn-outline border normal-case    px-8 py-4 w-full ${
           isDark
             ? "hover:border-white hover:text-white hover:bg-black bg-white text-black "
             : " bg-black text-white   hover:bg-white hover:text-black hover:border-black"
         }`}>
-        Create Account
+        Create Account {user.loading && <Spinner/>}
       </button>
       <div className=" flex  justify-between items-center">
         <h2
@@ -122,6 +241,6 @@ export default function SignupForm() {
           </span>
         </p>
       </div>
-    </div>
+    </form>
   );
 }

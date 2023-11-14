@@ -1,28 +1,51 @@
-import AppLayoout from '@/components/Layout/AppLayoout'
-import LoginDetails from '@/components/login/Login';
-import { useRouter } from 'next/router';
-import React from 'react'
-import { useSelector } from 'react-redux';
+import AppLayoout from "@/components/Layout/AppLayoout";
+import LoginDetails from "@/components/login/Login";
+import Spinner from "@/components/spinner/Spinner";
+import { setCurrentUserEmail } from "@/redux/storeSlice";
+import { reqOtp } from "@/services/request";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
 function ForgotPasswordform() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
-  const router  = useRouter()
+  const router = useRouter();
+  const [userEmail, setuserEmail] = useState({
+    email: "",
+    loading: false,
+  });
 
-  function handleCreateAccountNav(){
-    router.replace("/signup")
+  const dispatch  = useDispatch()
+
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    setuserEmail({ ...userEmail, [name]: value });
+  }
+
+  async function handleForgottenPassword(e) {
+    e.preventDefault();
+    setuserEmail({ ...userEmail, loading: true });
+    const response = await reqOtp({ email: userEmail.email });
+    const data  = await response.json()
+    if (response.status === 200) {
+      dispatch(setCurrentUserEmail(userEmail.email));
+      toast.success(<div className=" normal-case">OTP sent</div>);
+      router.push({
+        pathname: "/otp",
+        query:{forgotten_password:true}
+      });
+    } else {
+      toast.error(<h2 className=" normal-case">{data.message}</h2>);
+    }
+
+    setuserEmail({ ...userEmail, loading: false });
   }
 
 
-    function handleForgottenPassword() {
-      router.push("/forgotten-password");
-    }
-
-    function handleNext(){
-      router.push("/otp")
-    }
 
   return (
-    <div className=" flex flex-col justify-center">
+    <form onSubmit={handleForgottenPassword} className=" flex flex-col justify-center">
       <h2 className=" lg:text-[18px]  font-normal normal-case opacity-50">
         Enter the email address associated with your account.
       </h2>
@@ -30,12 +53,16 @@ function ForgotPasswordform() {
         <input
           type="email"
           placeholder="Email"
+          name="email"
+          value={userEmail.email}
+          required
+          onChange={handleInputChange}
           className={`input input-bordered  w-full  ${
             isDark ? " bg-black border-white " : " text-black  border-black"
           }`}
         />
       </div>
-      <p className=" lg:text-[18px]  font-normal normal-case opacity-50">
+      <p className=" lg:text-[18px]  font-normal normal-case opacity-50 ">
         We will send you a 6-digit OTP to reset your password
       </p>
       <button
@@ -44,17 +71,16 @@ function ForgotPasswordform() {
             ? "hover:border-white hover:text-white hover:bg-black bg-white text-black "
             : " bg-black text-white   hover:bg-white hover:text-black hover:border-black"
         }`}
-        onClick={handleNext}>
-        Next
+        >
+        Next {userEmail.loading && <Spinner/>}
       </button>
-    </div>
+    </form>
   );
 }
 
 export default function ForgottenPassowrd() {
-    const isDark = useSelector((state) => state.store.toggleMode.isDark);
-  
-  
+  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+
   return (
     <AppLayoout>
       <main className={isDark ? "" : " bg-[#D1D1D1]"}>

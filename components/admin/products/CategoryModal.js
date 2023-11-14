@@ -1,4 +1,4 @@
-import { createCategory, getCookie } from "@/services/request";
+import { createCategory, getCookie, uploadToCloudinary } from "@/services/request";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -39,23 +39,51 @@ setImage({ ...image, [name]: value });
 
  async function handleSubmit(e){
    e.preventDefault()
+
+   const formData  = new FormData();
+   formData.append("upload_preset", "stewart")
+   formData.append("file", image.imageFile)
+
+
+   
    const cookie = getCookie();
   if( !Boolean(image.imageFile ) || !Boolean(image.name)){
     toast.error("Add product image and title");
     return 
   }
     setImage({ ...image, loading: true});
-    const response  = await createCategory(image.imageFile, image.name, cookie)
-    if (response.status === 200) {
-      toast.success("Category created successfully")
-        setImage({ ...image, loading: false, imageFile:"", name:"", imageInput:"" });
-      }else{
-        toast.error("Error occurred while creating category")
-        setImage({ ...image, loading: false });
+    
+    const uploadImage  = await uploadToCloudinary(formData)
+    
+    if (uploadImage?.url){
+      
+      const response = await createCategory(
+        uploadImage?.url,
+        image.name,
+        cookie
+      );
+
+
+      if (response.status === 200) {
+        toast.success("Category created successfully")
+          setImage({ ...image, loading: false, imageFile:"", name:"", imageInput:"" });
+        }else{
+          toast.error("Error occurred while creating category")
+          setImage({ ...image, loading: false });
+      }
     }
 
 
+
   }
+
+    function removeImage() {
+      setImage({
+        ...image,
+        imageInput: "",
+        productImage: "",
+      });
+    }
 
   
 
@@ -64,7 +92,7 @@ setImage({ ...image, [name]: value });
       <dialog id="my_modal_2" className="modal modal-open">
         <form
           onSubmit={handleSubmit}
-          className=" modal-box bg-[#212121]  xl:max-w-5xl lg:max-w-2xl    sm:text-xs text-[white]">
+          className=" modal-box bg-[#212121]  xl:max-w-2xl lg:max-w-2xl    sm:text-xs text-[white]">
           <div className="  mt-0    text-[16px]  font-semibold  p-10">
             <div className=" flex justify-end  ">
               <span
@@ -92,8 +120,8 @@ setImage({ ...image, [name]: value });
                 />
               </div>
 
-              <div className="  p-3 grid grid-cols-2  sm:grid-cols-1">
-                <div className=" h-[250px] max-w-[250px]  my-auto">
+              <div className="  p-3 grid grid-cols-1  sm:grid-cols-1">
+                <div className=" h-[250px] max-w-[250px]  mx-auto my-auto">
                   <img
                     src={
                       image.imageInput ? image.imageInput : "/triangledark.png"

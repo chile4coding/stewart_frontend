@@ -9,114 +9,142 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { createProductColor, createProductSize, getCookie } from "@/services/request";
+import {
+  createProductColor,
+  createProductSize,
+  getCookie,
+  uploadToCloudinary,
+} from "@/services/request";
 import Spinner from "@/components/spinner/Spinner";
 
 export default function AddProductColor() {
   const [image, setImage] = useState({
     imageInput: "",
-    productImage:"",
-    name:"",
-    price:"",
-    salesPrice:"",
-    discount:"",
-    sizeId:"",
-    colorId:"a",
-    loading:false
-  
-
+    productImage: "",
+    name: "",
+    price: "",
+    salesPrice: "",
+    discount: "",
+    sizeId: "",
+    colorId: "a",
+    loading: false,
   });
-  const  [update, setUpdate] = useState(false)
+  const [update, setUpdate] = useState(false);
 
-   const { shop, toggleMode, sizes, singleProduct, singleProductColor, productColors } =
-     useSelector((state) => state.store);
-const router  = useRouter()
+  const {
+    shop,
+    toggleMode,
+    sizes,
+    singleProduct,
+    singleProductColor,
+    productColors,
+  } = useSelector((state) => state.store);
 
-   const { isDark } = toggleMode;
-   
-   useEffect(()=>{
-    
-     
+  const router = useRouter();
 
-    const isAdd = router.asPath.includes("update_color")
-    
-    if(isAdd){
-      setUpdate(true)
-      const   {discount,id,name,price,sales_price,size_id}= singleProductColor
-      setImage({...image,discount, price, salesPrice:sales_price, sizeId:size_id, colorId: id, name })
+  const { isDark } = toggleMode;
+
+  useEffect(() => {
+    const isAdd = router.asPath.includes("update_color");
+
+    if (isAdd) {
+      setUpdate(true);
+      const { discount, id, name, price, sales_price, size_id } =
+        singleProductColor;
+      setImage({
+        ...image,
+        discount,
+        price,
+        salesPrice: sales_price,
+        sizeId: size_id,
+        colorId: id,
+        name,
+      });
     }
-
-
-
-   },[])
-   
+  }, []);
 
   function handleImageInput(e) {
     const selectedImage = e.target.files[0];
     if (selectedImage) {
       const imageURL = URL.createObjectURL(selectedImage);
 
-      setImage({ ...image, imageInput: imageURL,productImage: selectedImage });
+      setImage({ ...image, imageInput: imageURL, productImage: selectedImage });
     }
   }
 
-  function handleInputChange(e){
-    const  {name, value} = e.target
-    setImage({...image, [name]:value});
-
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    setImage({ ...image, [name]: value });
   }
-    function isObjectNotEmpty(obj) {
-      for (const key in obj) {
-        if (obj[key] !== null && obj[key] !== undefined) {
-          if (typeof obj[key] === "string" && obj[key].trim() === "") {
-            return false; // Empty string
-          } else if (Array.isArray(obj[key]) && obj[key].length === 0) {
-            return false; // Empty array
-          }
-        } else {
-          return false; // Undefined or null value
-        }
-      }
-      return true; // Object is not empty
-    }
-
-  async function handleSubmit(e){
-    e.preventDefault()
-const cookie = getCookie();
-        if (isObjectNotEmpty(image)) {
-      setImage({ ...image, loading: true });
-       const response = await createProductColor(image, cookie);
-      if (response.status === 201) {
-        toast.success("Product added successfully");
-         setImage({
-           ...image,
-           imageInput: "",
-           productImage: "",
-           name: "",
-           price: "",
-           salesPrice: "",
-           discount: "",
-           sizeId: "",
-           colorId: "a",
-           loading: false,
-         });
-
-        if (update) {
-          router.push("/admin/products/details");
+  function isObjectNotEmpty(obj) {
+    for (const key in obj) {
+      if (obj[key] !== null && obj[key] !== undefined) {
+        if (typeof obj[key] === "string" && obj[key].trim() === "") {
+          return false; // Empty string
+        } else if (Array.isArray(obj[key]) && obj[key].length === 0) {
+          return false; // Empty array
         }
       } else {
-        toast.error("Error server error, try again");
+        return false; // Undefined or null value
+      }
+    }
+    return true; // Object is not empty
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const cookie = getCookie();
+
+    if (isObjectNotEmpty(image)) {
+      setImage({ ...image, loading: true });
+      const formData = new FormData();
+      formData.append("upload_preset", "stewart");
+      formData.append("file", image.productImage);
+
+      const uploadImage = await uploadToCloudinary(formData);
+
+      if (uploadImage?.url) {
+        const response = await createProductColor(
+          { ...image, productImage: uploadImage.url },
+          cookie
+        );
+
+        if (response.status === 201) {
+          toast.success("Product added successfully");
+          setImage({
+            ...image,
+            imageInput: "",
+            productImage: "",
+            name: "",
+            price: "",
+            salesPrice: "",
+            discount: "",
+            sizeId: "",
+            colorId: "a",
+            loading: false,
+          });
+          if (update) {
+            router.push("/admin/products/details");
+          }
+        } else {
+          toast.error("Error server error, try again");
+        }
       }
     } else {
       toast.error("fill all the field correctly");
     }
-    
-    setImage({...image, lading:false})
+
+    setImage({ ...image, lading: false });
   }
 
- 
+  function removeImage(){
+       setImage({
+         ...image,
+         imageInput: "",
+         productImage: "",
+       });
 
-  
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -234,7 +262,7 @@ const cookie = getCookie();
                         name="sizeId"
                         onChange={handleInputChange}
                         className="radio text-white bg-white"
-                   checked=    {size.id === image.sizeId? true: false}
+                        checked={size.id === image.sizeId ? true : false}
                         value={size.id}
                       />
                       <label className=" w-full">{size.name}</label>
@@ -315,13 +343,15 @@ const cookie = getCookie();
 
                 <label
                   htmlFor="imageupload"
-                  className="flex items-center gap-2">
+                  className="flex items-center gap-2 hover:cursor-pointer ">
                   {" "}
                   <MdModeEdit />
                   Add image
                 </label>
               </div>
-              <div className="flex items-center gap-1  hover:cursor-pointer  hover:text-[#d73300]">
+              <div
+                onClick={removeImage}
+                className="flex items-center gap-1  hover:cursor-pointer  hover:text-[#d73300]">
                 <AiFillCloseSquare className=" text-xl hover:cursor-pointer" />
                 <span className=" text-[#D73300] hover:underline">
                   Remove image

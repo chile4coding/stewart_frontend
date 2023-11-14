@@ -3,8 +3,9 @@ import Items from "@/components/items/Items";
 import AppLayoout from "@/components/Layout/AppLayoout";
 import { AiOutlineDownCircle } from "react-icons/ai";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
+
 
 function SortComponent() {
     const isDark = useSelector((state) => state.store.toggleMode.isDark);
@@ -39,16 +40,22 @@ function SortComponent() {
 }
 export default function Shop() {
   const [show, setShow] = useState(false);
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
-  const router   = useRouter()
+   const {
+     shop,
+     toggleMode,
+   } = useSelector((state) => state.store);
 
+
+
+   const { isDark } = toggleMode;
+  const router   = useRouter()
 
   const handleShowState = () => setShow((prev) => !prev);
   return (
     <AppLayoout>
       <main className=" px-10 sm:px-4">
         <div className="flex  justify-between  items-center mt-10 flex-wrap relative ">
-          <h2>Showing 15 products</h2>
+          <h2>Showing {shop.length } products</h2>
           <button
             onClick={handleShowState}
             className={` btn btn-outline flex normal-case  ${
@@ -61,23 +68,7 @@ export default function Shop() {
         </div>
         <div
           className={`grid xl:grid-cols-4 lg:grid-cols-5 md:grid-cols-4 md:gap-4 sm:grid-cols-3  gap-5  sm:gap-3 my-8 `}>
-          <Items />
-          <Items />
-          <Items />
-
-          <Items />
-          <Items />
-          <Items />
-
-          <Items />
-          <Items />
-          <Items />
-          <Items />
-          <Items />
-          <Items />
-          <Items />
-          <Items />
-          <Items />
+          {shop && shop.length > 0 && shop.map((prod) => <Items  items={prod}/>)}
         </div>
         <div className=" flex justify-center ">
           <button

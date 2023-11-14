@@ -4,7 +4,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import { useSelector } from 'react-redux'
-import {MdOutlineKeyboardArrowDown} from "react-icons/md"
+import {MdKeyboardArrowDown, MdOutlineKeyboardArrowDown} from "react-icons/md"
 import { BsFillChatSquareQuoteFill } from 'react-icons/bs';
 
 
@@ -36,50 +36,24 @@ export default function Inbox() {
         isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"
       }`}>
       <div className=" card-body">
-        <Accordion
-          sx={{
-            backgroundColor: isDark ? "#212121" : "#d1d1d1]",
-            color: isDark ? "#d1d1d1" : "black",
-          }}>
-          <AccordionSummary
-            expandIcon={
-              <MdOutlineKeyboardArrowDown
-                className={`${isDark ? " text-[#d1d1d1]" : " text-[black]"}`}
-              />
-            }
-            aria-controls="panel1a-content"
-            id="panel1a-header">
-            <div className=" flex justify-between items-center w-full">
-              <Typography className="text-[18px] font-semibold">
-                Your order
-              </Typography>
-              <h2 className="mr-4">23/10/2023</h2>
-            </div>
-          </AccordionSummary>
-          <AccordionDetails>
-            <h2 className=" text-[16px] leading-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </h2>
-            <h2 className=" text-[16px] leading-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </h2>
-            <h2 className=" text-[16px] leading-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </h2>
-            <h2 className=" text-[16px] leading-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </h2>
-          </AccordionDetails>
-        </Accordion>
-    
+        <div className="collapse   border-b rounded-none">
+          <input type="checkbox" />
+          <div className="collapse-title  font-normal  flex justify-between pr-2 items-center">
+            <div> Read comment</div>
+            <span className=" justify-self-end  self-center pr-0">
+              <h2 className=" opacity-50">23/2/2023</h2>
+              <MdKeyboardArrowDown />
+            </span>
+          </div>
+          <div className="collapse-content">
+            <p>
+              Once I have a better understanding of you, I can start to create
+              content that is tailored to your specific needs. For example, I
+              could write a blog post about your interests, create a social
+              media profile for you, or even write a resume or cover letter.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

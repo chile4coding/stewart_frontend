@@ -5,21 +5,48 @@ import { BiSolidUser } from "react-icons/bi";
 import ActiveLink from "../ActiveLink";
 import Modal from "../modal/Modal";
 import {AiOutlineMenu} from "react-icons/ai"
-import { toggler } from "@/redux/storeSlice";
+
 import { useSelector, useDispatch } from "react-redux";
 import { colors } from "@mui/material";
+import {
+  getBestSelling,
+  getCategory,
+  getNewArrival,
+  getShop,
+  toggler,
+  storeGetProducts as getStoreProducts,
+} from "@/redux/storeSlice";
+import { useRouter } from "next/router";
 
 export default function Header() {
   const [dark, seDark] = useState(true);
-const isDark = useSelector((state) => state.store.toggleMode.isDark);
+    const {
+      shop,
+      toggleMode,
+      singleProduct,
+      category,
+      newArrival,
+      bestSelling,
+      cart,
+      products: product,
+    } = useSelector((state) => state.store);
+    const { isDark } = toggleMode;
 const dispatch = useDispatch();
-
+const router =  useRouter()
 const toggle = () => {
   dispatch(toggler());
 };
   const handleShowModal = () => {
     window.my_modal_2.showModal();
   };
+
+  function handleShop() {
+    dispatch(getShop(product));
+  }
+    function handleUserNav() {
+      router.push("/my_account");
+    }
+
   return (
     <>
       <Modal />
@@ -46,7 +73,9 @@ const toggle = () => {
 
         <nav className="navbar-center sm:hidden md:hidden   gap-6">
           <ActiveLink href="/">Home</ActiveLink>
-          <ActiveLink href="/shop">Shop</ActiveLink>
+          <ActiveLink href="/shop">
+            <span onClick={handleShop}>Shop</span>
+          </ActiveLink>
           <ActiveLink href="/checkout">Checkout</ActiveLink>
         </nav>
         <div className="navbar-end ">
@@ -66,7 +95,7 @@ const toggle = () => {
             </div>
             <div className="indicator ">
               <span className="indicator-item badge  bg-[red]  text-[#fff]  ">
-                2
+                {cart?.length}
               </span>
 
               <BsFillCartFill
@@ -77,7 +106,7 @@ const toggle = () => {
               />
             </div>
             <div className="sm:hidden md:hidden">
-              <BiSolidUser className="text-[24px]" />
+              <BiSolidUser className="text-[24px] cursor-pointer" onClick={handleUserNav} />
             </div>
             <div>
               {isDark ? (

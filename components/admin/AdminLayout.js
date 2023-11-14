@@ -36,6 +36,7 @@ function AdminHeader() {
       async function getCategory(cookie){
   
      const data = await getProducts(cookie);
+
      const products = await getShopProducts(cookie);
   
    

@@ -8,7 +8,10 @@ export default function SizeModal({ handleCloseCategoryModal, productId }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 const [sizeDetails, setSizeDetails] = useState({
   name:"",
-  productId:""
+  productId:"",
+  waist:"",
+  length:"",
+  sleaves:""
 })
   const router = useRouter();
   useEffect(()=>{
@@ -21,6 +24,7 @@ setSizeDetails({...sizeDetails, [name]:value})
  async function handleSubmitCreateSize(e){
 e.preventDefault()
 const cookie = getCookie();
+
 const response = await createProductSize(sizeDetails, cookie);
 if(response.ok){
   toast.success("Product size created successfully")
@@ -29,6 +33,8 @@ if(response.ok){
 }
 
   }
+
+
   
   return (
     <>
@@ -36,7 +42,7 @@ if(response.ok){
         <form
           onSubmit={handleSubmitCreateSize}
           method="dialog"
-          className=" modal-box bg-[#212121]  xl:max-w-5xl lg:max-w-2xl    sm:text-xs text-[white]">
+          className=" modal-box bg-[#212121]  xl:max-w-2xl lg:max-w-2xl     sm:text-xs text-[white]">
           <div className="  mt-0    text-[16px]  font-semibold  p-10">
             <div className=" flex justify-end  ">
               <span
@@ -48,6 +54,7 @@ if(response.ok){
             <div className="grid grid-cols-5  border-b-2 border-white py-4">
               <h2 className=" col-span-2">Add Product name</h2>
             </div>
+            <div className=" grid grid-cols-2 gap-5 sm:grid-cols-1">
 
             <div className=" mt-4   ">
               <input
@@ -63,6 +70,50 @@ if(response.ok){
                 }`}
               />
             </div>
+            <div className=" mt-4   ">
+              <input
+                type="text"
+                name="waist"
+                value={sizeDetails.waist}
+                onChange={handleSizeInput}
+                placeholder="Enter waist size in ( cm )"
+                className={`input input-bordered  w-full ${
+                  isDark
+                    ? " bg-black border-white "
+                    : " text-black  border-black"
+                }`}
+              />
+            </div>
+            <div className=" mt-4   ">
+              <input
+                type="text"
+                name="length"
+                value={sizeDetails.length}
+                onChange={handleSizeInput}
+                placeholder="Enter length ( cm )"
+                className={`input input-bordered  w-full ${
+                  isDark
+                    ? " bg-black border-white "
+                    : " text-black  border-black"
+                }`}
+              />
+            </div>
+            <div className=" mt-4   ">
+              <input
+                type="text"
+                name="sleaves"
+                value={sizeDetails.sleaves}
+                onChange={handleSizeInput}
+                placeholder="Enter sleaves ( cm )"
+                className={`input input-bordered  w-full ${
+                  isDark
+                    ? " bg-black border-white "
+                    : " text-black  border-black"
+                }`}
+              />
+            </div>
+            </div>
+
           </div>
 
           <div className=" flex justify-center  mb-8">

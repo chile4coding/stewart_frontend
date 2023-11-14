@@ -2,12 +2,28 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import AppLayoout from "@/components/Layout/AppLayoout";
 import Hero from "@/components/homepage/Hero";
+import {
+  getCookie,
+  getCurrentUser,
+  getProducts as getProductCategory,
+  getShopProducts,
+  
+} from "@/services/request";
 
 import Items, { ItemCategory } from "@/components/items/Items";
 const inter = Inter({ subsets: ["latin"] });
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+import {
+  getBestSelling,
+  getCategory,
+  getNewArrival,
+  getShop,
+  setCartOnLoad,
+  storeGetProducts as getStoreProducts,
+  setGlobalLoaoding,
+  setUser,
+} from "@/redux/storeSlice";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -20,89 +36,76 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { GrNext, GrPrevious } from "react-icons/gr";
 import { useRouter } from "next/router";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef }) {
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef , items}) {
+ const { shop, toggleMode, singleProduct,cart,  category, newArrival, bestSelling } =
+   useSelector((state) => state.store);
 
-  return (
-    <div className="   w-full flex flex-wrap ">
-      <Swiper
-        spaceBetween={50}
-        slidesPerView={1}
-        autoplay={{
-          delay: 2500,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: false,
-        }}
-        breakpoints={{
-          // Define breakpoints for different screen sizes
-          320: {
-            slidesPerView: 3,
-            spaceBetween: 10,
-          },
-          760: {
-            slidesPerView: 4,
-            spaceBetween: 20,
-          },
-          1100: {
-            slidesPerView: 6,
-            spaceBetween: 20,
-          },
-        }}
-        rewind={true}
-        navigation={{
-          prevEl: swiperNavNexRef.current,
-          nextEl: swiperNavPrevRef.current,
-        }}
-     
-        Pagination={{
-          clickable: true,
-        }}
-        loop
-        modules={[Autoplay, Navigation]}
-        // slidesPerView={2}
-        onInit={(swiper) => {
-          swiper.params.navigation.prevEl = swiperNavPrevRef.current;
-          swiper.params.navigation.nextEl = swiperNavNexRef.current;
-          swiper.navigation.init();
-          swiper.navigation.update();
-        }}
-    
 
-        className={`mySwiper   mx-auto ${isDark ? "" : " bg-[white]"}`}>
-        <SwiperSlide className=" ">
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-      </Swiper>
-    </div>
-  );
+ const { isDark } = toggleMode;
+ if(newArrival){
+   return (
+     <div className="   w-full flex flex-wrap ">
+       <Swiper
+         spaceBetween={50}
+         slidesPerView={1}
+         autoplay={{
+           delay: 2500,
+           disableOnInteraction: false,
+         }}
+         pagination={{
+           clickable: false,
+         }}
+         breakpoints={{
+           // Define breakpoints for different screen sizes
+           320: {
+             slidesPerView: 3,
+             spaceBetween: 10,
+           },
+           760: {
+             slidesPerView: 4,
+             spaceBetween: 20,
+           },
+           1100: {
+             slidesPerView: 6,
+             spaceBetween: 20,
+           },
+         }}
+         rewind={true}
+         navigation={{
+           prevEl: swiperNavNexRef.current,
+           nextEl: swiperNavPrevRef.current,
+         }}
+         Pagination={{
+           clickable: true,
+         }}
+         loop
+         modules={[Autoplay, Navigation]}
+         // slidesPerView={2}
+         onInit={(swiper) => {
+           swiper.params.navigation.prevEl = swiperNavPrevRef.current;
+           swiper.params.navigation.nextEl = swiperNavNexRef.current;
+           swiper.navigation.init();
+           swiper.navigation.update();
+         }}
+         className={`mySwiper   mx-auto ${isDark ? "" : " bg-[white]"}`}>
+         {items && items.length > 0 && 
+           items.map((newIn) => (
+             <SwiperSlide className=" " key={newIn.id}>
+               <Items  items={newIn}/>
+             </SwiperSlide>
+           ))}
+       </Swiper>
+     </div>
+   );
+
+ }
 }
 
 
-function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef }) {
+function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
+
+
 
   return (
     <div className="   w-full flex flex-wrap  ">
@@ -138,7 +141,6 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef }) {
         }}
         modules={[Autoplay, Navigation]}
         loop
-    
         onInit={(swiper) => {
           swiper.params.navigation.prevEl = swiperNavPrevRef.current;
           swiper.params.navigation.nextEl = swiperNavNexRef.current;
@@ -148,30 +150,11 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef }) {
         // slidesPerView={2}
 
         className={`mySwiper    mx-auto ${isDark ? "" : " bg-[white]"}`}>
-        <SwiperSlide className=" ">
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Items />
-        </SwiperSlide>
+        {items && items?.length  > 0 &&  items.map((item) => (
+          <SwiperSlide className=" ">
+            <Items items={item} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );
@@ -179,226 +162,251 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef }) {
 
 export default function Home() {
   const router = useRouter();
+  const dispatch  =  useDispatch()
   const swiperNavPrevRef = useRef(null);
   const swiperNavNexRef = useRef(null);
   const swiperNavSecondPrevRef = useRef(null);
   const swiperNavSecondNexRef = useRef(null);
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+
+    const {
+      shop,
+      toggleMode,
+      singleProduct,
+      category,
+      newArrival,
+      bestSelling,
+      cart,
+    
+      products : product,
+    } = useSelector((state) => state.store);
+      const { isDark } = toggleMode;
+
+      
+      useEffect(()=>{
+        const token = getCookie()
+
+
+        if(!cart){
+          dispatch(setCartOnLoad());
+        }
+        async function allProduct(){
+
+          if(Boolean(token)){
+            const  response  =     await  getCurrentUser(token)
+            if(response.status === 200){
+              const user  = await response.json()
+              dispatch(setUser(user?.user));
+            }
+
+          }
+
+ dispatch(setGlobalLoaoding(true))
+          const {category} = await getProductCategory()
+
+          const {products} = await getShopProducts()
+         
+          if(products){
+            dispatch(getStoreProducts(products));
+            dispatch(getNewArrival(products));
+            dispatch(getBestSelling(products));
+          }
+
+          if(category){
+           
+            dispatch(getCategory(category))
+          }
+          
+   
+        }
+        dispatch(setGlobalLoaoding(false));
+        
+        allProduct()
+      },[])
+      
+
+  
+
 
   function handleSeeAllNewIn(){
-    router.push("/shop" , "/shop/new-in")
+ dispatch(getShop(newArrival));
+    router.push("New Arrival" ,"/shop" )
   }
   function handleSeeAllBestSelling(){
-    router.push("/shop/", "/shop/best-selling");
+    dispatch(getShop(bestSelling))
+    router.push("Best Selling", "/shop");
   }
-  return (
-    <AppLayoout>
-      <main className="px-10 sm:px-4">
-        <secition className=" ">
-          <Hero />
-        </secition>
-        <section className="  sm:my-10 pt-14 sm:pt-0">
-          <div className="flex  justify-center items-center  gap-8  sm:gap-5  sm:my-0  ">
-            <p
-              className={` flex-1  ${
-                isDark ? " border-b border-b-white" : " border-b border-b-black"
-              }`}></p>
-            <p className="text-[30px] font-semibold sm:text-sm  ">New in</p>
-            <p
-              className={` flex-1  ${
-                isDark ? " border-b border-b-white" : " border-b border-b-black"
-              }`}></p>
-          </div>
-          <div className="  flex justify-end items-center   sm:pr-4  normal-case ">
-            <button
-              className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
-                isDark
-                  ? "hover:border-white hover:bg-black hover:text-white"
-                  : " bg-black text-white hover:border-black"
-              }  `}
-              onClick={handleSeeAllNewIn}>
-              See All
-            </button>
-          </div>
 
-          <div className="  icon-nav-container ">
-            <div>
-              <ItemSwiper
-                swiperNavPrevRef={swiperNavPrevRef}
-                swiperNavNexRef={swiperNavNexRef}
-              />
-            </div>
-            <div ref={swiperNavNexRef} className="swiperNavPrev">
-              <MdNavigateBefore
-                className={` text-2xl font-bold ${
+
+ 
+
+
+    return (
+      <AppLayoout>
+        <main className="px-10 sm:px-4">
+          <secition className=" ">
+            <Hero />
+          </secition>
+          <section className="  sm:my-10 pt-14 sm:pt-0">
+            <div className="flex  justify-center items-center  gap-8  sm:gap-5  sm:my-0  ">
+              <p
+                className={` flex-1  ${
                   isDark
-                    ? "text-black  bg-white rounded-full"
-                    : "text-white bg-black rounded-full"
-                }`}
-              />
-            </div>
-            <div ref={swiperNavPrevRef} className="swiperNavNext">
-              <MdNavigateNext
-                className={` text-2xl font-bold ${
+                    ? " border-b border-b-white"
+                    : " border-b border-b-black"
+                }`}></p>
+              <p className="text-[30px] font-semibold sm:text-sm  ">New in</p>
+              <p
+                className={` flex-1  ${
                   isDark
-                    ? "text-black  bg-white rounded-full"
-                    : "text-white bg-black rounded-full"
-                }`}
-              />
+                    ? " border-b border-b-white"
+                    : " border-b border-b-black"
+                }`}></p>
             </div>
-          </div>
-        </section>
-        <section className="   lg:my-16 xl:my-14">
-          <div className="flex  justify-center items-center   gap-8  sm:gap-5  ">
-            <p
-              className={`  flex-1 ${
-                isDark ? " border-b border-b-white" : " border-b border-b-black"
-              }`}></p>
-            <p className="text-[30px] font-semibold sm:text-sm   sm:mb-0">
-              Best Selling
-            </p>
-            <p
-              className={` flex-1  ${
-                isDark ? " border-b border-b-white" : " border-b border-b-black"
-              }`}></p>
-          </div>
-
-          <div className="  flex justify-end items-center  sm:pr-4  normal-case">
-            <button
-              className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
-                isDark
-                  ? "hover:border-white hover:bg-black hover:text-white"
-                  : " bg-black text-white hover:border-black"
-              }  `}
-              onClick={handleSeeAllBestSelling}>
-              See All
-            </button>
-          </div>
-          <div className="icon-nav-container">
-            <BestSellingSwippper
-              swiperNavPrevRef={swiperNavSecondPrevRef}
-              swiperNavNexRef={swiperNavSecondNexRef}
-            />
-
-            <div ref={swiperNavSecondPrevRef} className="swiperNavPrev">
-              <MdNavigateBefore
-                className={` text-2xl font-bold ${
+            <div className="  flex justify-end items-center   sm:pr-4  normal-case ">
+              <button
+                className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
                   isDark
-                    ? "text-black  bg-white rounded-full"
-                    : "text-white bg-black rounded-full"
-                }`}
-              />
+                    ? "hover:border-white hover:bg-black hover:text-white"
+                    : " bg-black text-white hover:border-black"
+                }  `}
+                onClick={handleSeeAllNewIn}>
+                See All
+              </button>
             </div>
-            <div ref={swiperNavSecondNexRef} className="swiperNavNext">
-              <MdNavigateNext
-                className={` text-2xl font-bold ${
+
+            <div className="  icon-nav-container ">
+              <div>
+                <ItemSwiper
+                  items={newArrival}
+                  swiperNavPrevRef={swiperNavPrevRef}
+                  swiperNavNexRef={swiperNavNexRef}
+                />
+              </div>
+              <div ref={swiperNavNexRef} className="swiperNavPrev">
+                <MdNavigateBefore
+                  className={` text-2xl font-bold ${
+                    isDark
+                      ? "text-black  bg-white rounded-full"
+                      : "text-white bg-black rounded-full"
+                  }`}
+                />
+              </div>
+              <div ref={swiperNavPrevRef} className="swiperNavNext">
+                <MdNavigateNext
+                  className={` text-2xl font-bold ${
+                    isDark
+                      ? "text-black  bg-white rounded-full"
+                      : "text-white bg-black rounded-full"
+                  }`}
+                />
+              </div>
+            </div>
+          </section>
+          <section className="   lg:my-16 xl:my-14">
+            <div className="flex  justify-center items-center   gap-8  sm:gap-5  ">
+              <p
+                className={`  flex-1 ${
                   isDark
-                    ? "text-black  bg-white rounded-full"
-                    : "text-white bg-black rounded-full"
-                }`}
-              />
+                    ? " border-b border-b-white"
+                    : " border-b border-b-black"
+                }`}></p>
+              <p className="text-[30px] font-semibold sm:text-sm   sm:mb-0">
+                Best Selling
+              </p>
+              <p
+                className={` flex-1  ${
+                  isDark
+                    ? " border-b border-b-white"
+                    : " border-b border-b-black"
+                }`}></p>
             </div>
-          </div>
-        </section>
-        <section className=" mb-16 ">
-          <div className="flex  justify-center items-center   gap-8  sm:gap-5  sm:my-8 ">
-            <p className="  flex-1"></p>
-            <p className="text-[30px] font-semibold sm:text-sm  ">
-              Shop by Categories
-            </p>
-            <p className="flex-1"></p>
-          </div>
-          <div className="  grid  lg:grid-cols-6   md:grid-cols-4  sm:grid-cols-3 gap-5 sm:gap-3  ">
-            <ItemCategory />
-            <ItemCategory />
-            <ItemCategory />
-            <ItemCategory />
-            <ItemCategory />
-            <ItemCategory />
 
-            {/* <Swiper
-              spaceBetween={50}
-              slidesPerView={1}
-              autoplay={{
-                delay: 2500,
-                disableOnInteraction: false,
-              }}
-              pagination={{
-                clickable: true,
-              }}
-              breakpoints={{
-                // Define breakpoints for different screen sizes
-                320: {
-                  slidesPerView: 3,
-                  spaceBetween: 30,
-                },
-                760: {
-                  slidesPerView: 2,
-                  spaceBetween: 30,
-                },
-                1100: {
-                  slidesPerView: 4,
-                  spaceBetween: 40,
-                },
-              }}
-              rewind={true}
-              navigation={false}
-              modules={[Autoplay, Navigation]}
-              // slidesPerView={2}
-              className="mySwiper  mx-auto">
-              <SwiperSlide className="">
-                <ItemCategory />
-              </SwiperSlide>
-              <SwiperSlide className="">
-                <ItemCategory />
-              </SwiperSlide>
-              <SwiperSlide className="">
-                <ItemCategory />
-              </SwiperSlide>
-              <SwiperSlide className="">
-                <ItemCategory />
-              </SwiperSlide>
-              <SwiperSlide className="">
-                <ItemCategory />
-              </SwiperSlide>
-              <SwiperSlide className="">
-                <ItemCategory />
-              </SwiperSlide>
-              <SwiperSlide className="">
-                <ItemCategory />
-              </SwiperSlide>
-            </Swiper> */}
-          </div>
-        </section>
+            <div className="  flex justify-end items-center  sm:pr-4  normal-case">
+              <button
+                className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
+                  isDark
+                    ? "hover:border-white hover:bg-black hover:text-white"
+                    : " bg-black text-white hover:border-black"
+                }  `}
+                onClick={handleSeeAllBestSelling}>
+                See All
+              </button>
+            </div>
+            <div className="icon-nav-container">
+              {bestSelling && (
+                <BestSellingSwippper
+                  items={bestSelling}
+                  swiperNavPrevRef={swiperNavSecondPrevRef}
+                  swiperNavNexRef={swiperNavSecondNexRef}
+                />
+              )}
 
-        <section
-          className={`accountbg   card border grid grid-cols-2 p-10 sm:grid-cols-1 sm:gap-4 mb-20 ${
-            isDark ? "turndark" : "turnlight"
-          }`}>
-          <div className=" self-center sm:order-1">
-            <h2 className="text-[48px]  sm:text-center font-semibold text-white   sm:text-[36px] sm:font-normal flex  max-w-md  md:text-lg">
-              Sign up now to get 10% off your first order
-            </h2>
+              <div ref={swiperNavSecondPrevRef} className="swiperNavPrev">
+                <MdNavigateBefore
+                  className={` text-2xl font-bold ${
+                    isDark
+                      ? "text-black  bg-white rounded-full"
+                      : "text-white bg-black rounded-full"
+                  }`}
+                />
+              </div>
+              <div ref={swiperNavSecondNexRef} className="swiperNavNext">
+                <MdNavigateNext
+                  className={` text-2xl font-bold ${
+                    isDark
+                      ? "text-black  bg-white rounded-full"
+                      : "text-white bg-black rounded-full"
+                  }`}
+                />
+              </div>
+            </div>
+          </section>
+          <section className=" mb-16 ">
+            <div className="flex  justify-center items-center   gap-8  sm:gap-5  sm:my-8 ">
+              <p className="  flex-1"></p>
+              <p className="text-[30px] font-semibold sm:text-sm  ">
+                Shop by Categories
+              </p>
+              <p className="flex-1"></p>
+            </div>
+            <div className="  grid  lg:grid-cols-6  xl:grid-cols-6   md:grid-cols-4  sm:grid-cols-3 gap-5 sm:gap-3  ">
+              {category &&
+                category.length > 1 &&
+                category.map((cat) => (
+                  <ItemCategory key={cat.id} category={cat} />
+                ))}
+            </div>
+          </section>
 
-            <button className="btn sm:btn-sm sm:hidden  btn-outline  border  border-white normal-case font-semibold text-white">
-              Create Account
-            </button>
-          </div>
-          <div className=" sm:order-2">
-            <Image
-              src="/advert.png"
-              height={286}
-              width={571}
-              alt="account registration"
-            />
-            <div className=" flex justify-center mt-6 md:hidden lg:hidden xl:hidden">
-              <button className="btn sm:btn-sm    btn-outline  border  border-white normal-case font-semibold text-white">
+          <section
+            className={`accountbg   card border grid grid-cols-2 p-10 sm:grid-cols-1 sm:gap-4 mb-20 ${
+              isDark ? "turndark" : "turnlight"
+            }`}>
+            <div className=" self-center sm:order-1">
+              <h2 className="text-[48px]  sm:text-center font-semibold text-white   sm:text-[36px] sm:font-normal flex  max-w-md  md:text-lg">
+                Sign up now to get 10% off your first order
+              </h2>
+
+              <button className="btn sm:btn-sm sm:hidden  btn-outline  border  border-white normal-case font-semibold text-white">
                 Create Account
               </button>
             </div>
-          </div>
-        </section>
-      </main>
-    </AppLayoout>
-  );
+            <div className=" sm:order-2">
+              <Image
+                src="/advert.png"
+                height={286}
+                width={571}
+                alt="account registration"
+              />
+              <div className=" flex justify-center mt-6 md:hidden lg:hidden xl:hidden">
+                <button className="btn sm:btn-sm    btn-outline  border  border-white normal-case font-semibold text-white">
+                  Create Account
+                </button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </AppLayoout>
+    );
+  
 }

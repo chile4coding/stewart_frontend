@@ -13,9 +13,16 @@ export default function middleware(req, res) {
     url.includes("/admin/orders") ||
     url.includes("/admin/reviews") ||
     url.includes("/admin/customers") ||
-    url.includes("/admin/transactions") 
-    url.includes("/admin/settings") 
+    url.includes("/admin/transactions") ||
+    url.includes("/my_account") ||
+    url.includes("/orders") ||
+    url.includes("/messages") ||
+    url.includes("/saved_items") ||
+    url.includes("/reviews") ||
+    url.includes("/admin/settings"); 
   if (!verify && checkUr) {
-      return NextResponse.redirect("http://localhost:3000/login");
+      return NextResponse.redirect(
+        "https://stewart-frontend-chile4coding.vercel.app/login"
+      );
   }
 }

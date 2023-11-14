@@ -11,7 +11,12 @@ import namer from "color-namer";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { createProduct, getCookie } from "@/services/request";
+import {
+  createCategory,
+  createProduct,
+  getCookie,
+  uploadToCloudinary,
+} from "@/services/request";
 import Spinner from "@/components/spinner/Spinner";
 
 export default function AddProducts() {
@@ -28,6 +33,7 @@ export default function AddProducts() {
     productId: "a",
     salesPrice: "",
     categoryId: "",
+    short_desc:"",
     loading: false,
   });
 
@@ -37,7 +43,6 @@ export default function AddProducts() {
   );
 
   useEffect(() => {
-     
     const isAdd = router.asPath.includes("update");
 
     if (isAdd) {
@@ -64,15 +69,15 @@ export default function AddProducts() {
         initialSize: initial_size,
         salesPrice: sales_price,
         productId: id,
-        categoryId:category_id
+        categoryId: category_id,
       });
-     
     }
   }, []);
 
   const { isDark } = toggleMode;
   function handleImageInput(e) {
     const selectedImage = e.target.files[0];
+
     if (selectedImage) {
       const imageURL = URL.createObjectURL(selectedImage);
       setImage({ ...image, imageInput: imageURL, productImage: selectedImage });
@@ -101,35 +106,59 @@ export default function AddProducts() {
   async function handleSubmit(e) {
     e.preventDefault();
     const cookie = getCookie();
+
+    const formData = new FormData();
+    formData.append("upload_preset", "stewart");
+    formData.append("file", image.productImage);
+
     if (isObjectNotEmpty(image)) {
       setImage({ ...image, loading: true });
-      const response = await createProduct(image, cookie);
-      if (response.status === 201) {
-        toast.success("Product added successfully");
+      const uploadImage = await uploadToCloudinary(formData);
 
-        if (upadetPage) {
-          router.push("/admin/products");
+      if (uploadImage?.url) {
+       
+
+        const response = await createProduct(
+          { ...image, productImage: uploadImage.url },
+          cookie
+        );
+      
+        if (response.status === 201) {
+          toast.success("Product added successfully");
+
+             setImage({
+               ...image,
+               loading: false,
+               name: "",
+               description: "",
+               price: "",
+               discount: "",
+               initialColor: "",
+               initialSize: "",
+               productId: "a",
+               categoryId: "",
+               productImage: "",
+               imageInput: "",
+               short_desc:"",
+               loading: false,
+             });
+
+          if (upadetPage) {
+            router.push("/admin/products");
+          }
+   
+        } else {
+          toast.error("Error server error, try again");
         }
-      } else {
-        toast.error("Error server error, try again");
       }
+
     } else {
       toast.error("fill all the field correctly");
     }
 
     setImage({
       ...image,
-      loading: false,
-      name: "",
-      description: "",
-      price: "",
-      discount: "",
-      initialColor: "",
-      initialSize: "",
-      productId: "a",
-      categoryId: "",
-      productImage: "",
-      imageInput: "",
+
       loading: false,
     });
   }
@@ -148,6 +177,17 @@ export default function AddProducts() {
                 isDark ? " bg-black border-white " : " text-black  border-black"
               }`}
             />
+          </div>
+          <div className=" my-8   ">
+            <textarea
+              rows="2"
+              name="short_desc"
+              value={image.short_desc}
+              onChange={handleProductInput}
+              placeholder="Short  description"
+              className={` textarea  w-full ${
+                isDark ? " bg-black border-white " : " text-black  border-black"
+              }`}></textarea>
           </div>
           <div className=" my-8   ">
             <textarea
@@ -191,7 +231,7 @@ export default function AddProducts() {
 
                 <label
                   htmlFor="imageupload"
-                  className="flex items-center gap-2">
+                  className="flex items-center gap-2 cursor-pointer">
                   {" "}
                   <MdModeEdit />
                   Add image

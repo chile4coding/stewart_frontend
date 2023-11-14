@@ -6,18 +6,43 @@ import {GrClose } from "react-icons/gr"
 import ActiveLink from '../ActiveLink';
 import AppFooter from '../Footer/Footer';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggler } from '@/redux/storeSlice';
 
+import {
+  getBestSelling,
+  getCategory,
+  getNewArrival,
+  getShop,
+  toggler,
+  storeGetProducts as getStoreProducts,
+} from "@/redux/storeSlice";
 
 
 
 export default function AppLayoout({children}) {
     const [dark, seDark] = useState(true);
-  
-    const isDark  = useSelector(state=>state.store.toggleMode.isDark)
+     const {
+       shop,
+       toggleMode,
+       singleProduct,
+       category,
+       newArrival,
+       bestSelling,
+       products: product,
+     } = useSelector((state) => state.store);
+     const { isDark } = toggleMode;
+     const dispatch =  useDispatch()
   const toggle  = ()=>{
         dispatch(toggle())
       }
+
+function handleShop(){
+
+  
+  dispatch(getShop(product))
+}
+
+
+
   return (
     <>
       <div className={isDark ? "bg-black" : "#FAFAFA"}>
@@ -40,7 +65,9 @@ export default function AppLayoout({children}) {
               <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
               <ul
                 className={`menu px-6 flex flex-col gap-6  w-52 h-full text-base-content sticky top-0  ${
-                  isDark ? " bg-[#6b6b6b] text-white" : "bg-[#e4e3e3] text-black "
+                  isDark
+                    ? " bg-[#6b6b6b] text-white"
+                    : "bg-[#e4e3e3] text-black "
                 }`}>
                 <div className="flex  justify-end items-center w-full ">
                   <label
@@ -52,7 +79,9 @@ export default function AppLayoout({children}) {
                 </div>
 
                 <ActiveLink href="/">Home</ActiveLink>
-                <ActiveLink href="/shop">Shop</ActiveLink>
+                <ActiveLink href="/shop">
+                  <span onClick={handleShop}>Shop</span>
+                </ActiveLink>
                 <ActiveLink href="/checkout">Checkout</ActiveLink>
                 <ActiveLink href="/login">My Account</ActiveLink>
               </ul>

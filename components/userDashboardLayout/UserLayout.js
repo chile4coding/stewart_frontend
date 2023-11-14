@@ -4,25 +4,40 @@ import AppFooter from "../Footer/Footer";
 import { GrClose } from "react-icons/gr";
 import { UserActiveLink } from "../ActiveLink";
 import { AiFillStar, AiOutlineMenu } from "react-icons/ai";
-import { BsFillCartFill } from "react-icons/bs";
+import { BsFillCartFill, BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { BiMessageSquareDetail, BiSolidUser } from "react-icons/bi";
-import { toggler } from "@/redux/storeSlice";
+import { setOrderSearch, toggler } from "@/redux/storeSlice";
 import { useRouter } from "next/router";
 import { MdFavorite } from "react-icons/md";
 import {TbLogout}  from "react-icons/tb"
 import LogoutModal from "./logout/LogoutModal";
+import Modal from "../modal/Modal";
+import Cookies from "js-cookie";
+
 
 function UserHeader() {
   const [title, setTitle] = useState("");
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
-  const dispatch = useDispatch();
+   const {
+     shop,
+     toggleMode,
+     singleProduct,
+     category,
+     newArrival,
+     bestSelling,
+     cart,
+     orders,
+     user,
+     products: product,
+   } = useSelector((state) => state.store);
+   const { isDark } = toggleMode; 
+    const dispatch = useDispatch();
+   const [search, setSearch]= useState("")
 
-  
   const router = useRouter();
   useEffect(() => {
     if (router.pathname === "/my_account") {
       setTitle("Account Overview");
-    } else if (router.pathname.includes("/orders")) {
+    } else if (router.pathname ==="/orders") {
       setTitle("Orders");
     } else if (router.pathname === "/messages") {
       setTitle("Messages");
@@ -36,8 +51,30 @@ function UserHeader() {
   const handleShowModal = () => {
     window.my_modal_2.showModal();
   };
+
+  function handleUserNav(){
+    router.push("/my_account")
+  }
+  function handleInputChange(e){
+const {name, value} = e.target
+if (title === "Orders") {
+  dispatch(setOrderSearch({ orders: user.orders, search:value }));
+}
+setSearch(prev=>value)
+  }
+
+  function handleSearchSubmit(e){
+e.preventDefault()
+
+if (title === "Orders") {
+  dispatch(setOrderSearch({orders:user.orders, search}))
+  
+}
+  }
+ 
   return (
     <>
+      <Modal />
       <div
         className={`navbar  lg:px-10  md:px-5 sm:px-4  sticky top-0   opacity-95 w-full   py-4 ${
           isDark ? "" : " bg-[#fff] text-black"
@@ -60,10 +97,12 @@ function UserHeader() {
         </div>
 
         {title === "Orders" && (
-          <div className="w-full ">
+          <form onSubmit={handleSearchSubmit} className="w-full ">
             <div className="    w-full  ">
               <input
                 type="text"
+                value={search}
+                onChange={handleInputChange}
                 placeholder="search "
                 className={`input   input-bordered border-collapse  w-full  input-sm  ${
                   isDark ? "border-white bg-transparent" : " border-[black] "
@@ -71,14 +110,16 @@ function UserHeader() {
                 style={{ color: !isDark && "black !important" }}
               />
             </div>
-          </div>
+          </form>
         )}
 
         <div className="navbar-end ">
           <div className="flex gap-6 items-center  ">
-            <div className="indicator ">
+            <div
+              className="indicator  cursor-pointer"
+              onClick={handleShowModal}>
               <span className="indicator-item badge  bg-[red]  text-[#fff]  ">
-                2
+                {cart?.length}
               </span>
 
               <BsFillCartFill
@@ -88,16 +129,16 @@ function UserHeader() {
               />
             </div>
             <div className="sm:hidden md:hidden">
-              <BiSolidUser className="text-[24px]" />
+              <BiSolidUser className="text-[24px] cursor-pointer" onClick={handleUserNav} />
             </div>
             <div>
-              <input
-                type="checkbox"
-                className="toggle"
-                checked={isDark}
-                onClick={toggle}
-              />
-              <h2>{isDark ? "Light" : "Dark"}</h2>
+              {isDark ? (
+                <BsFillSunFill onClick={toggle} className=" cursor-pointer" />
+              ) : (
+                <BsFillMoonFill onClick={toggle} className=" cursor-pointer" />
+              )}
+
+              {/* <input type="checkbox" className="toggle" checked={isDark} /> */}
             </div>
           </div>
         </div>
@@ -108,14 +149,19 @@ function UserHeader() {
 
 export default function UserLayout({ children }) {
   const  [show, setShow] = useState(false)
+  const router = useRouter();
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
-function handleShowModal(){
-   window.my_modal_2?.showModal();
-  setShow(prevShow=>!prevShow)
+
+
+function signOut() {
+  Cookies.remove("_stewart_collection_token");
+
+  router.push("/");
 }
 
   return (
     <div className={isDark ? "bg-black" : "#FAFAFA"}>
+    
       <div
         className={`  max-w-[1440px]  h-full  mx-auto  ${
           isDark ? "turndark" : "turnlight"
@@ -140,7 +186,7 @@ function handleShowModal(){
               <div className="flex  justify-end items-center w-full ">
                 <label
                   tabIndex={0}
-                  className="btn-circle drawer-button btn lg:hidden"
+                  className="btn-circle drawer-button btn lg:hidden xl:hidden"
                   htmlFor="my-drawer-2">
                   <GrClose />
                 </label>
@@ -169,15 +215,13 @@ function handleShowModal(){
               </UserActiveLink>
               <UserActiveLink href="">
                 {" "}
-                <span
-                  className=" flex items-center gap-2"
-                  onClick={handleShowModal}>
+                <span className=" flex items-center gap-2" onClick={signOut}>
                   <TbLogout />
                   Logout
                 </span>
               </UserActiveLink>
             </ul>
-            { <LogoutModal  handleOpen={handleShowModal}  open={show} />}
+            {/* { <LogoutModal  handleOpen={handleShowModal}  open={show} />} */}
           </div>
         </div>
       </div>
