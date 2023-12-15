@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { MetaDataC } from "./orders";
 
 function ForgotPasswordform() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
@@ -82,6 +83,9 @@ export default function ForgottenPassowrd() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
+
+    <>
+      <MetaDataC title="Forgot Password"/>
     <AppLayoout>
       <main className={isDark ? "" : " bg-[#D1D1D1]"}>
         <div className=" text-center pt-5">
@@ -100,5 +104,6 @@ export default function ForgottenPassowrd() {
         </div>
       </main>
     </AppLayoout>
+    </>
   );
 }

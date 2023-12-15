@@ -27,8 +27,9 @@ export function NoInbox(){
   );
 }
 
-export default function Inbox() {
+export default function Inbox({message}) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
+
 
   return (
     <div
@@ -36,24 +37,28 @@ export default function Inbox() {
         isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"
       }`}>
       <div className=" card-body">
-        <div className="collapse   border-b rounded-none">
-          <input type="checkbox" />
-          <div className="collapse-title  font-normal  flex justify-between pr-2 items-center">
-            <div> Read comment</div>
-            <span className=" justify-self-end  self-center pr-0">
-              <h2 className=" opacity-50">23/2/2023</h2>
-              <MdKeyboardArrowDown />
-            </span>
-          </div>
-          <div className="collapse-content">
-            <p>
-              Once I have a better understanding of you, I can start to create
-              content that is tailored to your specific needs. For example, I
-              could write a blog post about your interests, create a social
-              media profile for you, or even write a resume or cover letter.
-            </p>
-          </div>
-        </div>
+      {
+        message && message.length > 0 && message.map((messg)=>{
+          return (
+            <div className="collapse   border-b rounded-none">
+              <input type="checkbox" />
+              <div className="collapse-title  font-normal  flex justify-between pr-2 items-center">
+                <div className=' normal-case'> {messg.title}</div>
+                <span className=" justify-self-end  self-center pr-0">
+                  <h2 className=" opacity-50">{messg.date}</h2>
+                  <MdKeyboardArrowDown />
+                </span>
+              </div>
+              <div className="collapse-content">
+                <p className=' normal-case'>
+                {messg.message}
+                </p>
+              </div>
+            </div>
+          );
+        })
+      }
+       
       </div>
     </div>
   );

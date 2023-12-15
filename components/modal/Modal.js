@@ -113,7 +113,8 @@ function ItemsDesc({ item }) {
 export default function Modal() {
   const { toggleMode, cart, cartTotal } = useSelector((state) => state.store);
 
-  const { isDark } = toggleMode;
+  // const { isDark } = toggleMode;
+    const isDark = toggleMode?.isDark;
 
   const router = useRouter();
   function handleCheckoutNav() {

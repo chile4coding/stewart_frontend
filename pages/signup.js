@@ -1,9 +1,11 @@
 import AppLayoout from '@/components/Layout/AppLayoout'
 import SignupForm from '@/components/signup/SignupForm';
 import React from 'react'
-
+import { MetaDataC } from './orders';
 export default function Signup() {
   return (
+    <>
+    <MetaDataC title="Register"/>
     <AppLayoout>
       <div className=" grid grid-cols-2 sm:grid-cols-1 px-10 gap-6 my-10">
         <div
@@ -24,5 +26,7 @@ export default function Signup() {
       <SignupForm/>
       </div>
     </AppLayoout>
+
+    </>
   );
 }

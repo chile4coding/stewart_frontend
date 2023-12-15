@@ -124,14 +124,23 @@ const mydata = [
 ];
 
 export function PieChart() {
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const {
 
+    toggleMode,
+
+    saleByCategory,
+
+  } = useSelector((state) => state.store);
+
+  
+
+  const isDark = toggleMode?.isDark;
   const [userData, setUserData] = useState({
-    labels: mydata.map((data) => data.day),
+    labels: saleByCategory.map((data) => data.category),
     datasets: [
       {
         label: ``,
-        data: mydata.map((data) => data.value),
+        data: saleByCategory.map((data) => data.sales),
 
         backgroundColor: [
           "#6FEAE2",
@@ -153,14 +162,28 @@ export function PieChart() {
   return <Doughnut data={userData} options={pieOptions} />;
 }
 export default function Graph() {
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const {
+    user,
+    toggleMode,
+    orders,
+    orderDetails,
+    admin,
+    revenue,
+    totalOrders,
+    userCount,
+    visiorCount,
+    adminReviews,
+    
+    graphData,
+  } = useSelector((state) => state.store);
 
+  const isDark = toggleMode?.isDark;
   const [userData, setUserData] = useState({
-    labels: mydata.map((data) => data.day),
+    labels: graphData.map((data) => data.month),
     datasets: [
       {
         label: ``,
-        data: mydata.map((data) => data.value),
+        data: graphData.map((data) => data.orders),
         borderColor: isDark ? "#6FEAE2" : "black",
 
         backgroundColor: isDark ? "white" : "black",

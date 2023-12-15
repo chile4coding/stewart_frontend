@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { MetaDataC } from "./orders";
 function Otpform() {
   const { currentUserEmail, toggleMode } = useSelector((state) => state.store);
 
@@ -140,6 +141,7 @@ export default function OTP() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
+    <><MetaDataC title="OTP"/>
     <AppLayoout>
       <main className={`px-4 ${isDark ? "" : "bg-[#D1D1D1]"}`}>
         <div className="   flex flex-col items-center justify-center px-10 gap-6 py-10">
@@ -150,5 +152,8 @@ export default function OTP() {
         </div>
       </main>
     </AppLayoout>
+    
+    
+    </>
   );
 }

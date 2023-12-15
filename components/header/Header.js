@@ -30,7 +30,8 @@ export default function Header() {
       cart,
       products: product,
     } = useSelector((state) => state.store);
-    const { isDark } = toggleMode;
+    // const { isDark } = toggleMode;
+    const isDark =  toggleMode?.isDark
 const dispatch = useDispatch();
 const router =  useRouter()
 const toggle = () => {
@@ -45,6 +46,9 @@ const toggle = () => {
   }
     function handleUserNav() {
       router.push("/my_account");
+    }
+    function handleUserHome() {
+      router.push("/");
     }
 
   return (
@@ -63,10 +67,12 @@ const toggle = () => {
             <AiOutlineMenu className=" font-semibold text-2xl hover:cursor-pointer" />
           </label>
 
-          {/* <div className=" w-24 sm:hidden ">
-            <img src="" />
-          </div> */}
-          <h2 className="text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
+          <div className=" w-24 cursor-pointer  " onClick={handleUserHome}>
+            <img src={isDark ? "/stewartw.png" : "/stewart.png"} />
+          </div>
+          <h2
+            onClick={handleUserHome}
+            className=" cursor-pointer text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
             Stewart Collections
           </h2>
         </div>
@@ -83,16 +89,12 @@ const toggle = () => {
             <img src="" />
           </div>
           <div className="flex gap-6 items-center ">
-            <div className=" ]  xl:w-[322px]  sm:hidden ">
-              <input
-                type="text"
-                placeholder="search "
-                className={`input  md:hidden input-bordered border-collapse  w-full   sm:hidden ${
-                  isDark ? "border-white bg-transparent" : " border-[black] "
-                }`}
-                style={{ color: !isDark && "black !important" }}
-              />
+            <div className="sm:hidden md:hidden">
+              <span className="cursor-pointer" onClick={handleUserNav}>
+                Login
+              </span>
             </div>
+
             <div className="indicator ">
               <span className="indicator-item badge  bg-[red]  text-[#fff]  ">
                 {cart?.length}
@@ -105,9 +107,7 @@ const toggle = () => {
                 onClick={handleShowModal}
               />
             </div>
-            <div className="sm:hidden md:hidden">
-              <BiSolidUser className="text-[24px] cursor-pointer" onClick={handleUserNav} />
-            </div>
+
             <div>
               {isDark ? (
                 <BsFillSunFill onClick={toggle} className=" cursor-pointer" />

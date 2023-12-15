@@ -5,13 +5,15 @@ import {
   getFavourite,
   getNewArrival,
   getProductByCategory,
-  getShopProducts as getStoreProducts
+  getShopProducts as getStoreProducts,
+  setUser
 
 } from "@/redux/storeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getSingleProduct,  } from "@/redux/storeSlice";
 import Spinner from "../spinner/Spinner";
 import { MdOutlineFavorite } from "react-icons/md";
+import { getCookie, getCurrentUser, saveItem } from "@/services/request";
 export function ItemCategory({ category }) {
     const {
       shop,
@@ -82,6 +84,7 @@ export default function Items({ items }) {
       products
     } = useSelector((state) => state.store);
     const [rout, setRoute] = useState(false)
+    const [token, setToken] = useState(null)
     const { isDark } = toggleMode;
     const route  = useRouter()
     useEffect(()=>{
@@ -89,6 +92,13 @@ if(route.asPath === "/shop"){
   setRoute(true)
 }else{
   setRoute(false)
+}
+
+if(!Boolean(token)){
+     const tokenN = getCookie();
+
+     setToken(tokenN)
+
 }
 
     }, [products])
@@ -107,16 +117,46 @@ if(route.asPath === "/shop"){
     
     }
   }
+
+  async function handleSaveItem(it, token){
+
+const  {name, favorite:status, id, price:amount,image} = it
+const details = {name,id:id+"",image,amount:amount+"",status:status+""||false+""}
+console.log(details)
+const response = await saveItem(details, token)
+const data = await response.json()
+
+
+
+if(token){
+            const resp = await getCurrentUser(token);
+              const user = await resp.json();
+
+              dispatch(setUser(user?.user));
+
+}
+
+  }
   
   function handleFavourite(item){
-    const {items, id} = item
-    dispatch(getFavourite(id));
+ 
+   const {items, id} = item
+ 
+   
+   dispatch(getFavourite(id));
+   
+   dispatch(getNewArrival(products));
+   dispatch(getBestSelling(products));
+   const i = products.find((item) => item.id === id);
+   if(token){
+     handleSaveItem(i, token)
 
-     dispatch(getNewArrival(products));
-     dispatch(getBestSelling(products));
+   }
+   
   }
   
 function addClass( favoriteId) {
+
   for (const item of products) {
     if (
       item.hasOwnProperty("favorite") &&
@@ -126,6 +166,9 @@ function addClass( favoriteId) {
       return "text-[red]";
     }
   }
+
+
+
 }
 
   return (
@@ -142,7 +185,7 @@ function addClass( favoriteId) {
               title: `${items?.name}`,
               id: items?.id,
             })}
-            className=" relative  sm:max-h-[100px]  h-full   w-full lg:max-h-[200px]  md:max-h-[150px] ">
+            className=" relative  sm:max-h-[100px]  h-full   w-full lg:max-h-[200px]  xl:max-h-[200px]  md:max-h-[150px] ">
             <img
               src={items?.image}
               alt={items?.name}
@@ -159,15 +202,19 @@ function addClass( favoriteId) {
                 {items?.name}
               </h2>
 
-         { rout &&    <MdOutlineFavorite
-                title="Save item"
-                onClick={handleFavourite.bind(this, {
-                  items,
-                  id: items?.id,
-                })}
-                className={` hover:text-[red]  text-2xl  ${addClass(items.id)} `}
-                style={{ zIndex: 999 }}
-              />}
+              {rout && (
+                <MdOutlineFavorite
+                  title="Save item"
+                  onClick={handleFavourite.bind(this, {
+                    items,
+                    id: items?.id,
+                  })}
+                  className={` hover:text-[red]  text-2xl  ${addClass(
+                    items.id
+                  )} `}
+                  style={{ zIndex: 999 }}
+                />
+              )}
             </div>
             <p className="my-3 sm:text-[10px] sm:my-0 ">
               ₦{items?.price?.toFixed(2)}

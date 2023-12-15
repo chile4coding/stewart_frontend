@@ -5,14 +5,22 @@ import { GrClose } from "react-icons/gr";
 import { UserActiveLink } from "../ActiveLink";
 import { AiFillStar, AiOutlineMenu } from "react-icons/ai";
 import { BsFillCartFill, BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
-import { BiMessageSquareDetail, BiSolidUser } from "react-icons/bi";
-import { setOrderSearch, toggler } from "@/redux/storeSlice";
+import { BiMessageSquareDetail, BiShoppingBag, BiSolidUser } from "react-icons/bi";
+import {
+  handleGetMessages,
+  handleGetNotification,
+  initTggle,
+  setOrderSearch,
+  toggler,
+  setUser,
+} from "@/redux/storeSlice";
 import { useRouter } from "next/router";
 import { MdFavorite } from "react-icons/md";
 import {TbLogout}  from "react-icons/tb"
 import LogoutModal from "./logout/LogoutModal";
 import Modal from "../modal/Modal";
 import Cookies from "js-cookie";
+import { getCookie, getMessages, getNotification, socket } from "@/services/request";
 
 
 function UserHeader() {
@@ -28,13 +36,20 @@ function UserHeader() {
      orders,
      user,
      products: product,
+     notification,
    } = useSelector((state) => state.store);
-   const { isDark } = toggleMode; 
-    const dispatch = useDispatch();
+  //  const { isDark } = toggleMode; 
+    const isDark = toggleMode?.isDark;
+
+  const dispatch = useDispatch();
    const [search, setSearch]= useState("")
 
   const router = useRouter();
   useEffect(() => {
+    const token = getCookie();
+      if (isDark === undefined) {
+        dispatch(initTggle());
+      }
     if (router.pathname === "/my_account") {
       setTitle("Account Overview");
     } else if (router.pathname ==="/orders") {
@@ -44,6 +59,34 @@ function UserHeader() {
     } else if (router.pathname === "/saved_items") {
       setTitle("Saved Items");
     } else if (router.pathname === "/reviews") [setTitle("Reviews")];
+ 
+async function getMessage(token){
+  const res = await getMessages(token)
+
+  const data  = await res.json()
+
+
+  const response = await getNotification(token)
+         dispatch(handleGetMessages(data.inbox));
+
+  
+  const dataN  = await response.json()
+       dispatch(handleGetNotification(dataN.inbox));
+
+
+}
+      socket.on(`new-message`, (message) => {
+
+        getMessage(token)
+      console.log("New notification")
+
+        // dispatch(getNotification(message));
+      });
+
+      return () => {
+        socket.off(`new-message`);
+      };
+ 
   }, []);
   const toggle = () => {
     dispatch(toggler());
@@ -128,9 +171,23 @@ if (title === "Orders") {
                 style={{ cursor: "pointer" }}
               />
             </div>
-            <div className="sm:hidden md:hidden">
-              <BiSolidUser className="text-[24px] cursor-pointer" onClick={handleUserNav} />
-            </div>
+
+            {user?.avatar?.trim().length > 1 ? (
+              <div className="">
+                <img
+                  onClick={handleUserNav}
+                  src={user.avatar}
+                  className=" cursor-pointer bg-[white] object-cover rounded-full  h-[30px] w-[30px] "
+                />
+              </div>
+            ) : (
+              <div className="sm:hidden md:hidden">
+                <BiSolidUser
+                  className="text-[24px] cursor-pointer"
+                  onClick={handleUserNav}
+                />
+              </div>
+            )}
             <div>
               {isDark ? (
                 <BsFillSunFill onClick={toggle} className=" cursor-pointer" />
@@ -150,18 +207,19 @@ if (title === "Orders") {
 export default function UserLayout({ children }) {
   const  [show, setShow] = useState(false)
   const router = useRouter();
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
-
+  const isDark = useSelector((state) => state?.store?.toggleMode?.isDark);
+const dispatch = useDispatch()
 
 function signOut() {
-  Cookies.remove("_stewart_collection_token");
 
-  router.push("/");
+        dispatch(setUser({}));
+  Cookies.remove("_stewart_collection_token");
+window.location.href =
+  "https://stewart-frontend-chile4coding.vercel.app/login";
 }
 
   return (
     <div className={isDark ? "bg-black" : "#FAFAFA"}>
-    
       <div
         className={`  max-w-[1440px]  h-full  mx-auto  ${
           isDark ? "turndark" : "turnlight"
@@ -191,13 +249,20 @@ function signOut() {
                   <GrClose />
                 </label>
               </div>
-              <h2 className="text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
-                Stewart Collections
-              </h2>
+              <div className="flex items-center ">
+                <div className=" w-16 ">
+                  <img src={isDark ? "/stewartw.png" : "/stewart.png"} />
+                </div>
+              </div>
               <UserActiveLink href="/my_account">
                 {" "}
                 <BiSolidUser />
                 My Account
+              </UserActiveLink>
+              <UserActiveLink href="/shop">
+                {" "}
+                <BiShoppingBag />
+                Shop
               </UserActiveLink>
               <UserActiveLink href="/orders">
                 <BsFillCartFill />
@@ -213,13 +278,14 @@ function signOut() {
               <UserActiveLink href="/saved_items">
                 <MdFavorite /> Saved Items
               </UserActiveLink>
-              <UserActiveLink href="">
-                {" "}
-                <span className=" flex items-center gap-2" onClick={signOut}>
+              <div
+                onClick={signOut}
+                className="activeuserhover cursor-pointer text-[18px] activeuserhover flex items-center gap-2">
+                <span className=" flex items-center gap-2">
                   <TbLogout />
                   Logout
                 </span>
-              </UserActiveLink>
+              </div>{" "}
             </ul>
             {/* { <LogoutModal  handleOpen={handleShowModal}  open={show} />} */}
           </div>

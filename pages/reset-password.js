@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
+import { MetaDataC } from './orders';
 function ResetPasswordform() {
    const { shop, toggleMode, currentUserEmail } = useSelector(
      (state) => state.store
@@ -159,12 +160,15 @@ export default function ResetPassowrd() {
 
         const isDark = useSelector((state) => state.store.toggleMode.isDark);
   return (
-    <AppLayoout>
-      <main className={`px-4 py-12 ${isDark ? "" : "bg-[#D1D1D1] "}   `}>
-        <div className="   px-10 gap-6 py-10">
-          <ResetPasswordform />
-        </div>
-      </main>
-    </AppLayoout>
+    <>
+      <MetaDataC title="Reset Password"/>
+      <AppLayoout>
+        <main className={`px-4 py-12 ${isDark ? "" : "bg-[#D1D1D1] "}   `}>
+          <div className="   px-10 gap-6 py-10">
+            <ResetPasswordform />
+          </div>
+        </main>
+      </AppLayoout>
+    </>
   );
 }

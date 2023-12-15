@@ -246,7 +246,7 @@ export default function PaymentDetails() {
     if (!token) {
       toast.error(
         <div className=" normal-case">
-          Please you cannot pay with wallet, rejgister or login your account to
+          Please you cannot pay with wallet, register or login your account to
           be enabled
         </div>
       );
@@ -443,6 +443,7 @@ setLoading(true);
 
     }else{
       toast.error(<div className=" lowercase text-[red]">{data.message}</div>)
+   setLoading(false);
     }
 
 
@@ -548,10 +549,10 @@ setLoading(true);
 
           {paymentMethod === "wallet" && (
             <h2 className=" mt-4">
-              {user?.wallet?.amount.toFixed(2) && (
+              {user && user?.wallet?.amount.toFixed(2) && (
                 <span className=" font-bold">
                   {" "}
-                  Wallet Balance: ₦{user?.wallet?.amount.toFixed(2)}
+                  Wallet Balance: ₦{user && user?.wallet?.amount.toFixed(2)}
                 </span>
               )}
 
@@ -562,7 +563,6 @@ setLoading(true);
                   Login
                 </span>
               )}
-           
             </h2>
           )}
         </div>

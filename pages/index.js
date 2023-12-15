@@ -2,12 +2,13 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import AppLayoout from "@/components/Layout/AppLayoout";
 import Hero from "@/components/homepage/Hero";
+
 import {
   getCookie,
   getCurrentUser,
   getProducts as getProductCategory,
   getShopProducts,
-  
+  visitor,
 } from "@/services/request";
 
 import Items, { ItemCategory } from "@/components/items/Items";
@@ -23,6 +24,7 @@ import {
   storeGetProducts as getStoreProducts,
   setGlobalLoaoding,
   setUser,
+  toggler,
 } from "@/redux/storeSlice";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -36,76 +38,95 @@ import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { GrNext, GrPrevious } from "react-icons/gr";
 import { useRouter } from "next/router";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef , items}) {
- const { shop, toggleMode, singleProduct,cart,  category, newArrival, bestSelling } =
-   useSelector((state) => state.store);
+import Head from "next/head";
 
-
- const { isDark } = toggleMode;
- if(newArrival){
-   return (
-     <div className="   w-full flex flex-wrap ">
-       <Swiper
-         spaceBetween={50}
-         slidesPerView={1}
-         autoplay={{
-           delay: 2500,
-           disableOnInteraction: false,
-         }}
-         pagination={{
-           clickable: false,
-         }}
-         breakpoints={{
-           // Define breakpoints for different screen sizes
-           320: {
-             slidesPerView: 3,
-             spaceBetween: 10,
-           },
-           760: {
-             slidesPerView: 4,
-             spaceBetween: 20,
-           },
-           1100: {
-             slidesPerView: 6,
-             spaceBetween: 20,
-           },
-         }}
-         rewind={true}
-         navigation={{
-           prevEl: swiperNavNexRef.current,
-           nextEl: swiperNavPrevRef.current,
-         }}
-         Pagination={{
-           clickable: true,
-         }}
-         loop
-         modules={[Autoplay, Navigation]}
-         // slidesPerView={2}
-         onInit={(swiper) => {
-           swiper.params.navigation.prevEl = swiperNavPrevRef.current;
-           swiper.params.navigation.nextEl = swiperNavNexRef.current;
-           swiper.navigation.init();
-           swiper.navigation.update();
-         }}
-         className={`mySwiper   mx-auto ${isDark ? "" : " bg-[white]"}`}>
-         {items && items.length > 0 && 
-           items.map((newIn) => (
-             <SwiperSlide className=" " key={newIn.id}>
-               <Items  items={newIn}/>
-             </SwiperSlide>
-           ))}
-       </Swiper>
-     </div>
-   );
-
- }
+export function MetaData() {
+  return (
+    <Head>
+      <title>Stewart Collection</title>
+      <meta name="description" content="   Explore the rise of juggers, the oversized garment defying gender norms. Break the mold! Show how polos infuse personality into formal suits
+        Craft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. 
+        Move beyond restrictive label"/>
+      <meta name="keyword" content="Polo   Suit  Tie  Shirt, Skirt, Clothes, Male Wares & Female Wares
+      "/>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </Head>
+  );
 }
 
+function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef, items }) {
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    cart,
+    category,
+    newArrival,
+    bestSelling,
+  } = useSelector((state) => state.store);
+  const isDark = toggleMode?.isDark;
+
+  if (newArrival) {
+    return (
+      <div className="   w-full flex flex-wrap ">
+        <Swiper
+          spaceBetween={50}
+          slidesPerView={1}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: false,
+          }}
+          breakpoints={{
+            // Define breakpoints for different screen sizes
+            320: {
+              slidesPerView: 3,
+              spaceBetween: 10,
+            },
+            760: {
+              slidesPerView: 4,
+              spaceBetween: 20,
+            },
+            1100: {
+              slidesPerView: 6,
+              spaceBetween: 20,
+            },
+          }}
+          rewind={true}
+          navigation={{
+            prevEl: swiperNavNexRef.current,
+            nextEl: swiperNavPrevRef.current,
+          }}
+          Pagination={{
+            clickable: true,
+          }}
+          loop
+          modules={[Autoplay, Navigation]}
+          // slidesPerView={2}
+          onInit={(swiper) => {
+            swiper.params.navigation.prevEl = swiperNavPrevRef.current;
+            swiper.params.navigation.nextEl = swiperNavNexRef.current;
+            swiper.navigation.init();
+            swiper.navigation.update();
+          }}
+          className={`mySwiper   mx-auto ${isDark ? "" : " bg-[white]"}`}>
+          {items &&
+            items.length > 0 &&
+            items.map((newIn) => (
+              <SwiperSlide className=" " key={newIn.id}>
+                <Items items={newIn} />
+              </SwiperSlide>
+            ))}
+        </Swiper>
+      </div>
+    );
+  }
+}
 
 function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
-
-
+  const isDark = useSelector((state) => state.store?.toggleMode?.isDark);
 
   return (
     <div className="   w-full flex flex-wrap  ">
@@ -150,11 +171,13 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
         // slidesPerView={2}
 
         className={`mySwiper    mx-auto ${isDark ? "" : " bg-[white]"}`}>
-        {items && items?.length  > 0 &&  items.map((item) => (
-          <SwiperSlide className=" ">
-            <Items items={item} />
-          </SwiperSlide>
-        ))}
+        {items &&
+          items?.length > 0 &&
+          items.map((item) => (
+            <SwiperSlide className=" ">
+              <Items items={item} />
+            </SwiperSlide>
+          ))}
       </Swiper>
     </div>
   );
@@ -162,87 +185,85 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
 
 export default function Home() {
   const router = useRouter();
-  const dispatch  =  useDispatch()
+  const dispatch = useDispatch();
   const swiperNavPrevRef = useRef(null);
   const swiperNavNexRef = useRef(null);
   const swiperNavSecondPrevRef = useRef(null);
   const swiperNavSecondNexRef = useRef(null);
 
-    const {
-      shop,
-      toggleMode,
-      singleProduct,
-      category,
-      newArrival,
-      bestSelling,
-      cart,
-    
-      products : product,
-    } = useSelector((state) => state.store);
-      const { isDark } = toggleMode;
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    category,
+    newArrival,
+    bestSelling,
+    cart,
 
-      
-      useEffect(()=>{
-        const token = getCookie()
+    products: product,
+  } = useSelector((state) => state.store);
+  const isDark = toggleMode?.isDark;
 
+  useEffect(() => {
+    const visited = sessionStorage.getItem("visited");
 
-        if(!cart){
-          dispatch(setCartOnLoad());
+    const token = getCookie();
+
+    if (!cart) {
+      dispatch(setCartOnLoad());
+    }
+    async function allProduct() {
+      if (!visited) {
+        await visitor();
+        sessionStorage.setItem("visited", true);
+      }
+      if (Boolean(token)) {
+        const response = await getCurrentUser(token);
+        if (response.status === 200) {
+          const user = await response.json();
+          dispatch(setUser(user?.user));
         }
-        async function allProduct(){
+      }
+      dispatch(setGlobalLoaoding(true));
+      const { category } = await getProductCategory();
 
-          if(Boolean(token)){
-            const  response  =     await  getCurrentUser(token)
-            if(response.status === 200){
-              const user  = await response.json()
-              dispatch(setUser(user?.user));
-            }
+      const { products } = await getShopProducts();
 
-          }
+      if (products) {
+        dispatch(getStoreProducts(products));
+        dispatch(getNewArrival(products));
+        dispatch(getBestSelling(products));
+      }
 
- dispatch(setGlobalLoaoding(true))
-          const {category} = await getProductCategory()
+      if (category) {
+        dispatch(getCategory(category));
+      }
+    }
+    dispatch(setGlobalLoaoding(false));
 
-          const {products} = await getShopProducts()
-         
-          if(products){
-            dispatch(getStoreProducts(products));
-            dispatch(getNewArrival(products));
-            dispatch(getBestSelling(products));
-          }
+    allProduct();
+  }, []);
 
-          if(category){
-           
-            dispatch(getCategory(category))
-          }
-          
-   
-        }
-        dispatch(setGlobalLoaoding(false));
-        
-        allProduct()
-      },[])
-      
-
-  
-
-
-  function handleSeeAllNewIn(){
- dispatch(getShop(newArrival));
-    router.push("New Arrival" ,"/shop" )
+  function handleSeeAllNewIn() {
+    dispatch(getShop(newArrival));
+    router.push("New Arrival", "/shop");
   }
-  function handleSeeAllBestSelling(){
-    dispatch(getShop(bestSelling))
+  function handleSeeAllBestSelling() {
+    dispatch(getShop(bestSelling));
     router.push("Best Selling", "/shop");
   }
 
+  function handleCreateAccountNav() {
+    router.replace("/signup");
+  }
 
- 
-
-
-    return (
+  return (
+    <>
+      <MetaData
+     
+      />
       <AppLayoout>
-        <main className="px-10 sm:px-4">
+        <main className="px-10 sm:px-4 max-h-[100vh]  overflow-y-scroll">
           <secition className=" ">
             <Hero />
           </secition>
@@ -371,7 +392,7 @@ export default function Home() {
             </div>
             <div className="  grid  lg:grid-cols-6  xl:grid-cols-6   md:grid-cols-4  sm:grid-cols-3 gap-5 sm:gap-3  ">
               {category &&
-                category.length > 1 &&
+                category.length > 0 &&
                 category.map((cat) => (
                   <ItemCategory key={cat.id} category={cat} />
                 ))}
@@ -383,12 +404,18 @@ export default function Home() {
               isDark ? "turndark" : "turnlight"
             }`}>
             <div className=" self-center sm:order-1">
-              <h2 className="text-[48px]  sm:text-center font-semibold text-white   sm:text-[36px] sm:font-normal flex  max-w-md  md:text-lg">
-                Sign up now to get 10% off your first order
+              <h2 className="lg:text-[48px] xl:text-[48px]  sm:text-center font-semibold text-white   sm:text-[26px] sm:font-bold flex  max-w-md  md:text-lg">
+                Become a premium user today!
               </h2>
+              <p className=" sm:hidden text-white normal-case leading-6 lg:py-4 xl:py-4  xl:text-[18px] lg:text-[18px]">
+                Enjoy a perpetual 10% discount on your entire Stewart Collection
+                wardrobe, from the latest trends to timeless classics
+              </p>
 
-              <button className="btn sm:btn-sm sm:hidden  btn-outline  border  border-white normal-case font-semibold text-white">
-                Create Account
+              <button
+                onClick={handleCreateAccountNav}
+                className="btn sm:btn-sm sm:hidden  btn-outline  border  border-white normal-case font-semibold text-white">
+                Get started
               </button>
             </div>
             <div className=" sm:order-2">
@@ -398,15 +425,19 @@ export default function Home() {
                 width={571}
                 alt="account registration"
               />
+              <p className=" xl:hidden lg:hidden sm:mt-4  md:hidden text-white normal-case leading-6 lg:py-4 xl:py-4  xl:text-[18px] lg:text-[18px]">
+                Enjoy a perpetual 10% discount on your entire Stewart Collection
+                wardrobe, from the latest trends to timeless classics
+              </p>
               <div className=" flex justify-center mt-6 md:hidden lg:hidden xl:hidden">
                 <button className="btn sm:btn-sm    btn-outline  border  border-white normal-case font-semibold text-white">
-                  Create Account
+                  Get started
                 </button>
               </div>
             </div>
           </section>
         </main>
       </AppLayoout>
-    );
-  
+    </>
+  );
 }

@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 // const base_url = "http://localhost:5000/api/v1";
 const base_url = "https://stewart-r0co.onrender.com/api/v1";
+import { io } from "socket.io-client";
 
 export async function createCategory(productPhoto, category, bearerId) {
   try {
@@ -52,6 +53,26 @@ export async function createProduct(productDetails, bearerId) {
         salesPrice: salesPrice,
         short_desc,
         image_url: productImage,
+      }),
+
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerId}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+export async function userImageUpload(avatar, bearerId) {
+  try {
+    const response = await fetch(`${base_url}/update_user_pics`, {
+      body: JSON.stringify({
+        avatar,
       }),
 
       method: "POST",
@@ -263,12 +284,18 @@ export async function signupAdmin(user) {
   }
 }
 export async function loginAdmin(user) {
+  const { email, password } = user;
+
   try {
-    const response = await axios.post(
+    const response = await fetch(
       `${base_url}/login_admin`,
 
-      user,
       {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -793,9 +820,12 @@ export async function getSavedItem(bearerId) {
 export async function deleteSavedItem(id, bearerId) {
   try {
     const response = await fetch(
-      `${base_url}/delete_saved_item?id=${id}`,
+      `${base_url}/delete_saved_item`,
 
       {
+        body: JSON.stringify({
+          id,
+        }),
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -811,6 +841,7 @@ export async function deleteSavedItem(id, bearerId) {
 }
 export async function saveItem(details, bearerId) {
   const { name, image, amount, id, status } = details;
+
   try {
     const response = await fetch(
       `${base_url}/save_item`,
@@ -838,7 +869,7 @@ export async function saveItem(details, bearerId) {
 }
 export async function addReview(details, bearerId) {
   const { rating, name, comment, productId } = details;
- 
+
   try {
     const response = await fetch(
       `${base_url}/add_review`,
@@ -866,8 +897,6 @@ export async function addReview(details, bearerId) {
 export async function updateReview(details, bearerId) {
   const { rating, comment, id } = details;
 
-  console.log(details)
-
   try {
     const response = await fetch(
       `${base_url}/update_review`,
@@ -878,6 +907,28 @@ export async function updateReview(details, bearerId) {
           comment,
           id,
         }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+
+export async function sendMessage(details, bearerId) {
+  console.log(details);
+  try {
+    const response = await fetch(
+      `${base_url}/create_message`,
+
+      {
+        body: JSON.stringify(details),
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -911,8 +962,6 @@ export async function getReviews(bearerId) {
   }
 }
 export async function deleteReviews(id, bearerId) {
-
-  
   try {
     const response = await fetch(
       `${base_url}/delete_review`,
@@ -972,12 +1021,134 @@ export async function getMessages(bearerId) {
     return error;
   }
 }
+export async function getAdminGraph(bearerId) {
+  try {
+    const response = await fetch(
+      `${base_url}/admin_graph`,
+
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    const data = response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+export async function getCustomers(bearerId) {
+  try {
+    const response = await fetch(
+      `${base_url}/get_customers`,
+
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+export async function getVisitors(bearerId) {
+  try {
+    const response = await fetch(
+      `${base_url}/get_visitors`,
+
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+export async function visitor() {
+  try {
+    const response = await fetch(
+      `${base_url}/visitor`,
+
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+export async function getNotification(bearerId) {
+  try {
+    const response = await fetch(
+      `${base_url}/get_notification`,
+
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+export async function adminMessages(bearerId) {
+  console.log(bearerId);
+  try {
+    const response = await fetch(
+      `${base_url}/admin_get_message`,
+
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
 export async function deleteMessages(id, bearerId) {
   try {
     const response = await fetch(
-      `${base_url}/delete_messages?id=${id}`,
+      `${base_url}/messages`,
 
       {
+        body: JSON.stringify({
+          id,
+        }),
+
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -1029,3 +1200,131 @@ export function pagination(totalItems) {
   );
   return data;
 }
+export function paginationProduct(totalItems) {
+  const data = Array.from(
+    { length: Math.ceil(totalItems.length / 6) },
+    (_, index) => totalItems.slice(index * 6, (index + 1) * 6)
+  );
+  return data;
+}
+
+export async function adminGetOrders(bearerId) {
+  try {
+    const response = await fetch(
+      `${base_url}/admin_get_orders`,
+
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+
+export function paginationReview(totalItems) {
+  const data = Array.from(
+    { length: Math.ceil(totalItems.length / 4) },
+    (_, index) => totalItems.slice(index * 4, (index + 1) * 4)
+  );
+  return data;
+}
+export async function adminGetreviews(bearerId) {
+  try {
+    const response = await fetch(
+      `${base_url}/admin_get_reviews`,
+
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + bearerId,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+
+export async function updateAdmin(admin, bearerId) {
+  const { firstName, lastName, city, country, state, email, phone } = admin;
+
+  try {
+    const response = await fetch(`${base_url}/update_admin_profile`, {
+      method: "POST",
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        name: city,
+        country,
+        state,
+
+        email,
+        phone,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerId}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+export async function updateAdminPics(avatar, bearerId) {
+  try {
+    const response = await fetch(`${base_url}/update_admin_profile_pics`, {
+      method: "POST",
+      body: JSON.stringify({
+        avatar,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerId}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+export async function getAdmin(bearerId) {
+  try {
+    const response = await fetch(`${base_url}/get_admin`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${bearerId}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+export async function contactUs(contact) {
+  try {
+    const response = await fetch(`${base_url}/contact`, {
+      method: "POST",
+      body: JSON.stringify(contact),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  } catch (error) {
+    return error;
+  }
+}
+
+export const socket = io("https://stewart-r0co.onrender.com");

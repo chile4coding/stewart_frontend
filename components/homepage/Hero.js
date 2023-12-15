@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 export default function Hero() {
  const router  =  useRouter()
-  const isDark  = useSelector(state=>state.store.toggleMode.isDark)
+  const isDark  = useSelector(state=>state.store?.toggleMode?.isDark)
 
     function handleShopNav() {
       router.replace("/shop");

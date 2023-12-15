@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setAdmin } from "@/redux/storeSlice";
 
 export default function AdminLogin() {
   const [user, setUser] = useState({
@@ -13,7 +14,7 @@ export default function AdminLogin() {
     loading: false,
   });
   const router = useRouter();
-
+const dispatch  = useDispatch()
   function handleCreateAccountNav() {
     router.replace("/admin/signup");
   }
@@ -36,21 +37,24 @@ export default function AdminLogin() {
       return;
     }
 
-    const userDetail = JSON.stringify({
-      email: user.email,
-      password: user.password,
-    });
+    // const userDetail = JSON.stringify({
+    //   email: user.email,
+    //   password: user.password,
+    // });
 
     setUser({ ...user, loading: true });
-    const response = await loginAdmin(userDetail);
+    const response = await loginAdmin(user);
+    const data = await response.json();
+   
 
     if (response.status === 200) {
-      toast.success("Loggin successfully registered");
-      const data = response.data;
+      toast.success(<div className=" normal-case">{data?.message}</div>);
+
+     dispatch(setAdmin(data?.findAdminUpdate));
       Cookies.set("_stewart_collection_token", data.token);
       router.push("/admin/home");
     } else {
-      toast.error("Login failed");
+      toast.error(<div className=" normal-case">{data?.message}</div>);
     }
     setUser({ ...user, loading: false });
   }
@@ -88,9 +92,9 @@ export default function AdminLogin() {
             <span className=" normal-case">Remember me</span>
           </div>
 
-          <span className={` cursor-pointer hover:underline text-[blue] `}>
+          {/* <span className={` cursor-pointer hover:underline text-[blue] `}>
             Forgot password?
-          </span>
+          </span> */}
         </div>
         <button
           className={`my-6 btn  btn-outline border normal-case    px-8 py-4 w-full `}>

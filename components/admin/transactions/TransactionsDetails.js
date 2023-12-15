@@ -12,7 +12,7 @@ function TransactionList() {
 
   return (
     <div
-      className={`  pb-3 mb-6  rounded-md ${
+      className={`max-h-[100vh]  overflow-y-scroll  pb-3 mb-6  rounded-md ${
         isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"
       }`}>
       <div
@@ -174,8 +174,10 @@ function TransactionList() {
 
 export default function TransactionsDetails() {
   return (
-    <div>
-      <p className=' my-6 opacity-50'>Showing payment transactions made in the last 7 days</p>
+    <div className=" max-h-[100vh]  overflow-y-scroll">
+      <p className=" my-6 opacity-50">
+        Showing payment transactions made in the last 7 days
+      </p>
 
       <TransactionList />
     </div>

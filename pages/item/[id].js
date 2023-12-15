@@ -4,6 +4,7 @@ import AppLayoout from '@/components/Layout/AppLayoout'
 import SingleItem from '@/components/singleItem/SingleItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { getSimilarItems } from '@/redux/storeSlice'
+import { MetaDataC } from '../orders'
 
 
 export default function ItemDescription() {
@@ -45,8 +46,11 @@ export default function ItemDescription() {
 
  
   return (
+    <>
+      <MetaDataC title={singleProduct
+      ?.name}/>
     <AppLayoout>
-      <div className=" p-10 sm:px-4">
+      <div className=" p-10 sm:px-4 max-h-[100vh]  overflow-y-scroll">
         {singleProduct && (
           <SingleItem
             singleItem={singleProduct}
@@ -55,5 +59,6 @@ export default function ItemDescription() {
         )}
       </div>
     </AppLayoout>
+    </>
   );
 }

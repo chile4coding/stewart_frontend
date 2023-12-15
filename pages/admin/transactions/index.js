@@ -4,10 +4,10 @@ import React from 'react'
 
 export default function Transactions() {
   return (
-   <AdminLayout>
-    <main className=' px-10 sm:px-4'>
-        <TransactionsDetails/>
-    </main>
-   </AdminLayout>
-  )
+    <AdminLayout>
+      <main className=" px-10 sm:px-4 max-h-[100vh]  overflow-y-scroll">
+        <TransactionsDetails />
+      </main>
+    </AdminLayout>
+  );
 }

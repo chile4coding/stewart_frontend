@@ -9,6 +9,8 @@ const { useSelector, useDispatch } = require("react-redux");
 
 export default function ProfileUpdate() {
   const { user, toggleMode } = useSelector((state) => state.store);
+
+  
   const [profile, setProfile] = useState({
     email: "",
     firstname: "",
@@ -22,8 +24,8 @@ export default function ProfileUpdate() {
   });
   useEffect(() => {
     const { email, phone, country, state, city, address } = user;
-    const firstname = user.name.split(" ")[0];
-    const lastname = user.name.split(" ")[1];
+    const firstname = user?.name?.split(" ")[0];
+    const lastname = user?.name?.split(" ")[1];
     setProfile({
       ...profile,
       email,
@@ -37,7 +39,9 @@ export default function ProfileUpdate() {
     });
   }, []);
 
-  const { isDark } = toggleMode;
+  // const { isDark } = toggleMode
+      const isDark = toggleMode?.isDark;
+;
   const router = useRouter();
 const dispatch  =  useDispatch()
   function handleChangePassword() {

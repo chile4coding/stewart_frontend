@@ -11,25 +11,31 @@ import {
   BiSolidDashboard,
   BiSolidUser,
 } from "react-icons/bi";
-import { getShop, toggler, storeGetProducts, getSizes } from "@/redux/storeSlice";
+import { getShop, toggler, storeGetProducts, getSizes, initTggle } from "@/redux/storeSlice";
 import { useRouter } from "next/router";
 import { MdFavorite } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
 import { IoIosNotifications } from "react-icons/io";
 import { FaCog } from "react-icons/fa";
 import { getCookie, getProductSizes, getProducts, getShopProducts } from "@/services/request";
+import { FaMessage } from "react-icons/fa6";
 
 
 function AdminHeader() {
   const [title, setTitle] = useState("");
   const {shop, toggleMode} = useSelector((state) => state.store);
-  const  {isDark} = toggleMode
+  
+  // const  {isDark} = toggleMode
+  const isDark = toggleMode?.isDark;
   const dispatch = useDispatch();
   const router = useRouter();
 
 
   
   useEffect(() => {
+      if (isDark === undefined) {
+        dispatch(initTggle());
+      }
     const cookie = getCookie()
 
     if(cookie){
@@ -109,7 +115,7 @@ function AdminHeader() {
           </h2>
         </div>
 
-        {title === "Orders" ||
+        {/* {title === "Orders" ||
           ("admin/customers/details" && (
             <div className="w-full ">
               <div className="    w-full  ">
@@ -123,11 +129,11 @@ function AdminHeader() {
                 />
               </div>
             </div>
-          ))}
+          ))} */}
 
         <div className="navbar-end ">
           <div className="flex gap-6 items-center  ">
-            <div className="indicator ">
+            {/* <div className="indicator ">
               <span className="indicator-item badge  bg-[red]  text-[#fff]  ">
                 2
               </span>
@@ -137,7 +143,7 @@ function AdminHeader() {
                 htmlFor="my_modal_6 btn  "
                 style={{ cursor: "pointer" }}
               />
-            </div>
+            </div> */}
             <div className="sm:hidden md:hidden">
               <BiSolidUser className="text-[24px]" />
             </div>
@@ -213,16 +219,20 @@ export default function AdminLayout({ children }) {
                 <BsFillCartFill />
                 Orders
               </UserActiveLink>
+              <UserActiveLink href="/admin/messages">
+                <FaMessage />
+                Messages
+              </UserActiveLink>
               <UserActiveLink href="/admin/reviews">
                 <AiFillStar /> Reviews
               </UserActiveLink>
-              <UserActiveLink href="/admin/customers">
+              {/* <UserActiveLink href="/admin/customers">
                 <HiUserGroup /> Customers
               </UserActiveLink>
               <UserActiveLink href="/admin/transactions">
                 <BsFillCreditCard2FrontFill className=" rotate-180" />
                 Transactions
-              </UserActiveLink>
+              </UserActiveLink> */}
               <UserActiveLink href="/admin/settings">
                 <span className=" flex items-center gap-2">
                   <FaCog />

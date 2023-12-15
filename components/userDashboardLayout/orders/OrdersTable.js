@@ -114,7 +114,7 @@ export default function OrdersTable() {
                   isDark
                     ? "hover:border-white hover:bg-black hover:text-white"
                     : " bg-black text-white hover:border-black  "
-                }  ${page === i ? " bg-[#302999]" : ""}`}>
+                }  ${page === i ? " bg-[#302999] text-[white]" : ""}`}>
                 {i + 1}
               </button>
             ))}

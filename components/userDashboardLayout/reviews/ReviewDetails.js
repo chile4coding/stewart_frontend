@@ -218,7 +218,7 @@ function Reviews() {
             />
             <div className=" order-1">{rev.name}</div>
             <div className=" grid gap-3 order-3">
-              <p className="text-[ 18px] font-normal leading-6  normal-case">
+              <p className="  lowercase text-[ 18px] font-normal leading-6  normal-case">
                 {rev.comment}
               </p>
             </div>
@@ -251,7 +251,7 @@ export default function ReviewDetails() {
   const { orders, orderDetails, user } = useSelector((state) => state.store);
   return (
     <div className=" h-[100vh]">
-      {user.review.length > 0 ? <Reviews /> : <NoReviews />}
+      {user?.review?.length > 0 ? <Reviews /> : <NoReviews />}
     </div>
   );
 }

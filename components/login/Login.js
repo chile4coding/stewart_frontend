@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 
 export default function LoginDetails() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
-  const router  = useRouter()
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const [user, setUserDetails] = useState({
@@ -19,49 +19,46 @@ export default function LoginDetails() {
     loading: false,
   });
 
-  const dispatch = useDispatch()
-  function handleCreateAccountNav(){
-    router.replace("/signup")
+  const dispatch = useDispatch();
+  function handleCreateAccountNav() {
+    router.replace("/signup");
   }
-    const handleShowPassword = () => setShowPassword((password) => !password);
+  const handleShowPassword = () => setShowPassword((password) => !password);
 
+  function handleForgottenPassword() {
+    router.push("/forgotten-password");
+  }
 
-    function handleForgottenPassword() {
-      router.push("/forgotten-password");
+  function handleInputChage(e) {
+    const { name, value } = e.target;
+    setUserDetails({ ...user, [name]: value });
+  }
+
+  async function handleSignup(e) {
+    e.preventDefault();
+    setUserDetails({ ...user, loading: true });
+
+    const response = await loginUser(user);
+    const data = await response.json();
+    Cookies.set("_stewart_collection_token", data.token);
+    if (response.status === 200) {
+      dispatch(setUser(data?.findUser));
+window.location.href =
+  "https://stewart-frontend-chile4coding.vercel.app/my_account";
+       
+      // router.push("/my_account");
+      toast.success(<h className=" normal-case">Login successful</h>);
+    } else {
+      toast.error(<h1 className="  lowercase">{data.message} </h1>);
     }
+    setUserDetails({ ...user, loading: false });
 
-      function handleInputChage(e) {
-        const { name, value } = e.target;
-        setUserDetails({ ...user, [name]: value });
-      }
-   
-
-        async function handleSignup(e) {
-          e.preventDefault();
-          setUserDetails({ ...user, loading: true });
-          
-          const response = await loginUser(user);
-          const data = await response.json();
-          if (response.status === 200) {
-            Cookies.set("_stewart_collection_token", data.token)
-            dispatch(setUser(data?.findUser));
-            toast.success(
-              <h className=" normal-case">
-                Login successful
-              </h>
-            );
-            router.push("/my_account");
-          } else {
-            toast.error(<h1 className="  lowercase">{data.message} </h1>);
-          }
-          setUserDetails({ ...user, loading: false });
-
-          // router.push("/otp");
-        }
+    // router.push("/otp");
+  }
 
   return (
     <form onSubmit={handleSignup} className=" flex flex-col justify-center">
-      <h2 className="text-center text-[18px] font-semibold">
+      <h2 className="text-center text-[18px] font-semibold normal-case">
         Welcome! Log in to your account
       </h2>
       <div className="my-6">

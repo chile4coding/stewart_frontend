@@ -5,6 +5,7 @@ import ProfileUpdate from '@/components/userDashboardLayout/Account/ProfileUpdat
 import { getCookie, getCurrentUser } from '@/services/request'
 import { setUser, getSingleOrders, getuserOrders } from "@/redux/storeSlice";
 import { useDispatch, useSelector } from 'react-redux'
+import { MetaDataC } from './orders'
 
 export default function Account() {
  const { orders, orderDetails, user } = useSelector((state) => state.store);
@@ -28,13 +29,15 @@ fetchRequest()
 
   },[])
   return (
-    <UserLayout>
-    <div className=' grid grid-cols-2 gap-8 px-10 sm:px-4 sm:grid-cols-1'>
-    <Accountupdate/>
-    <ProfileUpdate/>
+    <>
+      <MetaDataC  title="Dashboard"/>
 
-    </div>
-
-    </UserLayout>
-  )
+      <UserLayout>
+        <div className=" grid grid-cols-2 gap-8 px-10 sm:px-4 sm:grid-cols-1 max-h-[100vh]  overflow-y-scroll">
+          <Accountupdate />
+          <ProfileUpdate />
+        </div>
+      </UserLayout>
+    </>
+  );
 }

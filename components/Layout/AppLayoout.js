@@ -14,7 +14,12 @@ import {
   getShop,
   toggler,
   storeGetProducts as getStoreProducts,
+  initTggle,
+
+
 } from "@/redux/storeSlice";
+import { useEffect } from 'react';
+import { socket } from '@/services/request';
 
 
 
@@ -29,8 +34,19 @@ export default function AppLayoout({children}) {
        bestSelling,
        products: product,
      } = useSelector((state) => state.store);
-     const { isDark } = toggleMode;
+    //  const { isDark } = toggleMode;
+    const isDark =  toggleMode?.isDark
      const dispatch =  useDispatch()
+
+     useEffect(()=>{
+  if(isDark  === undefined){
+    dispatch(initTggle());
+  }
+     socket.on(`new-message`, async (message) => {
+       // dispatch(getNotification(message));
+     });
+
+     }, [])
   const toggle  = ()=>{
         dispatch(toggle())
       }

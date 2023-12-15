@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react'
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
+import { MetaDataC } from './orders';
 
 export default function ResetSuccessful() {
 const router  = useRouter()
@@ -12,6 +13,8 @@ const router  = useRouter()
   }
 
   return (
+    <>
+<MetaDataC title=" Reset Successful"/>
     <AppLayoout>
       <main
         className={` h-[80dvh] flex flex-col w-full px-4 ${
@@ -38,6 +41,8 @@ const router  = useRouter()
         </div>
       </main>
     </AppLayoout>
+
+    </>
   );
 
 

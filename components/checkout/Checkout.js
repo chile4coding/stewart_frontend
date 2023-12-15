@@ -17,6 +17,8 @@ export function Order() {
     useSelector((state) => state.store);
   const { isDark } = toggleMode;
 
+ 
+
   return (
     <div className="  flex  flex-col   my-14 sm:mb-4  md:order-1 sm:order-1">
       <div
@@ -38,7 +40,7 @@ export function Order() {
                 </span>
                 <div className="place-items-center ">
                   <img
-                    src="/polo.png"
+                    src={item.image}
                     className=" rounded-md object-cover max-w-[70px] sm:max-w-[40px] bg-[#c0bebe]"
                   />
                 </div>
@@ -201,11 +203,10 @@ export default function Checkout() {
 if(!checkAddress){
 return
 }
-    dispatch( setUserOrderDetails(shippingAddress))
-if(userOrderDetails){
 
-  router.push("/payment");
-}
+
+    dispatch( setUserOrderDetails(shippingAddress))
+    window.location.href = "https://stewart-frontend-chile4coding.vercel.app/payment";
 
 
   }
@@ -215,7 +216,6 @@ if(userOrderDetails){
 
     const st = value;
 
-    console.log(st);
     const city = await getSTateCities(
       shippingAddress.country.split(",")[1],
       value.split(",")[1]

@@ -244,7 +244,7 @@ function OrderIDCard() {
                 <th className=" text-[18px] font-semibold">
                   {orderDetails.orderitem.reduce((accumulator, currentItem) => {
                     if (currentItem.subTotal) {
-                      return accumulator + currentItem.qty;
+                      return accumulator + Number(currentItem.qty)
                     }
                     return accumulator;
                   }, 0)}{" "}

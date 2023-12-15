@@ -108,7 +108,7 @@ getColor()
 
   return (
     <div
-      className={`  pb-3 mb-6  rounded-md ${
+      className={` h-[100vh]  pb-3 mb-6  rounded-md ${
         isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"
       }`}>
       {showcategoryModal && (
@@ -269,7 +269,7 @@ getColor()
             </tbody>
           </table>
         </div>
-        <div className=" flex items-center gap-3 mt-6">
+        {/* <div className=" flex items-center gap-3 mt-6">
           <button
             className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
               isDark
@@ -303,7 +303,7 @@ getColor()
             <IoIosArrowForward />
             <IoIosArrowForward />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

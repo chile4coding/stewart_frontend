@@ -1,8 +1,13 @@
 import AdminSignup from '@/components/admin/auth/Signup'
 import React from 'react'
+import { MetaDataC } from '../orders';
 
 export default function signup() {
   return (
+
+    <>
+    <MetaDataC title="Admin Signup"/>
+
     <div className="  bg-[#dbd9d9]">
       <div className="grid grid-cols-2 sm:grid-cols-1 px-10 gap-6  h-[100vh]  max-w-[1440px] mx-auto">
         <div
@@ -22,7 +27,9 @@ export default function signup() {
         </div>
 
         <AdminSignup />
-      </div>
     </div>
+      </div>
+
+    </>
   );
 }

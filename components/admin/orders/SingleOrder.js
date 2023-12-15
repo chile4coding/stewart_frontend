@@ -1,13 +1,12 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-function OrderIDCard() {
+function OrderIDCard({info}) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
     <div className={`my-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
       <div className="  card-body over">
-      
         <div
           className={` overflow-x-auto mb-6  rounded-md ${
             isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"
@@ -27,76 +26,48 @@ function OrderIDCard() {
               </tr>
             </thead>
             <tbody>
-              <tr
-                className={
-                  isDark
-                    ? " text-white border-b"
-                    : "  text-black border-b border-b-black"
-                }>
-                <td>
-                  <div className="flex items-center space-x-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle rounded-md w-12 h-12">
-                        <img
-                          src="/tshirt.png"
-                          alt="Avatar Tailwind CSS Component"
-                          className=" w-full h-full bg-white"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">
-                        Stewart Collection Unisex Cotton
-                      </div>
-                      <div className="text-sm opacity-50">T-Shirt</div>
-                    </div>
-                  </div>
-                </td>
-                <td> #123455</td>
-                <td>
-                  <p>2</p>
-                </td>
-                <th>
-                  <span className=" normal-case hover:underline hover:cursor-pointer">
-                    N00.00
-                  </span>
-                </th>
-              </tr>
-              <tr
-                className={
-                  isDark
-                    ? " text-white border-b"
-                    : "  text-black border-b border-b-black"
-                }>
-                <td>
-                  <div className="flex items-center space-x-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle rounded-md w-12 h-12">
-                        <img
-                          src="/tshirt.png"
-                          alt="Avatar Tailwind CSS Component"
-                          className=" w-full h-full bg-white"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">
-                        Stewart Collection Unisex Cotton
-                      </div>
-                      <div className="text-sm opacity-50">T-Shirt</div>
-                    </div>
-                  </div>
-                </td>
-                <td> #123455</td>
-                <td>
-                  <p>2</p>
-                </td>
-                <th>
-                  <span className=" normal-case hover:underline hover:cursor-pointer">
-                    N00.00
-                  </span>
-                </th>
-              </tr>
+              {info?.orderitem?.map((order) => {
+                if (order.hasOwnProperty("price")) {
+                  return (
+                    <tr
+                      key={order.id}
+                      className={
+                        isDark
+                          ? " text-white border-b"
+                          : "  text-black border-b border-b-black"
+                      }>
+                      <td>
+                        <div className="flex items-center space-x-3">
+                          <div className="avatar">
+                            <div className="mask mask-squircle rounded-md w-12 h-12">
+                              <img
+                                src={order.image}
+                                alt="Avatar Tailwind CSS Component"
+                                className=" w-full h-full bg-white"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="font-bold normal-case">
+                              {order.name} {order.initial_color}{" "}
+                              {order.initial_size}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td> {order.id.slice(-6)}</td>
+                      <td>
+                        <p>{order.qty}</p>
+                      </td>
+                      <th>
+                        <span className=" normal-case hover:underline hover:cursor-pointer">
+                          ₦{order.subTotal.toFixed(2)}
+                        </span>
+                      </th>
+                    </tr>
+                  );
+                }
+              })}
             </tbody>
 
             <tfoot>
@@ -106,8 +77,16 @@ function OrderIDCard() {
                 }>
                 <th className=" text-[18px] font-semibold">Total</th>
                 <th></th>
-                <th className=" text-[18px] font-semibold">4 Items</th>
-                <th className=" text-[18px] font-semibold">₦0.00</th>
+                <th className=" text-[18px] font-semibold">
+                  {info.orderitem.reduce((accumulator, currentItem) => {
+                    if (currentItem.subTotal) {
+                      return accumulator + Number(currentItem.qty);
+                    }
+                    return accumulator;
+                  }, 0)}{" "}
+                  Items
+                </th>
+                <th className=" text-[18px] font-semibold">₦{info.total}</th>
               </tr>
             </tfoot>
 
@@ -119,8 +98,8 @@ function OrderIDCard() {
   );
 }
 
-function PaymentInfo() {
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
+function PaymentInfo({info}) {
+  const isDark = useSelector((state) => state.store?.toggleMode?.isDark);
 
   return (
     <div className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
@@ -134,11 +113,11 @@ function PaymentInfo() {
 
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Total amount:</h2>
-          <h2 className=" "> N00.00</h2>
+          <h2 className=" "> ₦{info.total}</h2>
         </div>
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Payment status:</h2>
-          <h2 className="  text-[#34C759]">Completed</h2>
+          <h2 className="  text-[#34C759]">{info.status}</h2>
         </div>
       </div>
     </div>
@@ -159,7 +138,7 @@ function DeliveryStatus() {
     </div>
   );
 }
-function AdditionalInfo() {
+function AdditionalInfo({info}) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
@@ -174,22 +153,24 @@ function AdditionalInfo() {
 
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Shipping</h2>
-          <h2 className=" ">Standard - N00.00</h2>
+          <h2 className=" ">
+            {info.shippingType} - ₦{info.shipping}
+          </h2>
         </div>
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Extra charges:</h2>
-          <h2 className=" ">Tax - N00.00</h2>
+          <h2 className=" ">Tax - ₦00.00</h2>
         </div>
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Total:</h2>
-          <h2 className=" ">N00.00</h2>
+          <h2 className=" ">₦{info.total}</h2>
         </div>
       </div>
     </div>
   );
 }
 
-function ShippingDetails() {
+function ShippingDetails({info}) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
@@ -204,18 +185,17 @@ function ShippingDetails() {
 
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Name:</h2>
-          <h2 className=" ">John Doe</h2>
+          <h2 className=" ">{info.name}</h2>
         </div>
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Address:</h2>
           <h2 className=" ">
-            No. 12, Maryland street Rumuigbo, Port Harcourt, Rivers state
-            Nigeria.
+{info.address}       {info.state}, {info.country}
           </h2>
         </div>
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Email</h2>
-          <h2 className=" ">Johndoe@gmail.com</h2>
+          <h2 className=" normal-case ">{info.email}</h2>
         </div>
         <h2
           className={`mb-3 border-b pb-1 ${
@@ -229,11 +209,16 @@ function ShippingDetails() {
         </div>
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Email</h2>
-          <h2 className=" ">Johndoe@gmail.com</h2>
+          <h2 className=" normal-case ">Johndoe@gmail.com</h2>
         </div>
         <div className=" grid grid-cols-2  sm:mb-3 lg:mb-3 xl:mb-3 flex-wrap">
           <h2>Payment type:</h2>
-          <h2 className=" ">Credit card</h2>
+          <h2 className=" ">{
+          info.orderitem.map((item)=>{
+            if(item.hasOwnProperty("paymentMethod")){
+              return item.paymentMethod;
+            }
+          })}</h2>
         </div>
       </div>
     </div>
@@ -241,19 +226,25 @@ function ShippingDetails() {
 }
 
 export default function SingleOrder() {
+    const { user, toggleMode, orders, adminOrderDetails } = useSelector(
+      (state) => state.store
+    );
   return (
     <div>
-      
       <p>Order #123454</p>
-      <p className=' opacity-50'>Order date - 20/09/2023</p>
-      <OrderIDCard />
+      <p className=" opacity-50">Order date - {adminOrderDetails?.placedOn}</p>
+      {adminOrderDetails && <OrderIDCard info={adminOrderDetails} />}
+
       <div className=" grid grid-cols-2 sm:grid-cols-1 gap-5">
-        <div>
-          <AdditionalInfo />
-          <PaymentInfo />
-          <DeliveryStatus />
-        </div>
-        <ShippingDetails />
+        {adminOrderDetails && (
+          <div>
+            <AdditionalInfo info={adminOrderDetails} />
+            <PaymentInfo info={adminOrderDetails} />
+            {/* <DeliveryStatus info={adminOrderDetails} /> */}
+          </div>
+        )}
+
+        {adminOrderDetails && <ShippingDetails info={adminOrderDetails} />}
       </div>
     </div>
   );
