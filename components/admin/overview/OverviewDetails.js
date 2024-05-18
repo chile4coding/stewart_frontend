@@ -265,7 +265,7 @@ export default function OverviewDetails() {
         </span>{" "}
         here’s how your store is doing today
       </h2>
-      {/* 
+
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
         <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
         <SummaryCard
@@ -280,9 +280,9 @@ export default function OverviewDetails() {
           percentage="+14%"
           isRevenue={false}
         />
-      </div> */}
+      </div>
 
-      {/* <div
+      <div
         className={` p-5  h-[490px] mb-6 card  w-full ${
           isDark ? " bg-[#212121]" : "bg-[#7c7b7b]"
         }`}>
@@ -297,6 +297,7 @@ export default function OverviewDetails() {
         </div>
         {graphData && graphData?.length > 0 && <Graph />}
       </div>
+      {/* 
 
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
         <Visitor
