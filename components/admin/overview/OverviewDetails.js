@@ -282,7 +282,7 @@ export default function OverviewDetails() {
         />
       </div>
 
-      <div
+      {/* <div
         className={` p-5  h-[490px] mb-6 card  w-full ${
           isDark ? " bg-[#212121]" : "bg-[#7c7b7b]"
         }`}>
@@ -296,7 +296,7 @@ export default function OverviewDetails() {
           </div>
         </div>
         {graphData && graphData?.length > 0 && <Graph />}
-      </div>
+      </div> */}
 
       {/* <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
         <Visitor
