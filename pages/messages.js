@@ -27,14 +27,12 @@ export default function Messages() {
     myNotification();
   }, []);
 
-  console.log(messages);
-
   return (
     <>
       <MetaDataC title="Messages" />
 
       <UserLayout>
-        <div className="px-10 sm:px-4 mt-6 max-h-[100vh]  overflow-y-scroll">
+        <div className="px-10 sm:px-0 mt-6 max-h-[100vh]   h-full overflow-y-scroll">
           {messages && messages.length > 0 && <Inbox message={messages} />}
           {messages && messages.length === 0 && <NoInbox />}
         </div>

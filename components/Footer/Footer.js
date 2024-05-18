@@ -14,33 +14,30 @@ import { FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
-
-
 export default function AppFooter() {
-    const {
-      shop,
-      toggleMode,
-      singleProduct,
-      category,
-      newArrival,
-      bestSelling,
-      products: product,
-    } = useSelector((state) => state.store);
-    // const { isDark } = toggleMode;
-        const isDark = toggleMode?.isDark;
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    category,
+    newArrival,
+    bestSelling,
+    products: product,
+  } = useSelector((state) => state.store);
+  // const { isDark } = toggleMode;
+  const isDark = toggleMode?.isDark;
 
-    const router = useRouter();
-    const dispatch = useDispatch();
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-    function handlecategories( cat){
-      dispatch(getProductByCategory(cat.id));
-      if (shop.length > 0) {
-        router.push(`/shop/category-${cat.cat}`, "/shop");
-      } else {
-        return;
-      }
-
+  function handlecategories(cat) {
+    dispatch(getProductByCategory(cat.id));
+    if (shop.length > 0) {
+      router.push(`/shop/category-${cat.cat}`, "/shop");
+    } else {
+      return;
     }
+  }
 
   return (
     <>
@@ -76,7 +73,9 @@ export default function AppFooter() {
                 {" "}
                 <FaTwitter size={24} />
               </a>
-              <a href="">
+              <a
+                href="https://web.facebook.com/profile.php?id=61554460659523"
+                target="_blank">
                 {" "}
                 <FaFacebook size={24} />
               </a>
@@ -106,7 +105,7 @@ export default function AppFooter() {
                       id: item.id,
                     })}
                     Key={item.id}>
-                  {item?.name}
+                    {item?.name}
                   </a>
                 );
               })}
@@ -122,7 +121,9 @@ export default function AppFooter() {
               Informations
             </header>
             <a className="link link-hover">About us</a>
-            <Link href={"/contact"} className="link link-hover">Contact</Link>
+            <Link href={"/contact"} className="link link-hover">
+              Contact
+            </Link>
           </nav>
           <nav
             className={` font-semibold capitalize  ${
@@ -181,7 +182,9 @@ export default function AppFooter() {
                 {" "}
                 <FaTwitter size={24} />
               </a>
-              <a href="">
+              <a
+                href="https://web.facebook.com/profile.php?id=61554460659523"
+                target="_blank">
                 {" "}
                 <FaFacebook size={24} />
               </a>
@@ -229,7 +232,7 @@ export default function AppFooter() {
                           id: item.id,
                         })}
                         Key={item.id}>
-                      {item?.name}
+                        {item?.name}
                       </a>
                     );
                   })}

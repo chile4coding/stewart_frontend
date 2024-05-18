@@ -63,6 +63,15 @@ export default function AddProductColor() {
     }
   }, []);
 
+  console.log({
+    shop,
+    toggleMode,
+    sizes,
+    singleProduct,
+    singleProductColor,
+    productColors,
+  });
+
   function handleImageInput(e) {
     const selectedImage = e.target.files[0];
     if (selectedImage) {
@@ -137,13 +146,12 @@ export default function AddProductColor() {
     setImage({ ...image, lading: false });
   }
 
-  function removeImage(){
-       setImage({
-         ...image,
-         imageInput: "",
-         productImage: "",
-       });
-
+  function removeImage() {
+    setImage({
+      ...image,
+      imageInput: "",
+      productImage: "",
+    });
   }
 
   return (

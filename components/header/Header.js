@@ -17,6 +17,7 @@ import {
   storeGetProducts as getStoreProducts,
 } from "@/redux/storeSlice";
 import { useRouter } from "next/router";
+import { isEmpty } from "lodash";
 
 export default function Header() {
   const [dark, seDark] = useState(true);
@@ -29,6 +30,7 @@ export default function Header() {
     bestSelling,
     cart,
     products: product,
+    user,
   } = useSelector((state) => state.store);
   // const { isDark } = toggleMode;
   const isDark = toggleMode?.isDark;
@@ -90,9 +92,29 @@ export default function Header() {
           </div>
           <div className="flex gap-6 items-center ">
             <div className="sm:hidden md:hidden">
-              <span className="cursor-pointer" onClick={handleUserNav}>
-                Login
-              </span>
+              {!isEmpty(user) && user.avatar?.trim().length > 1 && (
+                <div className="">
+                  <img
+                    onClick={handleUserNav}
+                    src={user.avatar}
+                    className=" cursor-pointer bg-[white] object-cover rounded-full  h-[30px] w-[30px] "
+                  />
+                </div>
+              )}
+
+              {!isEmpty(user) && !Boolean(user?.avatar) && (
+                <div className="sm:hidden md:hidden">
+                  <BiSolidUser
+                    className="text-[24px] cursor-pointer"
+                    onClick={handleUserNav}
+                  />
+                </div>
+              )}
+              {isEmpty(user) && (
+                <span className="cursor-pointer" onClick={handleUserNav}>
+                  Login
+                </span>
+              )}
             </div>
 
             <div className="indicator ">

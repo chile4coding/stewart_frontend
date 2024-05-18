@@ -434,7 +434,9 @@ export default function Home() {
                 wardrobe, from the latest trends to timeless classics
               </p>
               <div className=" flex justify-center mt-6 md:hidden lg:hidden xl:hidden">
-                <button className="btn sm:btn-sm    btn-outline  border  border-white normal-case font-semibold text-white">
+                <button
+                  className="btn sm:btn-sm    btn-outline  border  border-white normal-case font-semibold text-white"
+                  onClick={handleCreateAccountNav}>
                   Get started
                 </button>
               </div>

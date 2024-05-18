@@ -56,7 +56,9 @@ export default function LoginDetails() {
   }
 
   return (
-    <form onSubmit={handleSignup} className=" flex flex-col justify-center">
+    <form
+      onSubmit={handleSignup}
+      className=" flex flex-col justify-center  sm:h-[80vh]">
       <h2 className="text-center text-[18px] font-semibold normal-case">
         Welcome! Log in to your account
       </h2>

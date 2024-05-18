@@ -226,7 +226,9 @@ function ClethReviews({ review }) {
               />
             </div>
             <div>
-              <h2 className=" text-[ 18px]  font-semibold">{review?.user?.name}</h2>
+              <h2 className=" text-[ 18px]  font-semibold">
+                {review?.user?.name}
+              </h2>
               <p className=" text-[14px] italic font-normal leading-6">
                 Verified purchase
               </p>
@@ -245,7 +247,7 @@ function ClethReviews({ review }) {
   );
 }
 export default function SingleItem({ singleItem, similarProduct }) {
-  const { toggleMode,cart } = useSelector((state) => state.store);
+  const { toggleMode, cart } = useSelector((state) => state.store);
   const [clotheSize, setClotheSize] = useState(
     singleItem?.size.map((s) => ({ ...s, active: false }))
   );
@@ -261,12 +263,7 @@ export default function SingleItem({ singleItem, similarProduct }) {
 
   const [descAndReviewDisplay, setDescAndReviewDisplay] = useState(false);
   const [value, setValue] = useState(1);
-  const  dispatch = useDispatch()
-
-
-
-
-
+  const dispatch = useDispatch();
 
   const swiperNavPrevRef = useRef(null);
   const swiperNavNexRef = useRef(null);
@@ -327,7 +324,6 @@ export default function SingleItem({ singleItem, similarProduct }) {
         image: color.image,
         initial_color: color.name,
         initial_size: clothSize?.name,
-        
       });
     }
   }
@@ -367,17 +363,13 @@ export default function SingleItem({ singleItem, similarProduct }) {
   function handleIncreaseValue() {
     if (value > 0) {
       setValue((prev) => prev + 1);
-
     }
   }
 
   function handleDecreaseValue() {
     if (value > 1) {
       setValue((prev) => prev - 1);
-
-
     }
-
   }
 
   function handeDescriptionDisplay() {
@@ -388,38 +380,31 @@ export default function SingleItem({ singleItem, similarProduct }) {
     setDescAndReviewDisplay(true);
   }
 
+  function handleCart(checkouts) {
+    const { name, id, category_id, price, initial_size, initial_color, image } =
+      singleProduct;
+    const cartqty = value;
+    const activeCart = {
+      name,
+      id,
+      category_id,
+      price,
+      initial_size,
+      initial_color,
+      image,
+      qty: cartqty,
+      subTotal: price * cartqty,
+    };
+    dispatch(addToCart(activeCart));
 
-  
+    toast.success(
+      <h2 className=" normal-case">Your item has been added to cart</h2>
+    );
 
-  function handleCart(checkouts){
-    const {name, id, category_id, price, initial_size, initial_color, image} =  singleProduct
-    const cartqty  =  value
-   const activeCart = {
-     name,
-     id,
-     category_id,
-     price,
-     initial_size,
-     initial_color,
-     image,
-     qty: cartqty,
-     subTotal: price * cartqty
-   };
-   dispatch(addToCart(activeCart))
-
-   toast.success(<h2 className=" normal-case">Your item has been added to cart</h2>);
-
-   if (Boolean(checkouts)) {
-     router.replace("/checkout");
-   }
-
-   
-
-
+    if (Boolean(checkouts)) {
+      router.replace("/checkout");
+    }
   }
-  
-
- 
 
   return (
     <main className=" mb-20">
@@ -475,8 +460,9 @@ export default function SingleItem({ singleItem, similarProduct }) {
               backgroundColor: "#F0EDED",
               fill: "green",
             }}
+            readOnly
             className="my-4"
-            defaultValue={2.5}
+            defaultValue={3.5}
             precision={0.5}
           />
           <h2 className=" text-[18px]  font- leading-6 sm:text-xs normal-case">
