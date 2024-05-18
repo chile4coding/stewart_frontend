@@ -14,7 +14,7 @@ export default function AdminLogin() {
     loading: false,
   });
   const router = useRouter();
-const dispatch  = useDispatch()
+  const dispatch = useDispatch();
   function handleCreateAccountNav() {
     router.replace("/admin/signup");
   }
@@ -45,14 +45,13 @@ const dispatch  = useDispatch()
     setUser({ ...user, loading: true });
     const response = await loginAdmin(user);
     const data = await response.json();
-   
 
     if (response.status === 200) {
       toast.success(<div className=" normal-case">{data?.message}</div>);
 
-     dispatch(setAdmin(data?.findAdminUpdate));
+      dispatch(setAdmin(data?.findAdminUpdate));
       Cookies.set("_stewart_collection_token", data.token);
-      router.push("/admin/home");
+      window.location.href = "/admin/home";
     } else {
       toast.error(<div className=" normal-case">{data?.message}</div>);
     }
