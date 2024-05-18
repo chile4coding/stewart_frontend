@@ -299,12 +299,12 @@ export default function OverviewDetails() {
       </div>
 
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
-        {/* <Visitor
+        <Visitor
           title="Website Visitors"
           total={visiorCount}
           percentage="+31%"
           value="+1,340 this week"
-        /> */}
+        />
         <Reviews
           title="Reviews"
           total={adminReviews?.length}
