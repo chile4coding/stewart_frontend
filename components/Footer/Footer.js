@@ -74,7 +74,7 @@ export default function AppFooter() {
                 <FaTwitter size={24} />
               </a>
               <a
-                href="https://web.facebook.com/profile.php?id=61554460659523"
+                href="https://www.facebook.com/profile.php?id=61554460659523"
                 target="_blank">
                 {" "}
                 <FaFacebook size={24} />
@@ -183,7 +183,7 @@ export default function AppFooter() {
                 <FaTwitter size={24} />
               </a>
               <a
-                href="https://web.facebook.com/profile.php?id=61554460659523"
+                href="https://www.facebook.com/profile.php?id=61554460659523"
                 target="_blank">
                 {" "}
                 <FaFacebook size={24} />
