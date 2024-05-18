@@ -273,7 +273,7 @@ export default function OverviewDetails() {
       </h2>
 
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
-        <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
+        {/* <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} /> */}
         {/* <SummaryCard
           title="Total Customers"
           total={userCount}
