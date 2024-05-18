@@ -243,10 +243,10 @@ export default function OverviewDetails() {
           dataV?.visitors[0]?.count ? dataV?.visitors[0]?.count - 1 : 0
         )
       );
-      dispatch(setAdminReviews(dataR.reviews));
+      dispatch(setAdminReviews(dataR?.reviews));
     }
     fetchOrders();
-  }, [dispatch, userCount]);
+  }, []);
 
   function handleWeeklybtnClick(id) {
     setActiveBtn(id);
