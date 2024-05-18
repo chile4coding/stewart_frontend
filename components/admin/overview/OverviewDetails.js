@@ -41,7 +41,7 @@ function SummaryCard({ title, total, percentage, isRevenue }) {
         </div>
         <div className=" flex   items-center  justify-between">
           <h2 className=" lg:text-[30px]  xl:text-[30px] font-semibold">
-            {isRevenue && "₦"} {total && isRevenue ? total.toFixed(2) : total}
+            {total}
           </h2>
         </div>
       </div>
@@ -253,10 +253,6 @@ export default function OverviewDetails() {
     fetchOrders();
   }, []);
 
-  console.log("thi is the ========== ", {
-    totalOrders,
-    userCount,
-  });
   function handleWeeklybtnClick(id) {
     setActiveBtn(id);
   }
@@ -274,13 +270,13 @@ export default function OverviewDetails() {
         <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
         <SummaryCard
           title="Total Customers"
-          total={0}
+          total={userCount ? userCount : 0}
           percentage="-6%"
           isRevenue={false}
         />
         <SummaryCard
           title="Total Orders"
-          total={0}
+          total={totalOrders ? totalOrders : 0}
           percentage="+14%"
           isRevenue={false}
         />
