@@ -1,8 +1,8 @@
 import { data } from "autoprefixer";
 import axios from "axios";
 import Cookies from "js-cookie";
-const base_url = "http://localhost:5000/api/v1";
-// const base_url = "https://stewart-r0co.onrender.com/api/v1";
+// const base_url = "http://localhost:5000/api/v1";
+const base_url = "https://stewart-r0co.onrender.com/api/v1";
 import { io } from "socket.io-client";
 
 export async function createCategory(productPhoto, category, bearerId) {
