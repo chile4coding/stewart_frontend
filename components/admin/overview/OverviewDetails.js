@@ -306,23 +306,19 @@ export default function OverviewDetails() {
       </div>
 
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
-        {visiorCount && (
-          <Visitor
-            title="Website Visitors"
-            total={visiorCount}
-            percentage="+31%"
-            value="+1,340 this week"
-          />
-        )}
+        <Visitor
+          title="Website Visitors"
+          total={visiorCount}
+          percentage="+31%"
+          value="+1,340 this week"
+        />
 
-        {adminReviews?.length && (
-          <Reviews
-            title="Reviews"
-            total={adminReviews?.length}
-            percentage="See all reviews"
-            value="+12 this week"
-          />
-        )}
+        <Reviews
+          title="Reviews"
+          total={adminReviews?.length}
+          percentage="See all reviews"
+          value="+12 this week"
+        />
       </div>
 
       <div className=" grid grid-cols-2  sm:grid-cols-1 gap-10  md:grid-cols-1">
