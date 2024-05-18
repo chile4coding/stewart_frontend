@@ -29,7 +29,7 @@ const initialState = {
   adminOrder: {},
   adminOrderDetails: {},
   adminReviews: {},
-  userCount: 6,
+  userCount: {},
   visiorCount: {},
   reviewsPaercent: [],
   totalRevenue: {},
@@ -220,7 +220,7 @@ const storeSlice = createSlice({
         return randomizedArray;
       }
       const productLength = action.payload.length / 2;
-      const arr = action.payload.slice(productLength);
+      const arr = action.payload?.slice(productLength);
       state.bestSelling = shuffleArray(arr);
     },
     searchStore: (state, action) => {
@@ -534,6 +534,16 @@ const storeSlice = createSlice({
 
       state.topSale = value;
     },
+
+    setUpInit: (state, action) => {
+      state.graphData = [];
+      state.adminOrder = [];
+      state.topSale = {};
+      state.visiorCount = 0;
+      state.reviewsPaercent = 0;
+      state.userCount = 0;
+      state.adminReviews = {};
+    },
   },
 });
 
@@ -583,5 +593,6 @@ export const {
   getGraphData,
   setRevenueOrders,
   setTopSale,
+  setUpInit,
 } = storeSlice.actions;
 export default storeSlice.reducer;

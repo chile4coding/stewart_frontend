@@ -41,7 +41,7 @@ function SummaryCard({ title, total, percentage, isRevenue }) {
         </div>
         <div className=" flex   items-center  justify-between">
           <h2 className=" lg:text-[30px]  xl:text-[30px] font-semibold">
-            {isRevenue && "₦"} {total && isRevenue ? total?.toFixed(2) : total}
+            {isRevenue && "₦"} {total && isRevenue ? total.toFixed(2) : total}
           </h2>
         </div>
       </div>
@@ -200,7 +200,7 @@ export default function OverviewDetails() {
   const {
     toggleMode,
     admin,
-    totalRevenue: revenue,
+    revenue,
     totalOrders,
     userCount,
     visiorCount,
@@ -217,37 +217,47 @@ export default function OverviewDetails() {
 
     setToken(token);
     async function fetchOrders() {
-      const response = await adminGetOrders(token);
-      const data = await response.json();
-      const res = await adminGetreviews(token);
-      const dataR = await res.json();
-      const dataG = await getAdminGraph(token);
-      dispatch(getGraphData(dataG?.userData1));
+      try {
+        const response = await adminGetOrders(token);
+        const data = await response.json();
+        const res = await adminGetreviews(token);
+        const dataR = await res.json();
+        const dataG = await getAdminGraph(token);
+        dispatch(getGraphData(dataG?.userData1));
 
-      const dataC = await getCustomers(token);
-      const dataV = await getVisitors(token);
-      const dataP = await getShopProducts();
+        const dataC = await getCustomers(token);
+        const dataV = await getVisitors(token);
+        const dataP = await getShopProducts();
 
-      dispatch(initUser(dataC?.users?.length));
-      if (data?.orders.length > 0 && dataP?.products?.length > 0) {
+        dispatch(initUser(dataC?.users?.length));
+        if (data?.orders.length > 0 && dataP?.products?.length > 0) {
+          dispatch(
+            setAdminOrder({ orders: data?.orders, products: dataP?.products })
+          );
+        }
+        dispatch(setTopSale(data?.orders));
+
+        dispatch(setRevenueOrders(data.orders));
         dispatch(
-          setAdminOrder({ orders: data?.orders, products: dataP?.products })
+          initVisitor(
+            dataV?.visitors[0]?.count
+              ? Number(dataV?.visitors[0]?.count) - 1
+              : 0
+          )
         );
+        dispatch(setAdminReviews(dataR.reviews));
+      } catch (err) {
+        console.log(err);
       }
-      dispatch(setTopSale(data?.orders));
-
-      dispatch(setRevenueOrders(data.orders));
-      dispatch(
-        initVisitor(
-          dataV?.visitors[0]?.count ? Number(dataV?.visitors[0]?.count) - 1 : 0
-        )
-      );
-      dispatch(setAdminReviews(dataR.reviews));
     }
     fetchOrders();
   }, []);
 
-  console.log("this is th e========   ", {
+  function handleWeeklybtnClick(id) {
+    setActiveBtn(id);
+  }
+
+  console.log({
     toggleMode,
     admin,
     revenue,
@@ -259,10 +269,6 @@ export default function OverviewDetails() {
     saleByCategory,
     topSale,
   });
-  function handleWeeklybtnClick(id) {
-    setActiveBtn(id);
-  }
-
   return (
     <div>
       <h2 className=" normal-case mb-2 xl:mt-6">
@@ -273,13 +279,13 @@ export default function OverviewDetails() {
       </h2>
 
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
-        {/* <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} /> */}
-        {/* <SummaryCard
+        <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
+        <SummaryCard
           title="Total Customers"
           total={userCount}
           percentage="-6%"
           isRevenue={false}
-        /> */}
+        />
         <SummaryCard
           title="Total Orders"
           total={totalOrders}
@@ -315,12 +321,12 @@ export default function OverviewDetails() {
       </div>
 
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
-        {/* <Visitor
+        <Visitor
           title="Website Visitors"
           total={visiorCount}
           percentage="+31%"
           value="+1,340 this week"
-        /> */}
+        />
         <Reviews
           title="Reviews"
           total={adminReviews?.length}
