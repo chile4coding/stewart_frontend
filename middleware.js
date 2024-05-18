@@ -19,6 +19,6 @@ export default function middleware(req, res) {
     url.includes("/reviews") ||
     url.includes("/admin/settings");
   if (!verify && checkUr) {
-    return NextResponse.redirect("https://stewartcollection.store/login");
+    return NextResponse.redirect("https://www.stewartcollection.store/login");
   }
 }
