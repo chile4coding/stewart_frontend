@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 
-
 export default function middleware(req, res) {
   // console.log(req.cookies)
   const verify = req.cookies.get("_stewart_collection_token");
-
 
   const url = req.url;
   const checkUr =
@@ -19,10 +17,8 @@ export default function middleware(req, res) {
     url.includes("/messages") ||
     url.includes("/saved_items") ||
     url.includes("/reviews") ||
-    url.includes("/admin/settings"); 
+    url.includes("/admin/settings");
   if (!verify && checkUr) {
-      return NextResponse.redirect(
-        "https://stewart-frontend-chile4coding.vercel.app/login"
-      );
+    return NextResponse.redirect("https://stewartcollection.store/login");
   }
 }
