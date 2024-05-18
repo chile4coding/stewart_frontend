@@ -274,12 +274,12 @@ export default function OverviewDetails() {
           percentage="-6%"
           isRevenue={false}
         />
-        <SummaryCard
+        {/* <SummaryCard
           title="Total Orders"
           total={totalOrders}
           percentage="+14%"
           isRevenue={false}
-        />
+        /> */}
       </div>
 
       {/* <div
