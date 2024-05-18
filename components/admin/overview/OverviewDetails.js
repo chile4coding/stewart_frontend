@@ -70,7 +70,7 @@ function Visitor({ title, total, percentage, value }) {
           </select>
         </div>
         <h2 className="  my-2 lg:text-[30px]  xl:text-[30px] font-semibold">
-          {total}
+          {total && total}
         </h2>
 
         <div className=" flex   items-center  justify-between">
@@ -225,14 +225,13 @@ export default function OverviewDetails() {
       dispatch(getGraphData(dataG?.userData1));
 
       const dataC = await getCustomers(token);
-
       const dataV = await getVisitors(token);
       const dataP = await getShopProducts();
 
       dispatch(initUser(dataC?.users?.length));
-      if (data?.orders?.length > 0 && dataP.products?.length > 0) {
+      if (data?.orders.length > 0 && dataP?.products?.length > 0) {
         dispatch(
-          setAdminOrder({ orders: data.orders, products: dataP?.products })
+          setAdminOrder({ orders: data?.orders, products: dataP?.products })
         );
       }
       dispatch(setTopSale(data?.orders));
@@ -240,14 +239,13 @@ export default function OverviewDetails() {
       dispatch(setRevenueOrders(data.orders));
       dispatch(
         initVisitor(
-          dataV?.visitors[0]?.count ? dataV?.visitors[0]?.count - 1 : 0
+          dataV?.visitors[0]?.count ? Number(dataV?.visitors[0]?.count) - 1 : 0
         )
       );
-      dispatch(setAdminReviews(dataR?.reviews));
+      dispatch(setAdminReviews(dataR.reviews));
     }
     fetchOrders();
   }, []);
-
   function handleWeeklybtnClick(id) {
     setActiveBtn(id);
   }
@@ -255,10 +253,10 @@ export default function OverviewDetails() {
   return (
     <div>
       <h2 className=" normal-case mb-2 xl:mt-6">
-        <div className="  py-3">
-          Hi <span className="font-bold  capitalize"> {admin?.first_name}</span>{" "}
-          here’s how your store is doing today
-        </div>{" "}
+        <span className=" font-bold">
+          Hi <span className="  capitalize"> {admin?.first_name}</span>
+        </span>{" "}
+        here’s how your store is doing today
       </h2>
 
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
@@ -277,6 +275,32 @@ export default function OverviewDetails() {
         />
       </div>
 
+      <div
+        className={` p-5  h-[490px] mb-6 card  w-full ${
+          isDark ? " bg-[#212121]" : "bg-[#7c7b7b]"
+        }`}>
+        <div className=" flex justify-between items-center">
+          <h2>General Sales Activity</h2>
+          <div
+            className={`flex rounded-md px-4 py-1 bg-[#646464]   ${
+              isDark ? "" : ""
+            }`}>
+            {/* {btn.map((btn) => (
+              <button
+                key={btn.id}
+                onClick={handleWeeklybtnClick.bind(this, btn.id)}
+                className={`text-white normal-case btn btn-sm  bg-transparent border-none hover:rounded-md  hover:bg-[#4FBBD2] hover:text-white ${
+                  btn.id === activeBtn && "bg-[#4FBBD2] rounded-md"
+                }`}>
+                {btn.name}
+              </button>
+            ))} */}
+            {new Date().getFullYear().toString()}
+          </div>
+        </div>
+        {graphData && graphData?.length > 0 && <Graph />}
+      </div>
+
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
         <Visitor
           title="Website Visitors"
@@ -292,7 +316,7 @@ export default function OverviewDetails() {
         />
       </div>
       <div className=" grid grid-cols-2  sm:grid-cols-1 gap-10  md:grid-cols-1">
-        {topSale && topSale?.length > 0 && <TopSellingItems sale={topSale} />}
+        {topSale && topSale.length > 0 && <TopSellingItems sale={topSale} />}
 
         <div
           className={`mb-6  card  flex    ${
@@ -303,7 +327,7 @@ export default function OverviewDetails() {
               Sales by Category
             </h2>
             <div className="h-[250px]   my-auto mx-auto">
-              {saleByCategory && saleByCategory?.length > 0 && <PieChart />}
+              {saleByCategory && saleByCategory.length > 0 && <PieChart />}
             </div>
           </div>
         </div>
