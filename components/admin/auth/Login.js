@@ -51,7 +51,7 @@ export default function AdminLogin() {
 
       dispatch(setAdmin(data?.findAdminUpdate));
       Cookies.set("_stewart_collection_token", data.token);
-      window.location.href = "/admin/products";
+      window.location.href = "/admin/home";
     } else {
       toast.error(<div className=" normal-case">{data?.message}</div>);
     }
