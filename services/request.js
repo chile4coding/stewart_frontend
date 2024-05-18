@@ -1,8 +1,8 @@
 import { data } from "autoprefixer";
 import axios from "axios";
 import Cookies from "js-cookie";
-// const base_url = "http://localhost:5000/api/v1";
-const base_url = "https://stewart-r0co.onrender.com/api/v1";
+const base_url = "http://localhost:5000/api/v1";
+// const base_url = "https://stewart-r0co.onrender.com/api/v1";
 import { io } from "socket.io-client";
 
 export async function createCategory(productPhoto, category, bearerId) {
@@ -145,8 +145,6 @@ export async function getProductColors() {
 export async function createProductSize(productDetails, bearerId) {
   const { name, productId, waist, length, sleaves } = productDetails;
 
-  console.log(productDetails);
-
   try {
     const response = await fetch(
       `${base_url}/create_size`,
@@ -221,7 +219,6 @@ export async function createProductColor(productDetails, bearerId) {
   const { name, productImage, price, discount, salesPrice, sizeId, colorId } =
     productDetails;
 
-  console.log(productDetails);
   try {
     const response = await fetch(`${base_url}/create_cloth_color`, {
       body: JSON.stringify({
@@ -922,7 +919,6 @@ export async function updateReview(details, bearerId) {
 }
 
 export async function sendMessage(details, bearerId) {
-  console.log(details);
   try {
     const response = await fetch(
       `${base_url}/create_message`,
@@ -1120,7 +1116,6 @@ export async function getNotification(bearerId) {
   }
 }
 export async function adminMessages(bearerId) {
-  console.log(bearerId);
   try {
     const response = await fetch(
       `${base_url}/admin_get_message`,

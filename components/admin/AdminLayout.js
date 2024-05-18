@@ -4,65 +4,69 @@ import AppFooter from "../Footer/Footer";
 import { GrClose } from "react-icons/gr";
 import { UserActiveLink } from "../ActiveLink";
 import { AiFillStar, AiOutlineMenu } from "react-icons/ai";
-import { BsFillCartFill, BsFillCreditCard2FrontFill, BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
+import {
+  BsFillCartFill,
+  BsFillCreditCard2FrontFill,
+  BsFillMoonFill,
+  BsFillSunFill,
+} from "react-icons/bs";
 import { HiShoppingBag, HiUserGroup } from "react-icons/hi2";
 import {
   BiMessageSquareDetail,
   BiSolidDashboard,
   BiSolidUser,
 } from "react-icons/bi";
-import { getShop, toggler, storeGetProducts, getSizes, initTggle } from "@/redux/storeSlice";
+import {
+  getShop,
+  toggler,
+  storeGetProducts,
+  getSizes,
+  initTggle,
+} from "@/redux/storeSlice";
 import { useRouter } from "next/router";
 import { MdFavorite } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
 import { IoIosNotifications } from "react-icons/io";
 import { FaCog } from "react-icons/fa";
-import { getCookie, getProductSizes, getProducts, getShopProducts } from "@/services/request";
+import {
+  getCookie,
+  getProductSizes,
+  getProducts,
+  getShopProducts,
+} from "@/services/request";
 import { FaMessage } from "react-icons/fa6";
-
+import Link from "next/link";
 
 function AdminHeader() {
   const [title, setTitle] = useState("");
-  const {shop, toggleMode} = useSelector((state) => state.store);
-  
+  const { shop, toggleMode } = useSelector((state) => state.store);
+
   // const  {isDark} = toggleMode
   const isDark = toggleMode?.isDark;
   const dispatch = useDispatch();
   const router = useRouter();
 
-
-  
   useEffect(() => {
-      if (isDark === undefined) {
-        dispatch(initTggle());
-      }
-    const cookie = getCookie()
-
-    if(cookie){
-      async function getCategory(cookie){
-  
-     const data = await getProducts(cookie);
-
-     const products = await getShopProducts(cookie);
-  
-   
-     
-     
-  
-     if(data){
-  dispatch(getShop(data?.category));
-     }
-     if(products){
-      dispatch(storeGetProducts(products.products));
-     }
-  
-  
-  
-      }
-  getCategory()
-
+    if (isDark === undefined) {
+      dispatch(initTggle());
     }
+    const cookie = getCookie();
 
+    if (cookie) {
+      async function getCategory(cookie) {
+        const data = await getProducts(cookie);
+
+        const products = await getShopProducts(cookie);
+
+        if (data) {
+          dispatch(getShop(data?.category));
+        }
+        if (products) {
+          dispatch(storeGetProducts(products.products));
+        }
+      }
+      getCategory();
+    }
 
     if (router.pathname === "/admin") {
       setTitle("Dashboard Overview");
@@ -174,16 +178,14 @@ export default function AdminLayout({ children }) {
   return (
     <div className={isDark ? "bg-black" : "#FAFAFA"}>
       <div
-        className={`  max-w-[1440px]  h-full  mx-auto  ${
-          isDark ? "turndark" : "turnlight"
-        }`}>
+        className={`  h-full  mx-auto  ${isDark ? "turndark" : "turnlight"}`}>
         <div className="drawer lg:drawer-start lg:drawer-open xl:drawer-open">
           <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content flex flex-col     overflow-hidden  ">
             <div className={`sticky top-0 z-50 ${isDark ? " bg-[black]" : ""}`}>
               <AdminHeader />
             </div>
-            <div className=" overflow-hidden">{children}</div>
+            <div className=" overflow-hidden pt-6">{children}</div>
             <div className="">
               <AppFooter />
             </div>
@@ -202,9 +204,11 @@ export default function AdminLayout({ children }) {
                   <GrClose />
                 </label>
               </div>
-              <h2 className="text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
+              <Link
+                href={"/"}
+                className="text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
                 Stewart Collections
-              </h2>
+              </Link>
               <UserActiveLink href="/admin/home">
                 {" "}
                 <BiSolidDashboard />

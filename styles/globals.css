@@ -38,7 +38,6 @@ body {
 }
 .comment {
   background: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
-
 }
 .activeuserhover:hover {
   border-radius: 10px;
@@ -53,18 +52,17 @@ body {
   padding: 0.5rem;
   /* background-color:  linear-gradient(180deg, #0D58AF 0%, #6FEAE2 100%); */
 }
-.btn-weekly{
-   background: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
-   color: white;
+.btn-weekly {
+  background: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
+  color: white;
 }
-.activeBtn:hover{
+.activeBtn:hover {
   stroke-width: 1px;
-  
+
   stroke: #6feae2;
   border-bottom: 1px solid;
   border-image: linear-gradient(45deg, rgb(13, 88, 175), rgb(111, 234, 226)) 1;
   background-color: linear-gradient(180deg, #0d58af 0%, #6feae2 100%);
-  
 }
 /* when consuming API use this class to make the admin complete or all order active  */
 /* .activeBtn{
@@ -97,10 +95,8 @@ body {
   @apply outline-none;
   @border-0;
 }
-.image_ani{
+.image_ani {
   transition: 10s all ease;
-
-
 }
 
 .turndark {
@@ -118,7 +114,6 @@ body {
   height: 100%;
 }
 
-
 .swiperNavNext,
 .swiperNavPrev {
   cursor: pointer;
@@ -126,23 +121,19 @@ body {
   color: red !important;
   fill: red !important;
 }
-.icon-nav-container{
+.icon-nav-container {
   position: relative;
-
 }
 .swiperNavPrev {
   position: absolute;
   z-index: 999;
   top: 40%;
-
 }
 .swiperNavNext {
   position: absolute;
-    z-index: 999;
+  z-index: 999;
   top: 40%;
   right: 0;
-  
-
 }
 
 .item-category {
@@ -177,10 +168,10 @@ body {
 
 .input {
   /* color: rgba(255, 255, 255, 0.59); */
-  font-size: 16px;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 1.5rem;
 }
 
 .btn:hover {
@@ -192,12 +183,12 @@ body {
   width: 15px;
 }
 
-.adminweeklyselect{
+.adminweeklyselect {
   color: white;
   border-radius: 5px;
-background: rgba(255, 255, 255, 0.30)
+  background: rgba(255, 255, 255, 0.3);
 }
-.bg{
+.bg {
   background-image: url(/bg.png);
   background: url(/bg.png);
 
@@ -207,3 +198,8 @@ background: rgba(255, 255, 255, 0.30)
   background-size: cover;
   max-width: 1440px;
 }
+/* @media (max-width: 767px) {
+  body {
+    font-size: 0.8rem;
+  }
+} */

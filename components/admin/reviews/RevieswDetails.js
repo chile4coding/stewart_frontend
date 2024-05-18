@@ -51,7 +51,6 @@ function TotalReviews({
           {total}
         </h2>
 
-      
         <div className=" flex   items-center  justify-between">
           <h2 className=" ">Visitors</h2>
           <h2>{newCustomers}</h2>
@@ -64,10 +63,7 @@ function TotalReviews({
     </div>
   );
 }
-function ReviewDetails({rate}) {
-
-
-  
+function ReviewDetails({ rate }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
   return (
     <div className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
@@ -382,10 +378,16 @@ export default function RevieswDetails() {
         const dataV = await getVisitors(token);
 
         dispatch(initUser(dataC?.users?.length));
-        dispatch(initVisitor(dataV?.visitors[0]?.count - 1));
+        dispatch(
+          initVisitor(
+            dataV?.visitors[0]?.count ? dataV?.visitors[0]?.count - 1 : 0
+          )
+        );
 
         if (response.status === 200) {
           const data = await response.json();
+
+          console.log(data.reviews);
 
           dispatch(setAdminReviews(data.reviews));
           dispatch(setReviewPercent(data.reviews));
@@ -395,8 +397,6 @@ export default function RevieswDetails() {
     }
   }, []);
 
-
-
   return (
     <div>
       <div className="grid grid-cols-2 gap-5 sm:grid-cols-1 md:grid-cols-1">
@@ -404,16 +404,14 @@ export default function RevieswDetails() {
           <ReviewDetails rate={reviewsPaercent} />
         )}
 
-        {userCount && visiorCount && (
-          <TotalReviews
-            title="Total Reviews"
-            total={adminReviews?.length}
-            percentage="+31%"
-            value="Last 7 days"
-            returningCustomers={userCount}
-            newCustomers={visiorCount}
-          />
-        )}
+        <TotalReviews
+          title="Total Reviews"
+          total={adminReviews?.length}
+          percentage="+31%"
+          value="Last 7 days"
+          returningCustomers={userCount}
+          newCustomers={visiorCount}
+        />
       </div>
 
       {adminReviews && adminReviews.length > 0 && (

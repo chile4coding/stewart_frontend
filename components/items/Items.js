@@ -1,45 +1,44 @@
 import { useRouter } from "next/router";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   getBestSelling,
   getFavourite,
   getNewArrival,
   getProductByCategory,
   getShopProducts as getStoreProducts,
-  setUser
-
+  setUser,
 } from "@/redux/storeSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { getSingleProduct,  } from "@/redux/storeSlice";
+import { getSingleProduct } from "@/redux/storeSlice";
 import Spinner from "../spinner/Spinner";
 import { MdOutlineFavorite } from "react-icons/md";
 import { getCookie, getCurrentUser, saveItem } from "@/services/request";
 export function ItemCategory({ category }) {
-    const {
-      shop,
-      toggleMode,
-      singleProduct,
-      newArrival,
-      bestSelling,
-       globalLoading,
-       
-      products: product,
-    } = useSelector((state) => state.store);
-    const { isDark } = toggleMode;
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    newArrival,
+    bestSelling,
+    globalLoading,
+
+    products: product,
+  } = useSelector((state) => state.store);
+  const { isDark } = toggleMode;
   const router = useRouter();
-  const dispatch  = useDispatch()
+  const dispatch = useDispatch();
   function handleCategory(cat) {
-dispatch(getProductByCategory(cat.id));
-if(shop.length > 0 ){
-   router.push(`/shop/category-${cat.cat}`, "/shop");
-}else{
-  return
-}
+    dispatch(getProductByCategory(cat.id));
+    if (shop.length > 0) {
+      router.push(`/shop/category-${cat.cat}`, "/shop");
+    } else {
+      return;
+    }
   }
 
   return (
     <div
-      className={`card relative rounded-md   hover:opacity-50 cursor-pointer    ${
+      className={`card relative rounded-md   hover:opacity-90 cursor-pointer    ${
         isDark ? "item-category" : "bg-[#D9D9D9]"
       }
           `}
@@ -73,107 +72,93 @@ if(shop.length > 0 ){
 }
 
 export default function Items({ items }) {
-    const {
-      shop,
-      toggleMode,
-      singleProduct,
-      globalLoading,
-      newArrival, bestSelling,
-   
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    globalLoading,
+    newArrival,
+    bestSelling,
 
-      products
-    } = useSelector((state) => state.store);
-    const [rout, setRoute] = useState(false)
-    const [token, setToken] = useState(null)
-    const { isDark } = toggleMode;
-    const route  = useRouter()
-    useEffect(()=>{
-if(route.asPath === "/shop"){
-  setRoute(true)
-}else{
-  setRoute(false)
-}
+    products,
+  } = useSelector((state) => state.store);
+  const [rout, setRoute] = useState(false);
+  const [token, setToken] = useState(null);
+  const { isDark } = toggleMode;
+  const route = useRouter();
+  useEffect(() => {
+    if (route.asPath === "/shop") {
+      setRoute(true);
+    } else {
+      setRoute(false);
+    }
 
-if(!Boolean(token)){
-     const tokenN = getCookie();
+    if (!Boolean(token)) {
+      const tokenN = getCookie();
 
-     setToken(tokenN)
+      setToken(tokenN);
+    }
+  }, [products]);
 
-}
-
-    }, [products])
- 
   const router = useRouter();
-  const dispatch  = useDispatch()
+  const dispatch = useDispatch();
   function handleSingleItemDetailNav(item) {
+    dispatch(getSingleProduct(item.id));
 
-  
-
-    dispatch(getSingleProduct(item.id))
-
-   
-    if(singleProduct ){
+    if (singleProduct) {
       router.push(`/item/${item?.title}`);
-    
     }
   }
 
-  async function handleSaveItem(it, token){
+  async function handleSaveItem(it, token) {
+    const { name, favorite: status, id, price: amount, image } = it;
+    const details = {
+      name,
+      id: id + "",
+      image,
+      amount: amount + "",
+      status: status + "" || false + "",
+    };
+    console.log(details);
+    const response = await saveItem(details, token);
+    const data = await response.json();
 
-const  {name, favorite:status, id, price:amount,image} = it
-const details = {name,id:id+"",image,amount:amount+"",status:status+""||false+""}
-console.log(details)
-const response = await saveItem(details, token)
-const data = await response.json()
+    if (token) {
+      const resp = await getCurrentUser(token);
+      const user = await resp.json();
 
-
-
-if(token){
-            const resp = await getCurrentUser(token);
-              const user = await resp.json();
-
-              dispatch(setUser(user?.user));
-
-}
-
-  }
-  
-  function handleFavourite(item){
- 
-   const {items, id} = item
- 
-   
-   dispatch(getFavourite(id));
-   
-   dispatch(getNewArrival(products));
-   dispatch(getBestSelling(products));
-   const i = products.find((item) => item.id === id);
-   if(token){
-     handleSaveItem(i, token)
-
-   }
-   
-  }
-  
-function addClass( favoriteId) {
-
-  for (const item of products) {
-    if (
-      item.hasOwnProperty("favorite") &&
-      item.favorite &&
-      item.id === favoriteId
-    ) {
-      return "text-[red]";
+      dispatch(setUser(user?.user));
     }
   }
 
+  function handleFavourite(item) {
+    const { items, id } = item;
 
+    dispatch(getFavourite(id));
 
-}
+    dispatch(getNewArrival(products));
+    dispatch(getBestSelling(products));
+    const i = products.find((item) => item.id === id);
+    if (token) {
+      handleSaveItem(i, token);
+    }
+  }
+
+  function addClass(favoriteId) {
+    for (const item of products) {
+      if (
+        item.hasOwnProperty("favorite") &&
+        item.favorite &&
+        item.id === favoriteId
+      ) {
+        return "text-[red]";
+      }
+    }
+  }
 
   return (
     <div
-      className={`  h-full card   rounded-md   hover:opacity-50 cursor-pointer ${
+      className={`  h-full card   rounded-md   hover:opacity-90 cursor-pointer ${
         isDark ? " bg-[#212121]" : "bg-[#D9D9D9]"
       }`}>
       {globalLoading ? (
@@ -198,7 +183,7 @@ function addClass( favoriteId) {
           </figure>
           <div className="  mx-auto text-center">
             <div className=" flex justify-center gap-6 items-center">
-              <h2 className=" font-normal  text-center text-[14px] sm:text-sm sm:py-0 sm:my-0 sm:text-[7px]  sm:font-normal">
+              <h2 className=" font-normal  text-center text-[14px] sm:text-sm py-2 sm:my-0 sm:text-[7px]  lowercase sm:font-normal">
                 {items?.name}
               </h2>
 

@@ -5,7 +5,11 @@ import { GrClose } from "react-icons/gr";
 import { UserActiveLink } from "../ActiveLink";
 import { AiFillStar, AiOutlineMenu } from "react-icons/ai";
 import { BsFillCartFill, BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
-import { BiMessageSquareDetail, BiShoppingBag, BiSolidUser } from "react-icons/bi";
+import {
+  BiMessageSquareDetail,
+  BiShoppingBag,
+  BiSolidUser,
+} from "react-icons/bi";
 import {
   handleGetMessages,
   handleGetNotification,
@@ -16,77 +20,75 @@ import {
 } from "@/redux/storeSlice";
 import { useRouter } from "next/router";
 import { MdFavorite } from "react-icons/md";
-import {TbLogout}  from "react-icons/tb"
+import { TbLogout } from "react-icons/tb";
 import LogoutModal from "./logout/LogoutModal";
 import Modal from "../modal/Modal";
 import Cookies from "js-cookie";
-import { getCookie, getMessages, getNotification, socket } from "@/services/request";
-
+import {
+  getCookie,
+  getMessages,
+  getNotification,
+  socket,
+} from "@/services/request";
 
 function UserHeader() {
   const [title, setTitle] = useState("");
-   const {
-     shop,
-     toggleMode,
-     singleProduct,
-     category,
-     newArrival,
-     bestSelling,
-     cart,
-     orders,
-     user,
-     products: product,
-     notification,
-   } = useSelector((state) => state.store);
-  //  const { isDark } = toggleMode; 
-    const isDark = toggleMode?.isDark;
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    category,
+    newArrival,
+    bestSelling,
+    cart,
+    orders,
+    user,
+    products: product,
+    notification,
+  } = useSelector((state) => state.store);
+  //  const { isDark } = toggleMode;
+  const isDark = toggleMode?.isDark;
 
   const dispatch = useDispatch();
-   const [search, setSearch]= useState("")
+  const [search, setSearch] = useState("");
 
   const router = useRouter();
   useEffect(() => {
     const token = getCookie();
-      if (isDark === undefined) {
-        dispatch(initTggle());
-      }
+    if (isDark === undefined) {
+      dispatch(initTggle());
+    }
     if (router.pathname === "/my_account") {
       setTitle("Account Overview");
-    } else if (router.pathname ==="/orders") {
+    } else if (router.pathname === "/orders") {
       setTitle("Orders");
     } else if (router.pathname === "/messages") {
       setTitle("Messages");
     } else if (router.pathname === "/saved_items") {
       setTitle("Saved Items");
     } else if (router.pathname === "/reviews") [setTitle("Reviews")];
- 
-async function getMessage(token){
-  const res = await getMessages(token)
 
-  const data  = await res.json()
+    async function getMessage(token) {
+      const res = await getMessages(token);
 
+      const data = await res.json();
 
-  const response = await getNotification(token)
-         dispatch(handleGetMessages(data.inbox));
+      const response = await getNotification(token);
+      dispatch(handleGetMessages(data.inbox));
 
-  
-  const dataN  = await response.json()
-       dispatch(handleGetNotification(dataN.inbox));
+      const dataN = await response.json();
+      dispatch(handleGetNotification(dataN.inbox));
+    }
+    socket.on(`new-message`, (message) => {
+      getMessage(token);
+      console.log("New notification");
 
+      // dispatch(getNotification(message));
+    });
 
-}
-      socket.on(`new-message`, (message) => {
-
-        getMessage(token)
-      console.log("New notification")
-
-        // dispatch(getNotification(message));
-      });
-
-      return () => {
-        socket.off(`new-message`);
-      };
- 
+    return () => {
+      socket.off(`new-message`);
+    };
   }, []);
   const toggle = () => {
     dispatch(toggler());
@@ -95,26 +97,25 @@ async function getMessage(token){
     window.my_modal_2.showModal();
   };
 
-  function handleUserNav(){
-    router.push("/my_account")
+  function handleUserNav() {
+    router.push("/my_account");
   }
-  function handleInputChange(e){
-const {name, value} = e.target
-if (title === "Orders") {
-  dispatch(setOrderSearch({ orders: user.orders, search:value }));
-}
-setSearch(prev=>value)
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    if (title === "Orders") {
+      dispatch(setOrderSearch({ orders: user.orders, search: value }));
+    }
+    setSearch((prev) => value);
   }
 
-  function handleSearchSubmit(e){
-e.preventDefault()
+  function handleSearchSubmit(e) {
+    e.preventDefault();
 
-if (title === "Orders") {
-  dispatch(setOrderSearch({orders:user.orders, search}))
-  
-}
+    if (title === "Orders") {
+      dispatch(setOrderSearch({ orders: user.orders, search }));
+    }
   }
- 
+
   return (
     <>
       <Modal />
@@ -205,32 +206,29 @@ if (title === "Orders") {
 }
 
 export default function UserLayout({ children }) {
-  const  [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
   const router = useRouter();
   const isDark = useSelector((state) => state?.store?.toggleMode?.isDark);
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-function signOut() {
-
-        dispatch(setUser({}));
-  Cookies.remove("_stewart_collection_token");
-window.location.href =
-  "https://stewart-frontend-chile4coding.vercel.app/login";
-}
+  function signOut() {
+    dispatch(setUser({}));
+    Cookies.remove("_stewart_collection_token");
+    window.location.href =
+      "https://stewart-frontend-chile4coding.vercel.app/login";
+  }
 
   return (
     <div className={isDark ? "bg-black" : "#FAFAFA"}>
       <div
-        className={`  max-w-[1440px]  h-full  mx-auto  ${
-          isDark ? "turndark" : "turnlight"
-        }`}>
+        className={`    h-full  mx-auto  ${isDark ? "turndark" : "turnlight"}`}>
         <div className="drawer lg:drawer-start lg:drawer-open xl:drawer-open">
           <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content flex flex-col     overflow-hidden  ">
             <div className={`sticky top-0 z-50 ${isDark ? " bg-[black]" : ""}`}>
               <UserHeader />
             </div>
-            <div className=" overflow-hidden">{children}</div>
+            <div className=" overflow-hidden p-6">{children}</div>
             <div className="">
               <AppFooter />
             </div>

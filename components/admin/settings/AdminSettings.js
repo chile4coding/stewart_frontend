@@ -17,7 +17,6 @@ import Spinner from "@/components/spinner/Spinner";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 
-
 function ProfileCard() {
   const { shop, toggleMode, products, admin } = useSelector(
     (state) => state.store
@@ -42,7 +41,7 @@ function ProfileCard() {
       });
     }
   }, []);
- 
+
   function handleImageInput(e) {
     const selectedImage = e.target.files[0];
 
@@ -72,7 +71,7 @@ function ProfileCard() {
       if (response.status === 200) {
         const resA = await getAdmin(token);
         const dataA = await resA.json();
-  
+
         dispatch(setAdmin(dataA?.admin));
         toast.success(
           <div className=" normal-case">
@@ -200,6 +199,7 @@ function ProfileInfoForm() {
   useEffect(() => {
     const token = getCookie();
     setToken(token);
+
     setDetails({
       ...details,
       firstName: admin?.first_name,

@@ -43,9 +43,8 @@ export default function LoginDetails() {
     Cookies.set("_stewart_collection_token", data.token);
     if (response.status === 200) {
       dispatch(setUser(data?.findUser));
-window.location.href =
-  "https://stewart-frontend-chile4coding.vercel.app/my_account";
-       
+      window.location.href = "/my_account";
+
       // router.push("/my_account");
       toast.success(<h className=" normal-case">Login successful</h>);
     } else {

@@ -70,7 +70,7 @@ function Visitor({ title, total, percentage, value }) {
           </select>
         </div>
         <h2 className="  my-2 lg:text-[30px]  xl:text-[30px] font-semibold">
-          {total&& total}
+          {total}
         </h2>
 
         <div className=" flex   items-center  justify-between">
@@ -88,12 +88,12 @@ function Visitor({ title, total, percentage, value }) {
 }
 function Reviews({ title, total, percentage, value }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
- const router  = useRouter()
+  const router = useRouter();
 
- function handleRoute(){
-router.push("/admin/reviews")
- }
- 
+  function handleRoute() {
+    router.push("/admin/reviews");
+  }
+
   return (
     <div className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
       <div className=" card-body">
@@ -129,9 +129,8 @@ router.push("/admin/reviews")
   );
 }
 
-function TopSellingItems({sale}) {
+function TopSellingItems({ sale }) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
-
 
   return (
     <div className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
@@ -153,7 +152,8 @@ function TopSellingItems({sale}) {
           </thead>
           <tbody>
             {sale.map((item) => (
-              <tr key={item.id}
+              <tr
+                key={item.id}
                 className={
                   isDark ? " text-white border-0" : "  text-black border-0"
                 }>
@@ -169,9 +169,7 @@ function TopSellingItems({sale}) {
                       </div>
                     </div>
                     <div>
-                      <div className="font-bold">
-                        {item.name}
-                      </div>
+                      <div className="font-bold">{item.name}</div>
                     </div>
                   </div>
                 </td>
@@ -223,41 +221,44 @@ export default function OverviewDetails() {
       const data = await response.json();
       const res = await adminGetreviews(token);
       const dataR = await res.json();
-const dataG = await getAdminGraph(token)
-dispatch(getGraphData(dataG?.userData1))
+      const dataG = await getAdminGraph(token);
+      dispatch(getGraphData(dataG?.userData1));
 
       const dataC = await getCustomers(token);
+
       const dataV = await getVisitors(token);
-const dataP = await getShopProducts()
-
-
+      const dataP = await getShopProducts();
 
       dispatch(initUser(dataC?.users?.length));
-      if(data?.orders.length > 0 && dataP.products.length > 0){
+      if (data?.orders.length > 0 && dataP.products.length > 0) {
         dispatch(
           setAdminOrder({ orders: data.orders, products: dataP.products })
         );
       }
       dispatch(setTopSale(data.orders));
-      
+
       dispatch(setRevenueOrders(data.orders));
-      dispatch(initVisitor(dataV?.visitors[0]?.count - 1));
+      dispatch(
+        initVisitor(
+          dataV?.visitors[0]?.count ? dataV?.visitors[0]?.count - 1 : 0
+        )
+      );
       dispatch(setAdminReviews(dataR.reviews));
     }
     fetchOrders();
-  }, []);
+  }, [dispatch, userCount]);
+
   function handleWeeklybtnClick(id) {
     setActiveBtn(id);
   }
 
-
   return (
     <div>
       <h2 className=" normal-case mb-2 xl:mt-6">
-        <span className=" font-bold">
-          Hi <span className="  capitalize"> {admin?.first_name}</span>
-        </span>{" "}
-        here’s how your store is doing today
+        <div className="  py-3">
+          Hi <span className="font-bold  capitalize"> {admin?.first_name}</span>{" "}
+          here’s how your store is doing today
+        </div>{" "}
       </h2>
 
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
@@ -274,32 +275,6 @@ const dataP = await getShopProducts()
           percentage="+14%"
           isRevenue={false}
         />
-      </div>
-
-      <div
-        className={` p-5  h-[490px] mb-6 card  w-full ${
-          isDark ? " bg-[#212121]" : "bg-[#7c7b7b]"
-        }`}>
-        <div className=" flex justify-between items-center">
-          <h2>General Sales Activity</h2>
-          <div
-            className={`flex rounded-md px-4 py-1 bg-[#646464]   ${
-              isDark ? "" : ""
-            }`}>
-            {/* {btn.map((btn) => (
-              <button
-                key={btn.id}
-                onClick={handleWeeklybtnClick.bind(this, btn.id)}
-                className={`text-white normal-case btn btn-sm  bg-transparent border-none hover:rounded-md  hover:bg-[#4FBBD2] hover:text-white ${
-                  btn.id === activeBtn && "bg-[#4FBBD2] rounded-md"
-                }`}>
-                {btn.name}
-              </button>
-            ))} */}
-            {new Date().getFullYear().toString()}
-          </div>
-        </div>
-        {graphData && graphData?.length > 0 && <Graph />}
       </div>
 
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">

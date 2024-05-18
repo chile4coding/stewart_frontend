@@ -29,7 +29,7 @@ const initialState = {
   adminOrder: {},
   adminOrderDetails: {},
   adminReviews: {},
-  userCount: {},
+  userCount: 6,
   visiorCount: {},
   reviewsPaercent: [],
   totalRevenue: {},
@@ -375,10 +375,8 @@ const storeSlice = createSlice({
 
       state.adminOrder = orders;
 
-
-
-      if(!products?.length > 0 ){
-        return
+      if (!products?.length > 0) {
+        return;
       }
 
       function saleByCategory(data) {
@@ -446,6 +444,7 @@ const storeSlice = createSlice({
       const fiveStar = review.filter(
         (item) => Number(item.rating) === 5
       ).length;
+
       const fourStar = review.filter(
         (item) => Number(item.rating) === 4
       ).length;
@@ -454,11 +453,21 @@ const storeSlice = createSlice({
       ).length;
       const twoStar = review.filter((item) => Number(item.rating) === 2).length;
       const oneStar = review.filter((item) => Number(item.rating) === 1).length;
-      const fiveStarPercent = Math.round((fiveStar / review.length) * 100);
-      const fourStarPercent = Math.round((fourStar / review.length) * 100);
-      const threeStarPercent = Math.round((threeStar / review.length) * 100);
-      const twoStarPercent = Math.round((twoStar / review.length) * 100);
-      const oneStarPercent = Math.round((oneStar / review.length) * 100);
+      const fiveStarPercent = fiveStar
+        ? Math.round((fiveStar / review.length) * 100)
+        : 0;
+      const fourStarPercent = fourStar
+        ? Math.round((fourStar / review.length) * 100)
+        : 0;
+      const threeStarPercent = threeStar
+        ? Math.round((threeStar / review.length) * 100)
+        : 0;
+      const twoStarPercent = twoStar
+        ? Math.round((twoStar / review.length) * 100)
+        : 0;
+      const oneStarPercent = oneStar
+        ? Math.round((oneStar / review.length) * 100)
+        : 0;
 
       state.reviewsPaercent = [
         fiveStarPercent,

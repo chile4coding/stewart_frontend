@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
-import Header from '../header/Header';
+import React, { useState } from "react";
+import Header from "../header/Header";
 import { BsFillCartFill } from "react-icons/bs";
 import { BiSolidUser } from "react-icons/bi";
-import {GrClose } from "react-icons/gr"
-import ActiveLink from '../ActiveLink';
-import AppFooter from '../Footer/Footer';
-import { useSelector, useDispatch } from 'react-redux';
+import { GrClose } from "react-icons/gr";
+import ActiveLink from "../ActiveLink";
+import AppFooter from "../Footer/Footer";
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   getBestSelling,
@@ -15,55 +15,46 @@ import {
   toggler,
   storeGetProducts as getStoreProducts,
   initTggle,
-
-
 } from "@/redux/storeSlice";
-import { useEffect } from 'react';
-import { socket } from '@/services/request';
+import { useEffect } from "react";
+import { socket } from "@/services/request";
 
+export default function AppLayoout({ children }) {
+  const [dark, seDark] = useState(true);
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    category,
+    newArrival,
+    bestSelling,
+    products: product,
+  } = useSelector((state) => state.store);
+  //  const { isDark } = toggleMode;
+  const isDark = toggleMode?.isDark;
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (isDark === undefined) {
+      dispatch(initTggle());
+    }
+    socket.on(`new-message`, async (message) => {
+      // dispatch(getNotification(message));
+    });
+  }, []);
+  const toggle = () => {
+    dispatch(toggle());
+  };
 
-export default function AppLayoout({children}) {
-    const [dark, seDark] = useState(true);
-     const {
-       shop,
-       toggleMode,
-       singleProduct,
-       category,
-       newArrival,
-       bestSelling,
-       products: product,
-     } = useSelector((state) => state.store);
-    //  const { isDark } = toggleMode;
-    const isDark =  toggleMode?.isDark
-     const dispatch =  useDispatch()
-
-     useEffect(()=>{
-  if(isDark  === undefined){
-    dispatch(initTggle());
+  function handleShop() {
+    dispatch(getShop(product));
   }
-     socket.on(`new-message`, async (message) => {
-       // dispatch(getNotification(message));
-     });
-
-     }, [])
-  const toggle  = ()=>{
-        dispatch(toggle())
-      }
-
-function handleShop(){
-
-  
-  dispatch(getShop(product))
-}
-
-
 
   return (
     <>
       <div className={isDark ? "bg-black" : "#FAFAFA"}>
         <div
-          className={`  max-w-[1440px]  h-full  mx-auto  ${
+          className={`   h-full  mx-auto  ${
             isDark ? "turndark" : "turnlight"
           }`}>
           <div className="drawer lg:drawer-start">

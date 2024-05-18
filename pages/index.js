@@ -44,11 +44,17 @@ export function MetaData() {
   return (
     <Head>
       <title>Stewart Collection</title>
-      <meta name="description" content="   Explore the rise of juggers, the oversized garment defying gender norms. Break the mold! Show how polos infuse personality into formal suits
+      <meta
+        name="description"
+        content="   Explore the rise of juggers, the oversized garment defying gender norms. Break the mold! Show how polos infuse personality into formal suits
         Craft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. 
-        Move beyond restrictive label"/>
-      <meta name="keyword" content="Polo   Suit  Tie  Shirt, Skirt, Clothes, Male Wares & Female Wares
-      "/>
+        Move beyond restrictive label"
+      />
+      <meta
+        name="keyword"
+        content="Polo   Suit  Tie  Shirt, Skirt, Clothes, Male Wares & Female Wares
+      "
+      />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>
   );
@@ -111,7 +117,7 @@ function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef, items }) {
             swiper.navigation.init();
             swiper.navigation.update();
           }}
-          className={`mySwiper   mx-auto ${isDark ? "" : " bg-[white]"}`}>
+          className={`mySwiper   mx-auto ${isDark ? "" : " "}`}>
           {items &&
             items.length > 0 &&
             items.map((newIn) => (
@@ -129,7 +135,7 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
   const isDark = useSelector((state) => state.store?.toggleMode?.isDark);
 
   return (
-    <div className="   w-full flex flex-wrap  ">
+    <div className="   w-full flex flex-wrap     ">
       <Swiper
         spaceBetween={50}
         slidesPerView={1}
@@ -170,7 +176,7 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
         }}
         // slidesPerView={2}
 
-        className={`mySwiper    mx-auto ${isDark ? "" : " bg-[white]"}`}>
+        className={`mySwiper    mx-auto ${isDark ? "" : ""}`}>
         {items &&
           items?.length > 0 &&
           items.map((item) => (
@@ -259,9 +265,7 @@ export default function Home() {
 
   return (
     <>
-      <MetaData
-     
-      />
+      <MetaData />
       <AppLayoout>
         <main className="px-10 sm:px-4 max-h-[100vh]  overflow-y-scroll">
           <secition className=" ">
@@ -285,7 +289,7 @@ export default function Home() {
             </div>
             <div className="  flex justify-end items-center   sm:pr-4  normal-case ">
               <button
-                className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
+                className={`  btn normal-case   font-normal my-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
                   isDark
                     ? "hover:border-white hover:bg-black hover:text-white"
                     : " bg-black text-white hover:border-black"
@@ -342,9 +346,9 @@ export default function Home() {
                 }`}></p>
             </div>
 
-            <div className="  flex justify-end items-center  sm:pr-4  normal-case">
+            <div className="   flex justify-end items-center  sm:pr-4  normal-case">
               <button
-                className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
+                className={`  btn normal-case   font-normal my-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
                   isDark
                     ? "hover:border-white hover:bg-black hover:text-white"
                     : " bg-black text-white hover:border-black"
@@ -383,7 +387,7 @@ export default function Home() {
             </div>
           </section>
           <section className=" mb-16 ">
-            <div className="flex  justify-center items-center   gap-8  sm:gap-5  sm:my-8 ">
+            <div className="flex  justify-center items-center   gap-8  sm:gap-5  my-8  ">
               <p className="  flex-1"></p>
               <p className="text-[30px] font-semibold sm:text-sm  ">
                 Shop by Categories
