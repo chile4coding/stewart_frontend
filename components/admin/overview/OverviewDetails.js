@@ -41,7 +41,7 @@ function SummaryCard({ title, total, percentage, isRevenue }) {
         </div>
         <div className=" flex   items-center  justify-between">
           <h2 className=" lg:text-[30px]  xl:text-[30px] font-semibold">
-            {isRevenue && "₦"} {total && isRevenue ? total.toFixed(2) : total}
+            {isRevenue && "₦"} {total && isRevenue ? total?.toFixed(2) : total}
           </h2>
         </div>
       </div>
@@ -200,7 +200,7 @@ export default function OverviewDetails() {
   const {
     toggleMode,
     admin,
-    revenue,
+    totalRevenue: revenue,
     totalOrders,
     userCount,
     visiorCount,
