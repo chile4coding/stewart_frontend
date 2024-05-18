@@ -267,19 +267,26 @@ export default function OverviewDetails() {
       </h2>
 
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
-        <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
-        <SummaryCard
-          title="Total Customers"
-          total={userCount ? userCount : 0}
-          percentage="-6%"
-          isRevenue={false}
-        />
-        <SummaryCard
-          title="Total Orders"
-          total={totalOrders ? totalOrders : 0}
-          percentage="+14%"
-          isRevenue={false}
-        />
+        {revenue && (
+          <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
+        )}
+        {userCount && (
+          <SummaryCard
+            title="Total Customers"
+            total={userCount ? userCount : 0}
+            percentage="-6%"
+            isRevenue={false}
+          />
+        )}
+
+        {totalOrders && (
+          <SummaryCard
+            title="Total Orders"
+            total={totalOrders ? totalOrders : 0}
+            percentage="+14%"
+            isRevenue={false}
+          />
+        )}
       </div>
 
       <div
@@ -299,18 +306,23 @@ export default function OverviewDetails() {
       </div>
 
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
-        <Visitor
-          title="Website Visitors"
-          total={visiorCount}
-          percentage="+31%"
-          value="+1,340 this week"
-        />
-        <Reviews
-          title="Reviews"
-          total={adminReviews?.length}
-          percentage="See all reviews"
-          value="+12 this week"
-        />
+        {visiorCount && (
+          <Visitor
+            title="Website Visitors"
+            total={visiorCount}
+            percentage="+31%"
+            value="+1,340 this week"
+          />
+        )}
+
+        {adminReviews?.length && (
+          <Reviews
+            title="Reviews"
+            total={adminReviews?.length}
+            percentage="See all reviews"
+            value="+12 this week"
+          />
+        )}
       </div>
 
       <div className=" grid grid-cols-2  sm:grid-cols-1 gap-10  md:grid-cols-1">
