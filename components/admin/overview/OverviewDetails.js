@@ -257,18 +257,6 @@ export default function OverviewDetails() {
     setActiveBtn(id);
   }
 
-  console.log({
-    toggleMode,
-    admin,
-    revenue,
-    totalOrders,
-    userCount,
-    visiorCount,
-    adminReviews,
-    graphData,
-    saleByCategory,
-    topSale,
-  });
   return (
     <div>
       <h2 className=" normal-case mb-2 xl:mt-6">
@@ -277,7 +265,7 @@ export default function OverviewDetails() {
         </span>{" "}
         here’s how your store is doing today
       </h2>
-
+      {/* 
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
         <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
         <SummaryCard
@@ -292,9 +280,9 @@ export default function OverviewDetails() {
           percentage="+14%"
           isRevenue={false}
         />
-      </div>
+      </div> */}
 
-      <div
+      {/* <div
         className={` p-5  h-[490px] mb-6 card  w-full ${
           isDark ? " bg-[#212121]" : "bg-[#7c7b7b]"
         }`}>
@@ -304,16 +292,6 @@ export default function OverviewDetails() {
             className={`flex rounded-md px-4 py-1 bg-[#646464]   ${
               isDark ? "" : ""
             }`}>
-            {/* {btn.map((btn) => (
-              <button
-                key={btn.id}
-                onClick={handleWeeklybtnClick.bind(this, btn.id)}
-                className={`text-white normal-case btn btn-sm  bg-transparent border-none hover:rounded-md  hover:bg-[#4FBBD2] hover:text-white ${
-                  btn.id === activeBtn && "bg-[#4FBBD2] rounded-md"
-                }`}>
-                {btn.name}
-              </button>
-            ))} */}
             {new Date().getFullYear().toString()}
           </div>
         </div>
@@ -350,7 +328,7 @@ export default function OverviewDetails() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

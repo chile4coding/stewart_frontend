@@ -10,7 +10,7 @@ export default function AdminHome() {
 
       <AdminLayout>
         <div className=" px-10 sm:px-4 max-h-[100vh]  overflow-y-scroll">
-          {/* <OverviewDetails /> */}
+          <OverviewDetails />
         </div>
       </AdminLayout>
     </>
