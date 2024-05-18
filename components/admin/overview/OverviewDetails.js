@@ -151,9 +151,9 @@ function TopSellingItems({ sale }) {
             </tr>
           </thead>
           <tbody>
-            {sale.map((item) => (
+            {sale?.map((item) => (
               <tr
-                key={item.id}
+                key={item?.id}
                 className={
                   isDark ? " text-white border-0" : "  text-black border-0"
                 }>
@@ -162,21 +162,21 @@ function TopSellingItems({ sale }) {
                     <div className="avatar">
                       <div className="mask  rounded-md w-12 h-12">
                         <img
-                          src={item.image}
+                          src={item?.image}
                           alt="Avatar Tailwind CSS Component"
                           className=" w-full h-full bg-white"
                         />
                       </div>
                     </div>
                     <div>
-                      <div className="font-bold">{item.name}</div>
+                      <div className="font-bold">{item?.name}</div>
                     </div>
                   </div>
                 </td>
 
                 <th>
                   <span className=" normal-case hover:underline hover:cursor-pointer">
-                    {item.sales}
+                    {item?.sales}
                   </span>
                 </th>
               </tr>
@@ -253,6 +253,10 @@ export default function OverviewDetails() {
     fetchOrders();
   }, []);
 
+  console.log("thi is the ========== ", {
+    totalOrders,
+    userCount,
+  });
   function handleWeeklybtnClick(id) {
     setActiveBtn(id);
   }
@@ -268,18 +272,18 @@ export default function OverviewDetails() {
 
       <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
         <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
-        {/* <SummaryCard
+        <SummaryCard
           title="Total Customers"
-          total={userCount}
+          total={0}
           percentage="-6%"
           isRevenue={false}
         />
         <SummaryCard
           title="Total Orders"
-          total={totalOrders}
+          total={0}
           percentage="+14%"
           isRevenue={false}
-        /> */}
+        />
       </div>
 
       <div
