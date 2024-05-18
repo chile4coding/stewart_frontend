@@ -297,7 +297,6 @@ export default function OverviewDetails() {
         </div>
         {graphData && graphData?.length > 0 && <Graph />}
       </div>
-      {/* 
 
       <div className=" grid grid-cols-2 sm:grid-cols-1 mt-10 mb-5 gap-10">
         <Visitor
@@ -313,6 +312,8 @@ export default function OverviewDetails() {
           value="+12 this week"
         />
       </div>
+      {/* 
+
       <div className=" grid grid-cols-2  sm:grid-cols-1 gap-10  md:grid-cols-1">
         {topSale && topSale?.length > 0 && <TopSellingItems sale={topSale} />}
 
