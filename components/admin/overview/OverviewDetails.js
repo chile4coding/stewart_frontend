@@ -266,9 +266,9 @@ export default function OverviewDetails() {
         here’s how your store is doing today
       </h2>
 
-      {/* <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
+      <div className=" grid grid-cols-3  gap-6 sm:grid-cols-1 my-6">
         <SummaryCard title="Total Revenue" total={revenue} isRevenue={true} />
-        <SummaryCard
+        {/* <SummaryCard
           title="Total Customers"
           total={userCount}
           percentage="-6%"
@@ -279,8 +279,8 @@ export default function OverviewDetails() {
           total={totalOrders}
           percentage="+14%"
           isRevenue={false}
-        />
-      </div> */}
+        /> */}
+      </div>
 
       <div
         className={` p-5  h-[490px] mb-6 card  w-full ${
