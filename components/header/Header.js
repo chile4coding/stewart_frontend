@@ -4,7 +4,7 @@ import { BsFillCartFill, BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { BiSolidUser } from "react-icons/bi";
 import ActiveLink from "../ActiveLink";
 import Modal from "../modal/Modal";
-import {AiOutlineMenu} from "react-icons/ai"
+import { AiOutlineMenu } from "react-icons/ai";
 
 import { useSelector, useDispatch } from "react-redux";
 import { colors } from "@mui/material";
@@ -20,23 +20,23 @@ import { useRouter } from "next/router";
 
 export default function Header() {
   const [dark, seDark] = useState(true);
-    const {
-      shop,
-      toggleMode,
-      singleProduct,
-      category,
-      newArrival,
-      bestSelling,
-      cart,
-      products: product,
-    } = useSelector((state) => state.store);
-    // const { isDark } = toggleMode;
-    const isDark =  toggleMode?.isDark
-const dispatch = useDispatch();
-const router =  useRouter()
-const toggle = () => {
-  dispatch(toggler());
-};
+  const {
+    shop,
+    toggleMode,
+    singleProduct,
+    category,
+    newArrival,
+    bestSelling,
+    cart,
+    products: product,
+  } = useSelector((state) => state.store);
+  // const { isDark } = toggleMode;
+  const isDark = toggleMode?.isDark;
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const toggle = () => {
+    dispatch(toggler());
+  };
   const handleShowModal = () => {
     window.my_modal_2.showModal();
   };
@@ -44,12 +44,12 @@ const toggle = () => {
   function handleShop() {
     dispatch(getShop(product));
   }
-    function handleUserNav() {
-      router.push("/my_account");
-    }
-    function handleUserHome() {
-      router.push("/");
-    }
+  function handleUserNav() {
+    router.push("/my_account");
+  }
+  function handleUserHome() {
+    router.push("/");
+  }
 
   return (
     <>

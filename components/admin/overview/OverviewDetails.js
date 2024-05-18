@@ -230,12 +230,12 @@ export default function OverviewDetails() {
       const dataP = await getShopProducts();
 
       dispatch(initUser(dataC?.users?.length));
-      if (data?.orders.length > 0 && dataP.products.length > 0) {
+      if (data?.orders?.length > 0 && dataP.products?.length > 0) {
         dispatch(
-          setAdminOrder({ orders: data.orders, products: dataP.products })
+          setAdminOrder({ orders: data.orders, products: dataP?.products })
         );
       }
-      dispatch(setTopSale(data.orders));
+      dispatch(setTopSale(data?.orders));
 
       dispatch(setRevenueOrders(data.orders));
       dispatch(
@@ -292,7 +292,7 @@ export default function OverviewDetails() {
         />
       </div>
       <div className=" grid grid-cols-2  sm:grid-cols-1 gap-10  md:grid-cols-1">
-        {topSale && topSale.length > 0 && <TopSellingItems sale={topSale} />}
+        {topSale && topSale?.length > 0 && <TopSellingItems sale={topSale} />}
 
         <div
           className={`mb-6  card  flex    ${
@@ -303,7 +303,7 @@ export default function OverviewDetails() {
               Sales by Category
             </h2>
             <div className="h-[250px]   my-auto mx-auto">
-              {saleByCategory && saleByCategory.length > 0 && <PieChart />}
+              {saleByCategory && saleByCategory?.length > 0 && <PieChart />}
             </div>
           </div>
         </div>

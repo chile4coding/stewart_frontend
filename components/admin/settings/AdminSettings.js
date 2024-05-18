@@ -88,8 +88,7 @@ function ProfileCard() {
 
   function signOut() {
     Cookies.remove("_stewart_collection_token");
-    window.location.href =
-      "https://stewart-frontend-chile4coding.vercel.app/admin";
+    window.location.href = "/admin";
   }
   return (
     <div className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>

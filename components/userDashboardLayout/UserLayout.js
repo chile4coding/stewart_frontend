@@ -214,8 +214,7 @@ export default function UserLayout({ children }) {
   function signOut() {
     dispatch(setUser({}));
     Cookies.remove("_stewart_collection_token");
-    window.location.href =
-      "https://stewart-frontend-chile4coding.vercel.app/login";
+    window.location.href = "/login";
   }
 
   return (
