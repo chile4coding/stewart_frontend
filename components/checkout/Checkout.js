@@ -132,11 +132,11 @@ export default function Checkout() {
     );
 
     if (!checkAddress) {
-      toast.error(
-        <h2 className=" normal-case">
-          Please fill in the field correctly to determine your location
-        </h2>
-      );
+      // toast.error(
+      //   <h2 className=" normal-case">
+      //     Please fill in the field correctly to determine your location
+      //   </h2>
+      // );
       return;
     }
 
