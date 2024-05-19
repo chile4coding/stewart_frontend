@@ -159,7 +159,6 @@ export default function Checkout() {
         );
 
         const fee = distance * Number(shippingAddress.shipping);
-        setShippingAddress({ ...shippingAddress, deliveryfee: fee });
 
         dispatch(calCulateShippingFee(fee));
       }
@@ -174,9 +173,14 @@ export default function Checkout() {
       );
     }
 
+    setShippingAddress({
+      ...shippingAddress,
+      deliveryfee: parseInt(shippingFee),
+    });
+
     // Example usage:
     getLocationFromAddress();
-  }, [shippingAddress.shipping, shippingAddress.country, fee]);
+  }, [shippingAddress.shipping, shippingAddress.country]);
 
   function handleInputChange(e) {
     const { name, value } = e.target;
