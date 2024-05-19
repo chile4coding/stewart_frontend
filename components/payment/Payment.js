@@ -12,11 +12,6 @@ import Spinner from "../spinner/Spinner";
 import { setCartOnLoad, setUser } from "@/redux/storeSlice";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import {
-  useMonnifyPayment,
-  MonnifyButton,
-  MonnifyConsumer,
-} from "react-monnify";
 
 function SuccessfulOrder() {
   const {
