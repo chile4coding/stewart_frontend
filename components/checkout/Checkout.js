@@ -201,6 +201,7 @@ export default function Checkout() {
     // );
     let status = false;
     for (let key in shippingAddress) {
+      status = false;
       if (isEmpty(shippingAddress[key])) {
         status = true;
 
