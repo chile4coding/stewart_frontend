@@ -198,7 +198,7 @@ export default function Checkout() {
     // );
     let status = false;
     for (let key in shippingAddress) {
-      if (shippingAddress[key] === "") {
+      if (isEmpty(shippingAddress[key])) {
         status = true;
         toast.error(`Please fill in ${key} field`);
         break;
