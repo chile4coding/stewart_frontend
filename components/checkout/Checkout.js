@@ -202,6 +202,7 @@ export default function Checkout() {
     let status = false;
     for (let key in shippingAddress) {
       status = false;
+      console.log(shippingAddress);
       if (isEmpty(shippingAddress[key])) {
         status = true;
 
@@ -212,6 +213,7 @@ export default function Checkout() {
           toast.error(
             <div className=" lowercase">{`Please fill in ${key} field`}</div>
           );
+
           break;
         }
       }
@@ -223,10 +225,7 @@ export default function Checkout() {
     }
 
     dispatch(setUserOrderDetails(shippingAddress));
-
-    if (!isEmpty(userOrderDetails)) {
-      window.location.href = "/payment";
-    }
+    window.location.href = "/payment";
   }
 
   async function handleStates(e) {
