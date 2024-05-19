@@ -96,7 +96,7 @@ export default function Checkout() {
     phone: "",
     email: "",
     shipping: "",
-    deliveryfee: "",
+    deliveryfee: parseInt(shippingFee) || "",
     countries: [],
     states: [],
     cities: [],
@@ -164,6 +164,8 @@ export default function Checkout() {
       }
     }
 
+    // Example usage:
+    getLocationFromAddress();
     if (!shippingFee) {
       toast.error(
         <h2 className=" normal-case">
@@ -172,14 +174,10 @@ export default function Checkout() {
         </h2>
       );
     }
-
-    setShippingAddress({
-      ...shippingAddress,
-      deliveryfee: parseInt(shippingFee),
-    });
-
-    // Example usage:
-    getLocationFromAddress();
+    // setShippingAddress({
+    //   ...shippingAddress,
+    //   deliveryfee: parseInt(shippingFee),
+    // });
   }, [shippingAddress.shipping, shippingAddress.country]);
 
   function handleInputChange(e) {
