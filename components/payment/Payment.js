@@ -239,7 +239,7 @@ export default function PaymentDetails() {
       paymentMethods: ["CARD", "ACCOUNT_TRANSFER"],
 
       onLoadStart: () => {
-        console.log("loading has started");
+        console.log("loading started");
       },
       onLoadComplete: () => {
         console.log("SDK is UP");
