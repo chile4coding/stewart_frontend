@@ -159,10 +159,9 @@ export default function Checkout() {
         );
 
         const fee = distance * Number(shippingAddress.shipping);
+        setShippingAddress({ ...shippingAddress, deliveryfee: parseInt(fee) });
 
         dispatch(calCulateShippingFee(fee));
-
-        setShippingAddress({ ...shippingAddress, deliveryfee: parseInt(fee) });
       }
     }
 
@@ -200,7 +199,9 @@ export default function Checkout() {
     for (let key in shippingAddress) {
       if (isEmpty(shippingAddress[key])) {
         status = true;
-        toast.error(`Please fill in ${key} field`);
+        toast.error(
+          <div className=" lowercase">{`Please fill in ${key} field`}</div>
+        );
         break;
       }
     }
