@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
-import AppLayoout from '@/components/Layout/AppLayoout'
-import Checkout from '@/components/checkout/Checkout'
-import { useRouter } from 'next/router'
-import { useSelector } from 'react-redux';
-import Head from 'next/head';
- function MetaDataN() {
+import React, { useEffect } from "react";
+import AppLayoout from "@/components/Layout/AppLayoout";
+import Checkout from "@/components/checkout/Checkout";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import Head from "next/head";
+import toast from "react-hot-toast";
+function MetaDataN() {
   return (
     <Head>
       <title>Stewart Collection | Checkout</title>
@@ -25,25 +26,25 @@ import Head from 'next/head';
 }
 
 export default function Check() {
-   const { cart } =
-     useSelector((state) => state.store);
+  const { cart } = useSelector((state) => state.store);
 
-  const router = useRouter()
-  useEffect(()=>{
+  const router = useRouter();
 
-        if (cart.length < 1) {
-           router.push("/shop");
-           return;
-        }
-  },[])
+  if (cart?.length < 1) {
+    router.push("/shop");
+    toast.error(<div className=" normal-case  text-[red]">Cart is empty</div>);
+
+    return;
+  }
+
   return (
     <>
-      <MetaDataN/>
-    <AppLayoout>
-      <main className=" max-h-[100vh]  overflow-y-scroll">
-        <Checkout />
-      </main>
-    </AppLayoout>
+      <MetaDataN />
+      <AppLayoout>
+        <main className=" max-h-[100vh]  overflow-y-scroll">
+          <Checkout />
+        </main>
+      </AppLayoout>
     </>
   );
 }
