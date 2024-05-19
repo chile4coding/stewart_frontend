@@ -96,7 +96,7 @@ export default function Checkout() {
     phone: "",
     email: "",
     shipping: "",
-    deliveryfee: parseInt(shippingFee) || "",
+    deliveryfee: "",
     countries: [],
     states: [],
     cities: [],
@@ -197,24 +197,19 @@ export default function Checkout() {
     //     shippingAddress.phone &&
     //     shippingAddress.deliveryfee
     // );
-    let status = false;
+
+    setShippingAddress({ ...shippingAddress, deliveryfee: shippingFee });
+
     for (let key in shippingAddress) {
-      status = false;
-      console.log(shippingAddress);
       if (isEmpty(shippingAddress[key])) {
         status = true;
-
-        if (key === "deliveryfee") {
-          <div className=" lowercase">{`Please select a shipping method`}</div>;
-          break;
-        } else {
-          toast.error(
-            <div className=" lowercase">{`Please fill in ${key} field`}</div>
-          );
-
-          break;
-        }
+        console.log("this is runing here", key);
+        toast.error(
+          <div className=" lowercase">{`Please fill in ${key} field`}</div>
+        );
+        break;
       }
+      status = false;
     }
 
     console.log("this is the status ==== ", status);
