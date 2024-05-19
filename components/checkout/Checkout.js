@@ -176,7 +176,7 @@ export default function Checkout() {
 
     // Example usage:
     getLocationFromAddress();
-  }, [shippingAddress.shipping, shippingAddress.country]);
+  }, [shippingAddress.shipping, shippingAddress.country, fee]);
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -200,7 +200,7 @@ export default function Checkout() {
       if (isEmpty(shippingAddress[key])) {
         status = true;
 
-        if (shippingAddress[key] === "deliveryfee") {
+        if (key === "deliveryfee") {
           <div className=" lowercase">{`Please select a shipping method`}</div>;
           break;
         } else {
