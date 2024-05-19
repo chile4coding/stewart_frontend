@@ -159,19 +159,17 @@ export default function Shop() {
               more.map((prod) => <Items items={prod} key={prod.id} />)}
           </div>
           <div className=" flex justify-center ">
-            {
-              !less(
-                <button
-                  onClick={loadMore}
-                  className={` my-4 btn btn-outline  mx-auto normal-case sm:btn-sm ${
-                    isDark
-                      ? "  border-white text-white hover:bg-white  hover:text-black"
-                      : " bg-black text-white hover:border-black hover:bg-white hover:text-black"
-                  } `}>
-                  Load More
-                </button>
-              )
-            }
+            {!less && (
+              <button
+                onClick={loadMore}
+                className={` my-4 btn btn-outline  mx-auto normal-case sm:btn-sm ${
+                  isDark
+                    ? "  border-white text-white hover:bg-white  hover:text-black"
+                    : " bg-black text-white hover:border-black hover:bg-white hover:text-black"
+                } `}>
+                Load More
+              </button>
+            )}
             {less && (
               <button
                 onClick={loadLess}
