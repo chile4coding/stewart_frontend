@@ -196,17 +196,18 @@ export default function Checkout() {
     //     shippingAddress.phone &&
     //     shippingAddress.deliveryfee
     // );
+    let status = false;
     for (let key in shippingAddress) {
       if (shippingAddress[key] === "") {
-        toast.error("Please fill in all fields");
-        return;
+        status = true;
+        toast.error(`Please fill in ${key} field`);
+        break;
       }
     }
 
-    // if (isEmpty(shippingAddress)) {
-    //   toast.error("Please fill in all fields");
-    //   return;
-    // }
+    if (status) {
+      return;
+    }
 
     dispatch(setUserOrderDetails(shippingAddress));
     window.location.href = "/payment";
