@@ -217,12 +217,16 @@ export default function Checkout() {
       }
     }
 
+    console.log("this is the status ==== ", status);
     if (status) {
       return;
     }
 
     dispatch(setUserOrderDetails(shippingAddress));
-    window.location.href = "/payment";
+
+    if (!isEmpty(userOrderDetails)) {
+      window.location.href = "/payment";
+    }
   }
 
   async function handleStates(e) {
