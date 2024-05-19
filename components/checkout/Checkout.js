@@ -216,7 +216,8 @@ export default function Checkout() {
         deliveryfee: parseInt(shippingFee),
       })
     );
-    window.location.href = "/payment";
+
+    router.push("/payment");
   }
 
   async function handleStates(e) {
