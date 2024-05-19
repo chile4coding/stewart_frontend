@@ -1,4 +1,9 @@
-import { createOrder, createPayWithWallet, createRgisteredUserOrder, getCurrentUser } from "@/services/request";
+import {
+  createOrder,
+  createPayWithWallet,
+  createRgisteredUserOrder,
+  getCurrentUser,
+} from "@/services/request";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { BsFillCheckCircleFill } from "react-icons/bs";
@@ -7,6 +12,11 @@ import Spinner from "../spinner/Spinner";
 import { setCartOnLoad, setUser } from "@/redux/storeSlice";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import {
+  useMonnifyPayment,
+  MonnifyButton,
+  MonnifyConsumer,
+} from "react-monnify";
 
 function SuccessfulOrder() {
   const {
@@ -73,7 +83,7 @@ export default function PaymentDetails() {
   const [paymentStatus, setPaymentSTatus] = useState({
     paymentStat: false,
   });
-  const [token, setToken] =  useState("")
+  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const {
     shop,
@@ -82,32 +92,30 @@ export default function PaymentDetails() {
     userOrderDetails,
     shippingFee,
     cart,
-    user
+    user,
   } = useSelector((state) => state.store);
   const router = useRouter();
   const { isDark } = toggleMode;
   const [status, setStatus] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("");
   const dispatch = useDispatch();
+  const {
+    shipping,
+    email,
+    address,
+    city,
+    country,
+    state,
+    deliveryfee,
+    firstname,
+    lastname,
+    phone,
+    village,
+  } = userOrderDetails;
 
   useEffect(() => {
-
     const cookie = Cookies.get("_stewart_collection_token");
-    setToken(cookie)
-    
-    const {
-      shipping,
-      email,
-      address,
-      city,
-      country,
-      state,
-      deliveryfee,
-      firstname,
-      lastname,
-      phone,
-      village,
-    } = userOrderDetails;
+    setToken(cookie);
 
     if (status && status?.status) {
       async function getOrderrequest() {
@@ -116,43 +124,38 @@ export default function PaymentDetails() {
         //  also appreciate the user for pursched requests
         //   and redirect the user to the  store page
 
-        
-           if (Boolean(token)) {
-             const response = await getCurrentUser(token);
-             if (response.status === 200) {
-               const user = await response.json();
-               dispatch(setUser(user?.user));
-             }
-           }
+        if (Boolean(token)) {
+          const response = await getCurrentUser(token);
+          if (response.status === 200) {
+            const user = await response.json();
+            dispatch(setUser(user?.user));
+          }
+        }
 
-        
         setLoading(true);
         let data;
 
-        if(Boolean(token)){
+        if (Boolean(token)) {
           data = await createRgisteredUserOrder(
-           {
-             email,
-             total: Number(overallTotal.toFixed(2)),
-             orderitem: [...cart, { paymentMethod: paymentMethod }],
-             name: `${firstname} ${lastname}`,
-             state,
-             city,
-             address: `${village} ${address}`,
-             status: status.status,
-             country,
-             shipping: Number(shippingFee.toFixed(2)),
-             phone,
-             refNo: `${email}`,
-
-             shippingType: Number(shipping) === 50 ? "express" : "standard",
-           },
-           token
-         );
-
-
-        }else{
-           data = await createOrder({
+            {
+              email,
+              total: Number(overallTotal.toFixed(2)),
+              orderitem: [...cart, { paymentMethod: paymentMethod }],
+              name: `${firstname} ${lastname}`,
+              state,
+              city,
+              address: `${village} ${address}`,
+              status: status.status,
+              country,
+              shipping: Number(shippingFee.toFixed(2)),
+              phone,
+              refNo: `${email}`,
+              shippingType: Number(shipping) === 50 ? "express" : "standard",
+            },
+            token
+          );
+        } else {
+          data = await createOrder({
             email,
             total: Number(overallTotal.toFixed(2)),
             orderitem: cart,
@@ -165,10 +168,9 @@ export default function PaymentDetails() {
             shipping: Number(shippingFee.toFixed(2)),
             phone,
             refNo: status.transactionReference,
-  
+
             shippingType: Number(shipping) === 50 ? "express" : "standard",
           });
-
         }
 
         if (data?.visitorOrder?.status == "SUCCESS") {
@@ -197,6 +199,30 @@ export default function PaymentDetails() {
     const { value } = e.target;
     setPaymentMethod(value);
   }
+
+  // const config = {
+  //   amount: `${parseInt(overallTotal)}`,
+  //   currency: "NGN",
+  //   reference: new String(new Date().getTime()),
+  //   customerFullName: `${userOrderDetails.firstname} ${userOrderDetails.lastname}`,
+  //   customerEmail: `${userOrderDetails.email}`,
+  //   apiKey: process.env.NEXT_PUBLIC_MONI_API_KEY,
+  //   contractCode: process.env.NEXT_PUBLIC_contractCode,
+  //   paymentDescription: "Pay for your order",
+  //   metadata: {
+  //     name: `${userOrderDetails.firstname} ${userOrderDetails.lastname}`,
+  //   },
+  //   paymentMethods: ["CARD"],
+  // };
+
+  // const componentProps = {
+  //   ...config,
+  //   onSuccess: (response) => console.log("==========="),
+  //   onClose: (response) => console.log("hello======"),
+  // };
+
+  // const initializePayment = useMonnifyPayment(componentProps);
+
   function payWithMonnify() {
     MonnifySDK.initialize({
       amount: `${parseInt(overallTotal)}`,
@@ -210,6 +236,7 @@ export default function PaymentDetails() {
       metadata: {
         name: `${userOrderDetails.firstname} ${userOrderDetails.lastname}`,
       },
+      paymentMethods: ["CARD", "ACCOUNT_TRANSFER"],
 
       onLoadStart: () => {
         console.log("loading has started");
@@ -219,6 +246,9 @@ export default function PaymentDetails() {
       },
 
       onComplete: function (response) {
+        const data = response;
+        setStatus(data);
+
         //Implement what happens when the transaction is completed.
       },
       onClose: function (data) {
@@ -256,7 +286,7 @@ export default function PaymentDetails() {
     const data = await createOrder({
       email,
       total: Number(overallTotal.toFixed(2)),
-      orderitem: [...cart, {paymentMethod: paymentMethod}],
+      orderitem: [...cart, { paymentMethod: paymentMethod }],
       name: `${firstname} ${lastname}`,
       state,
       city,
@@ -302,102 +332,98 @@ export default function PaymentDetails() {
       village,
     } = userOrderDetails;
 
-
-
-if(token){
-  
-    setLoading(true);
-    const data = await createRgisteredUserOrder({
-      email,
-      total: Number(overallTotal.toFixed(2)),
-      orderitem: [...cart, { paymentMethod: paymentMethod }],
-      name: `${firstname} ${lastname}`,
-      state,
-      city,
-      address: `${village} ${address}`,
-      status: "PAY ON DELIVERY",
-      country,
-      shipping: Number(shippingFee.toFixed(2)),
-      phone,
-      refNo: `${email}`,
-
-      shippingType: Number(shipping) === 50 ? "express" : "standard",
-    }, token);
-
-    if (data?.visitorOrder?.status == "PAY ON DELIVERY") {
-      setPaymentSTatus({
-        ...paymentStatus,
-        paymentStat: true,
-      });
-      setLoading(false);
-
-      dispatch(setCartOnLoad());
-    } else {
-      setPaymentSTatus({
-        ...paymentStatus,
-        paymentStat: false,
-      });
-
-      setLoading(false);
-    }
-
-}else{
-  setLoading(true);
-  const data = await createOrder({
-    email,
-    total: Number(overallTotal.toFixed(2)),
-    orderitem: [...cart, { paymentMethod: paymentMethod }],
-    name: `${firstname} ${lastname}`,
-    state,
-    city,
-    address: `${village} ${address}`,
-    status: "PAY ON DELIVERY",
-    country,
-    shipping: Number(shippingFee.toFixed(2)),
-    phone,
-    refNo: `${email}`,
-
-    shippingType: Number(shipping) === 50 ? "express" : "standard",
-  });
-
-
-
-  if (data?.visitorOrder?.status == "PAY ON DELIVERY") {
-    setPaymentSTatus({
-      ...paymentStatus,
-      paymentStat: true,
-    });
-    setLoading(false);
-
-    dispatch(setCartOnLoad());
-  } else {
-    setPaymentSTatus({
-      ...paymentStatus,
-      paymentStat: false,
-    });
-
-    setLoading(false);
-  }
-
-}
-  }
-
-  async function payWithWallet(token){
-        const {
-          shipping,
+    if (token) {
+      setLoading(true);
+      const data = await createRgisteredUserOrder(
+        {
           email,
-          address,
-          city,
-          country,
+          total: Number(overallTotal.toFixed(2)),
+          orderitem: [...cart, { paymentMethod: paymentMethod }],
+          name: `${firstname} ${lastname}`,
           state,
-          deliveryfee,
-          firstname,
-          lastname,
+          city,
+          address: `${village} ${address}`,
+          status: "PAY ON DELIVERY",
+          country,
+          shipping: Number(shippingFee.toFixed(2)),
           phone,
-          village,
-        } = userOrderDetails;
+          refNo: `${email}`,
 
-setLoading(true);
+          shippingType: Number(shipping) === 50 ? "express" : "standard",
+        },
+        token
+      );
+
+      if (data?.visitorOrder?.status == "PAY ON DELIVERY") {
+        setPaymentSTatus({
+          ...paymentStatus,
+          paymentStat: true,
+        });
+        setLoading(false);
+
+        dispatch(setCartOnLoad());
+      } else {
+        setPaymentSTatus({
+          ...paymentStatus,
+          paymentStat: false,
+        });
+
+        setLoading(false);
+      }
+    } else {
+      setLoading(true);
+      const data = await createOrder({
+        email,
+        total: Number(overallTotal.toFixed(2)),
+        orderitem: [...cart, { paymentMethod: paymentMethod }],
+        name: `${firstname} ${lastname}`,
+        state,
+        city,
+        address: `${village} ${address}`,
+        status: "PAY ON DELIVERY",
+        country,
+        shipping: Number(shippingFee.toFixed(2)),
+        phone,
+        refNo: `${email}`,
+
+        shippingType: Number(shipping) === 50 ? "express" : "standard",
+      });
+
+      if (data?.visitorOrder?.status == "PAY ON DELIVERY") {
+        setPaymentSTatus({
+          ...paymentStatus,
+          paymentStat: true,
+        });
+        setLoading(false);
+
+        dispatch(setCartOnLoad());
+      } else {
+        setPaymentSTatus({
+          ...paymentStatus,
+          paymentStat: false,
+        });
+
+        setLoading(false);
+      }
+    }
+  }
+
+  async function payWithWallet(token) {
+    const {
+      shipping,
+      email,
+      address,
+      city,
+      country,
+      state,
+      deliveryfee,
+      firstname,
+      lastname,
+      phone,
+      village,
+    } = userOrderDetails;
+
+    setLoading(true);
 
     const response = await createPayWithWallet(
       {
@@ -419,72 +445,68 @@ setLoading(true);
       token
     );
 
-    const data = await response.json()
+    const data = await response.json();
 
-    if(response.status === 200){
+    if (response.status === 200) {
       toast.success(<div className=" lowercase ">{data.message}</div>);
 
-       if (data?.order?.status == "SUCCESS") {
-         setPaymentSTatus({
-           ...paymentStatus,
-           paymentStat: true,
-         });
-         setLoading(false);
+      if (data?.order?.status == "SUCCESS") {
+        setPaymentSTatus({
+          ...paymentStatus,
+          paymentStat: true,
+        });
+        setLoading(false);
 
-         dispatch(setCartOnLoad());
-       } else {
-         setPaymentSTatus({
-           ...paymentStatus,
-           paymentStat: false,
-         });
+        dispatch(setCartOnLoad());
+      } else {
+        setPaymentSTatus({
+          ...paymentStatus,
+          paymentStat: false,
+        });
 
-         setLoading(false);
-       }
-
-    }else{
-      toast.error(<div className=" lowercase text-[red]">{data.message}</div>)
-   setLoading(false);
+        setLoading(false);
+      }
+    } else {
+      toast.error(<div className=" lowercase text-[red]">{data.message}</div>);
+      setLoading(false);
     }
-
-
-
   }
 
   function pay() {
     if (paymentMethod === "card") {
-    payWithMonnify()
+      // initializePayment();
+      payWithMonnify();
     } else if (paymentMethod === "wallet") {
-      if(Boolean(token)){
-        payWithWallet(token)
-
-      }else{
-        toast.error(<div className=" normal-case  text-[red]">Please Login to your account and pay again</div>)
+      if (Boolean(token)) {
+        payWithWallet(token);
+      } else {
+        toast.error(
+          <div className=" normal-case  text-[red]">
+            Please Login to your account and pay again
+          </div>
+        );
       }
       console.log("wallet");
     } else if (paymentMethod === "delivery") {
-      if(Boolean(token)){
+      if (Boolean(token)) {
         payOnDelivery(token);
 
         // console.log("I have yoken now")
-        
-      }else{
-        payOnDelivery()
+      } else {
+        payOnDelivery();
         // console.log("I do not have token")
-
       }
     } else {
       toast.error(
         <div className=" normal-case">Please selct a payment method</div>
       );
     }
-
   }
 
-  function handleLogin(){
-    router.push("/login")
+  function handleLogin() {
+    router.push("/login");
   }
 
- 
   return (
     <div className=" sm:pb-4">
       {loading && !paymentStatus.paymentStat && "Processing Order "}
