@@ -96,7 +96,6 @@ export default function Checkout() {
     phone: "",
     email: "",
     shipping: "",
-    deliveryfee: "",
     countries: [],
     states: [],
     cities: [],
@@ -132,11 +131,6 @@ export default function Checkout() {
     );
 
     if (!checkAddress) {
-      // toast.error(
-      //   <h2 className=" normal-case">
-      //     Please fill in the field correctly to determine your location
-      //   </h2>
-      // );
       return;
     }
 
@@ -198,7 +192,7 @@ export default function Checkout() {
     //     shippingAddress.deliveryfee
     // );
 
-    setShippingAddress({ ...shippingAddress, deliveryfee: shippingFee });
+    let status;
 
     for (let key in shippingAddress) {
       if (isEmpty(shippingAddress[key])) {
@@ -212,12 +206,16 @@ export default function Checkout() {
       status = false;
     }
 
-    console.log("this is the status ==== ", status);
     if (status) {
       return;
     }
 
-    dispatch(setUserOrderDetails(shippingAddress));
+    dispatch(
+      setUserOrderDetails({
+        shippingAddress,
+        deliveryfee: parseInt(shippingFee),
+      })
+    );
     window.location.href = "/payment";
   }
 
