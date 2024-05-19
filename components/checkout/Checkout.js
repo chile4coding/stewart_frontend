@@ -11,6 +11,7 @@ import {
   getUserDistance,
 } from "@/services/request";
 import { calCulateShippingFee, setUserOrderDetails } from "@/redux/storeSlice";
+import { isEmpty } from "lodash";
 export function Order() {
   // const isDark = useSelector((state) => state.store.toggleMode.isDark);
   const { toggleMode, cart, cartTotal, shippingFee, overallTotal } =
@@ -184,20 +185,28 @@ export default function Checkout() {
   }
 
   function handlePayment() {
-    const checkAddress = Boolean(
-      shippingAddress.country &&
-        shippingAddress.city &&
-        shippingAddress.state &&
-        shippingAddress.address &&
-        shippingAddress.firstname &&
-        shippingAddress.lastname &&
-        shippingAddress.email &&
-        shippingAddress.phone &&
-        shippingAddress.deliveryfee
-    );
-    if (!checkAddress) {
-      return;
+    // const checkAddress = Boolean(
+    //   shippingAddress.country &&
+    //     shippingAddress.city &&
+    //     shippingAddress.state &&
+    //     shippingAddress.address &&
+    //     shippingAddress.firstname &&
+    //     shippingAddress.lastname &&
+    //     shippingAddress.email &&
+    //     shippingAddress.phone &&
+    //     shippingAddress.deliveryfee
+    // );
+    for (let key in shippingAddress) {
+      if (shippingAddress[key] === "") {
+        toast.error("Please fill in all fields");
+        return;
+      }
     }
+
+    // if (isEmpty(shippingAddress)) {
+    //   toast.error("Please fill in all fields");
+    //   return;
+    // }
 
     dispatch(setUserOrderDetails(shippingAddress));
     window.location.href = "/payment";
