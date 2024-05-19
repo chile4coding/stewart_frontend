@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import Head from "next/head";
 import toast from "react-hot-toast";
+import { isEmpty } from "lodash";
 function MetaDataN() {
   return (
     <Head>
@@ -30,7 +31,7 @@ export default function Check() {
 
   const router = useRouter();
 
-  if (cart?.length < 1) {
+  if (!Boolean(cart) || isEmpty(cart) || cart?.length < 1) {
     router.push("/shop");
     toast.error(<div className=" normal-case  text-[red]">Cart is empty</div>);
 

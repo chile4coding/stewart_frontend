@@ -17,8 +17,6 @@ export function Order() {
     useSelector((state) => state.store);
   const { isDark } = toggleMode;
 
- 
-
   return (
     <div className="  flex  flex-col   my-14 sm:mb-4  md:order-1 sm:order-1">
       <div
@@ -107,7 +105,6 @@ export default function Checkout() {
   const router = useRouter();
 
   useEffect(() => {
-
     async function getCountries() {
       if (shippingAddress.countries.length < 1) {
         const country = await getAllCountry();
@@ -186,29 +183,24 @@ export default function Checkout() {
     setShippingAddress({ ...shippingAddress, [name]: value });
   }
 
-
-
   function handlePayment() {
-      const checkAddress = Boolean(
-        shippingAddress.country &&
-          shippingAddress.city &&
-          shippingAddress.state &&
-          shippingAddress.address &&
-          shippingAddress.firstname &&
-          shippingAddress.lastname &&
-          shippingAddress.email &&
-          shippingAddress.phone &&
-          shippingAddress.deliveryfee
-      );
-if(!checkAddress){
-return
-}
+    const checkAddress = Boolean(
+      shippingAddress.country &&
+        shippingAddress.city &&
+        shippingAddress.state &&
+        shippingAddress.address &&
+        shippingAddress.firstname &&
+        shippingAddress.lastname &&
+        shippingAddress.email &&
+        shippingAddress.phone &&
+        shippingAddress.deliveryfee
+    );
+    if (!checkAddress) {
+      return;
+    }
 
-
-    dispatch( setUserOrderDetails(shippingAddress))
-    window.location.href = "https://stewart-frontend-chile4coding.vercel.app/payment";
-
-
+    dispatch(setUserOrderDetails(shippingAddress));
+    window.location.href = "/payment";
   }
 
   async function handleStates(e) {
@@ -407,7 +399,6 @@ return
         </div>
         <div className="  flex justify-center mb-24">
           <button
-   
             className={`  btn  shadow-md   capitalize sm:my-4   mx-auto ${
               isDark
                 ? "hover:border-white hover:bg-black hover:text-white"
@@ -421,8 +412,8 @@ return
       <div>
         <Order />
         <h2 className=" text-justify normal-case">
-          <span className=" font-bold"> Note: </span> Express usuallly takes 4 - 5 working days to be
-          delivered
+          <span className=" font-bold"> Note: </span> Express usuallly takes 4 -
+          5 working days to be delivered
         </h2>
         <h2 className=" text-justify normal-case">
           Standard usuallly takes 6 - 7 working days to be delivered
