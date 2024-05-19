@@ -22,14 +22,14 @@ export default function SentMessage({ message }) {
     const res= await deleteMessages(id, token)
     const dataD  = await res.json()
 
-    console.log(dataD)
+ 
 
 if(res.ok){
   
   const response = await adminMessages(token);
   const data = await response.json();
 
-  console.log(res)
+
   if(res.ok){
 
     dispatch(handleGetMessages(data.messages));

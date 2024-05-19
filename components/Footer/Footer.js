@@ -69,7 +69,7 @@ export default function AppFooter() {
               Follow us on socials
             </p>
             <div className=" flex  justify-around w-full mt-4">
-              <a href="">
+              <a>
                 {" "}
                 <FaTwitter size={24} />
               </a>
@@ -79,7 +79,9 @@ export default function AppFooter() {
                 {" "}
                 <FaFacebook size={24} />
               </a>
-              <a href="">
+              <a
+                href="https://www.instagram.com/t0010000t?igsh=MTF0cTFubDcwYm5taw%3D%3D&utm_source=qr"
+                target="_blank">
                 <FaInstagram size={24} />
               </a>
             </div>
@@ -188,7 +190,9 @@ export default function AppFooter() {
                 {" "}
                 <FaFacebook size={24} />
               </a>
-              <a href="">
+              <a
+                href="https://www.instagram.com/t0010000t?igsh=MTF0cTFubDcwYm5taw%3D%3D&utm_source=qr"
+                target="_blank">
                 <FaInstagram size={24} />
               </a>
             </div>

@@ -11,7 +11,7 @@ export default function Login() {
     <>
       <MetaDataC title="Login" />
       <AppLayoout>
-        <div className=" grid grid-cols-2 sm:grid-cols-1 px-10 gap-6 my-10 sm:max-h-[80vh]">
+        <div className=" grid grid-cols-2 sm:grid-cols-1 px-10 gap-6 my-10">
           <div
             className="login_bg  max-w-[588px] h-[509px] w-full sm:hidden  rounded-lg flex justify-center items-center   "
             style={{
