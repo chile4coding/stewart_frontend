@@ -1,8 +1,14 @@
 import { ImageComponent } from "@/components/image/Imagecomponent";
 import Spinner from "@/components/spinner/Spinner";
 import { setUser } from "@/redux/storeSlice";
-import { deleteReviews, getCookie, getCurrentUser, updateReview } from "@/services/request";
+import {
+  deleteReviews,
+  getCookie,
+  getCurrentUser,
+  updateReview,
+} from "@/services/request";
 import { Rating } from "@mui/material";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiFillCloseSquare } from "react-icons/ai";
@@ -12,7 +18,7 @@ export function AddReviewModal({ item }) {
   const { user, toggleMode, orders, orderDetails } = useSelector(
     (state) => state.store
   );
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [review, setReview] = useState({
     rating: "",
     name: "",
@@ -29,11 +35,8 @@ export function AddReviewModal({ item }) {
       comment: item.comment,
       productId: item.product_id,
       id: item.id,
-      name: item.name
+      name: item.name,
     });
-
-
-
   }, [item]);
 
   function handleInputChange(e) {
@@ -54,12 +57,9 @@ export function AddReviewModal({ item }) {
       ...review,
       loading: true,
     });
-    const response = await updateReview(
-      review ,
-      token
-    );
+    const response = await updateReview(review, token);
     const data = await response.json();
-    console.log(data)
+    console.log(data);
 
     if (response.status === 200) {
       toast.success(<div className="  normal-case">{data.message}</div>);
@@ -137,6 +137,7 @@ export function AddReviewModal({ item }) {
 }
 function NoReviews() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const router = useRouter();
 
   return (
     <div className="w-full  flex flex-col justify-center items-center h-[88vh] ">
@@ -156,7 +157,8 @@ function NoReviews() {
           isDark
             ? "hover:border-white hover:bg-black hover:text-white"
             : " bg-black text-white hover:border-black"
-        }`}>
+        }`}
+        onClick={() => router.push("/shop")}>
         Continue Shopping
       </button>
     </div>
@@ -167,8 +169,8 @@ function Reviews() {
   const { orders, orderDetails, user, toggleMode } = useSelector(
     (state) => state.store
   );
-  const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const { isDark } = toggleMode;
   const [item, setItem] = useState({});
   function handleModalShow(item) {
@@ -176,25 +178,22 @@ function Reviews() {
     window.my_modal_3.showModal();
   }
 
-  async function handleDeleteReview(id){
-    
+  async function handleDeleteReview(id) {
     const token = getCookie();
-    setLoading(prev=>true)
-     const response = await deleteReviews(id, token);
-     const data = await response.json()
-  
-        if (response.status === 200) {
-          toast.success(<div className="  normal-case">{data.message}</div>);
-          const response = await getCurrentUser(token);
-          if (response.status === 200) {
-            const user = await response.json();
-            dispatch(setUser(user?.user));
-          }
-        }
+    setLoading((prev) => true);
+    const response = await deleteReviews(id, token);
+    const data = await response.json();
 
-       setLoading((prev) => false);
+    if (response.status === 200) {
+      toast.success(<div className="  normal-case">{data.message}</div>);
+      const response = await getCurrentUser(token);
+      if (response.status === 200) {
+        const user = await response.json();
+        dispatch(setUser(user?.user));
+      }
+    }
 
-
+    setLoading((prev) => false);
   }
   return (
     <div>
@@ -237,7 +236,6 @@ function Reviews() {
                   onClick={handleDeleteReview.bind(this, rev.id)}
                   className=" text-xl hover:cursor-pointer"
                 />
-         
               </div>
             </div>
           </div>
