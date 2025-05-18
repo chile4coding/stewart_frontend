@@ -99,11 +99,11 @@ body {
   transition: 10s all ease;
 }
 
-.turndark {
+.turn-dark {
   background-color: black;
   color: white;
 }
-.turnlight {
+.turn-light {
   transition: 2s all ease;
   background-color: #f0eded;
   color: black;
@@ -156,8 +156,8 @@ body {
   cursor: pointer;
 }
 
-.accountbg {
-  background-image: url(/accountbg.png);
+.account-background {
+  background-image: url(/account-background.png);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -196,7 +196,7 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  max-width: 1440px;
+  width: 100%;
 }
 /* @media (max-width: 767px) {
   body {

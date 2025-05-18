@@ -38,7 +38,8 @@ function Color({ id, color, active, handleColor }) {
         }  ${isDark && active && " text-black hover:text-black bg-white "} ${
           !isDark && active && "bg-black"
         }`}
-        onClick={handleColor.bind(this, id)}>
+        onClick={handleColor.bind(this, id)}
+      >
         {color}
       </button>
     </>
@@ -56,7 +57,8 @@ function Sizes({ id, size, active, handleSize }) {
         }  ${isDark && active && " text-black hover:text-black bg-white  "} ${
           !isDark && active && "bg-black"
         }`}
-        onClick={handleSize.bind(this, id)}>
+        onClick={handleSize.bind(this, id)}
+      >
         {size}
       </button>
     </>
@@ -90,20 +92,23 @@ function ClothDescription({ desc, size, singleProduct }) {
       <h2
         className={`border-b  text-[24px] font-semibold pb-4 pt-8 mb-8 ${
           isDark ? "" : " border-b-black"
-        }`}>
+        }`}
+      >
         Size & fit
       </h2>
       <div
         className={`overflow-x-auto ${
           isDark ? " bg-[#f0eded] text-black" : ""
-        }`}>
+        }`}
+      >
         <table className="table">
           {/* head */}
           <thead>
             <tr
               className={`border-b-black font-bold  text-[18px] ${
                 isDark ? " text-black" : " text-black"
-              }`}>
+              }`}
+            >
               <th className=" lowercase">sizes</th>
               {sizeName?.map((s, i) => (
                 <th key={i} className=" lowercase">
@@ -176,7 +181,8 @@ function SimilarClothes({
         swiper.navigation.init();
         swiper.navigation.update();
       }}
-      className="mySwiper  mx-auto flex  items-center justify-between mr-6">
+      className="mySwiper  mx-auto flex  items-center justify-between mr-6"
+    >
       {similar.map((s) =>
         s.colors.map((col) => (
           <SwiperSlide className="" key={col.id}>
@@ -205,7 +211,8 @@ function ClethReviews({ review }) {
       <div
         className={` grid grid-cols-3 py-10 sm:grid-cols-1  ${
           isDark ? "border-b border-b-white " : " border-b border-b-black "
-        }`}>
+        }`}
+      >
         <Rating
           sx={{
             backgroundColor: "",
@@ -413,7 +420,7 @@ export default function SingleItem({ singleItem, similarProduct }) {
           <img
             src={singleProduct?.image}
             alt="polo"
-            className={` object-cover h-full w-full rounded-lg image_ani ${
+            className={`  object-cover h-full w-full rounded-lg image_ani ${
               isDark ? "bg-[#e4e1e1]" : "bg-[#9c9a9a]"
             }`}
           />
@@ -499,7 +506,8 @@ export default function SingleItem({ singleItem, similarProduct }) {
           <div
             className={`border flex gap-6 max-w-[98px] p-2  rounded-md items-center ${
               isDark ? "" : "  border-black text-black"
-            }`}>
+            }`}
+          >
             <FaMinus
               className=" font-bold  text-[30px] cursor-pointer"
               onClick={handleDecreaseValue}
@@ -517,7 +525,8 @@ export default function SingleItem({ singleItem, similarProduct }) {
                   ? "border-white text-white  hover:bg-white hover:text-black "
                   : " hover:bg-black hover:text-white "
               }`}
-              onClick={handleCart.bind(this, false)}>
+              onClick={handleCart.bind(this, false)}
+            >
               Add to cart
             </button>
             <button
@@ -526,7 +535,8 @@ export default function SingleItem({ singleItem, similarProduct }) {
                   ? "border-white text-white  hover:bg-white hover:text-black "
                   : " hover:bg-black hover:text-white "
               }`}
-              onClick={handleCart.bind(this, true)}>
+              onClick={handleCart.bind(this, true)}
+            >
               Buy Now
             </button>
           </div>
@@ -536,7 +546,8 @@ export default function SingleItem({ singleItem, similarProduct }) {
         <h2
           className={`  border-b  text-[24px] font-semibold pb-4 pt-8 ${
             isDark ? "" : " border-b-black"
-          }`}>
+          }`}
+        >
           <span>
             <div className=" flex gap-8 items-center ">
               <span
@@ -544,7 +555,8 @@ export default function SingleItem({ singleItem, similarProduct }) {
                   !descAndReviewDisplay &&
                   "bg-[#212121] p-2 rounded-md text-white"
                 }`}
-                onClick={handeDescriptionDisplay}>
+                onClick={handeDescriptionDisplay}
+              >
                 Description
               </span>
               <span
@@ -552,7 +564,8 @@ export default function SingleItem({ singleItem, similarProduct }) {
                   descAndReviewDisplay &&
                   "bg-[#212121] p-2 rounded-md text-white"
                 }`}
-                onClick={handleReviewsDisplay}>
+                onClick={handleReviewsDisplay}
+              >
                 Reviews
               </span>
             </div>

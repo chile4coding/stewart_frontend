@@ -4,18 +4,22 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { AiFillCloseSquare, AiOutlineCloseSquare } from "react-icons/ai";
 import { BsFillChatSquareQuoteFill } from "react-icons/bs";
-import { getCookie, deleteSavedItem, getCurrentUser, pagination } from "@/services/request";
-
+import {
+  getCookie,
+  deleteSavedItem,
+  getCurrentUser,
+  pagination,
+} from "@/services/request";
 
 import { useDispatch, useSelector } from "react-redux";
 import { IoIosArrowForward } from "react-icons/io";
+import Link from "next/link";
 
-export function NoSavedItems() {
+export function NoSavedItems({
+  title = "No saved items yet",
+  message = "Your saved products will appear here.",
+}) {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
-const router  = useRouter()
-  function handleShopNav(){
-    router.push("/shop")
-  }
 
   return (
     <div className="w-full  flex flex-col justify-center items-center h-[88vh] ">
@@ -24,18 +28,20 @@ const router  = useRouter()
       </div>
 
       <h2 className=" lg:text-[24px] xl:text-[24px] font-semibold mt-6 mb-2">
-        No saved items yet
+        {title}
       </h2>
-      <p className=" mb-6 text-center">Your saved products will appear here.</p>
+      <p className=" mb-6 text-center">{message}</p>
 
-      <button onClick={handleShopNav}
-        className={`btn  shadow-md   normal-case sm:btn-xs sm:my-4 sm:text-[7.98px] mx-auto ${
-          isDark
-            ? "hover:border-white hover:bg-black hover:text-white"
-            : " bg-black text-white hover:border-black"
-        }`}>
-        Continue Shopping
-      </button>
+      <Link href={"/shop"}>
+        <button
+          className={`btn  shadow-md   normal-case sm:btn-xs sm:my-4 sm:text-[7.98px] mx-auto ${
+            isDark
+              ? "hover:border-white hover:bg-black hover:text-white"
+              : " bg-black text-white hover:border-black"
+          }`}>
+          Continue Shopping
+        </button>
+      </Link>
     </div>
   );
 }
@@ -44,9 +50,9 @@ export default function SavedItemsDetails() {
   const { user, toggleMode, singleProduct } = useSelector(
     (state) => state.store
   );
-    const [table, setTable] = useState([]);
-    const [page, setPage] = useState(0);
-      const [token, setToken] = useState(null);
+  const [table, setTable] = useState([]);
+  const [page, setPage] = useState(0);
+  const [token, setToken] = useState(null);
 
   const router = useRouter();
   const { isDark } = toggleMode;
@@ -61,21 +67,19 @@ export default function SavedItemsDetails() {
     }
   }, []);
 
-
   async function handleDelete(id) {
-   const response  = await  deleteSavedItem(id, token);
-   const data  = await response.json()
-  
-   if(response.ok){
-    toast.success(<div className=" normal-case">product deleted</div>)
-          const response = await getCurrentUser(token);
-          if (response.status === 200) {
-            const user = await response.json();
-         
-            dispatch(setUser(user?.user));
-          }
-  
-   }
+    const response = await deleteSavedItem(id, token);
+    const data = await response.json();
+
+    if (response.ok) {
+      toast.success(<div className=" normal-case">product deleted</div>);
+      const response = await getCurrentUser(token);
+      if (response.status === 200) {
+        const user = await response.json();
+
+        dispatch(setUser(user?.user));
+      }
+    }
   }
 
   async function handeBuyItem(item) {
@@ -86,10 +90,9 @@ export default function SavedItemsDetails() {
     }
   }
 
-    function handlePageination(pageId) {
-      setPage((prev) => pageId);
-    }
-
+  function handlePageination(pageId) {
+    setPage((prev) => pageId);
+  }
 
   return (
     <div

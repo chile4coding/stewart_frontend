@@ -52,7 +52,7 @@ const storeSlice = createSlice({
       //   return array;
       // }
 
-      function shuffleArray(array) {
+      function shuffleArray(array = []) {
         const randomizedArray = [...array];
 
         for (let i = randomizedArray.length - 1; i > 0; i--) {
@@ -316,7 +316,7 @@ const storeSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
-    setGlobalLoaoding: (state, action) => {
+    setGlobalLoading: (state, action) => {
       state.globalLoading = action.payload;
     },
     getuserOrders: (state, action) => {
@@ -580,7 +580,7 @@ export const {
   setUserOrderDetails,
   setCurrentUserEmail,
   setUser,
-  setGlobalLoaoding,
+  setGlobalLoading,
   getuserOrders,
   getSingleOrders,
   setOrderSearch,

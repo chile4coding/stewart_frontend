@@ -17,9 +17,6 @@ export function ItemCategory({ category }) {
   const {
     shop,
     toggleMode,
-    singleProduct,
-    newArrival,
-    bestSelling,
     globalLoading,
 
     products: product,
@@ -50,6 +47,7 @@ export function ItemCategory({ category }) {
         <div className=" p-4 sm:p-2  ">
           <figure className="  sm:max-h-[100px]  xl:max-h-[200px]  lg:max-h-[200px]  md:max-h-[150px] ">
             <img
+              loading="lazy"
               src={category?.image}
               alt={category?.name}
               className={`rounded-md   object-contain  sm:h-full w-full   h-full  ${
@@ -106,7 +104,7 @@ export default function Items({ items }) {
     dispatch(getSingleProduct(item.id));
 
     if (singleProduct) {
-      router.push(`/item/${item?.title}`);
+      router.push(`/item/${item?.id}`);
     }
   }
 
@@ -174,7 +172,7 @@ export default function Items({ items }) {
             <img
               src={items?.image}
               alt={items?.name}
-              className={`  w-full   object-contain   h-[200px] ${
+              className={`  w-full    object-cover object-center   h-[200px] ${
                 isDark
                   ? "bg-[white]  rounded-md"
                   : "bg-[#e4e1e1] border-0 rounded-none"

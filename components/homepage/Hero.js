@@ -1,18 +1,9 @@
 import React from "react";
-import Image from "next/image";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Hero() {
- const router  =  useRouter()
-  const isDark  = useSelector(state=>state.store?.toggleMode?.isDark)
-
-    function handleShopNav() {
-      router.replace("/shop");
-    }
-    function handleCreateAccountNav() {
-      router.replace("/signup");
-    }
+  const isDark = useSelector((state) => state.store?.toggleMode?.isDark);
 
   return (
     <section
@@ -29,16 +20,18 @@ export default function Hero() {
           individuality. Get ready to redefine your style with us!
         </p>
         <div className="  flex items-center gap-8   sm:gap-4 sm:mt-4  ">
-          <button
-            className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs   bg-transparent text-white hover:bg-white  hover:text-black`}
-            onClick={handleShopNav}>
-            Start shopping
-          </button>
-          <button
-            className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs   bg-transparent text-white hover:bg-white  hover:text-black`}
-            onClick={handleCreateAccountNav}>
-            Create Account
-          </button>
+          <Link href={"/shop"}>
+            <button
+              className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs   bg-transparent text-white hover:bg-white  hover:text-black`}>
+              Start shopping
+            </button>
+          </Link>
+          <Link href={"/signup"}>
+            <button
+              className={`  btn normal-case   font-normal mt-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs   bg-transparent text-white hover:bg-white  hover:text-black`}>
+              Create Account
+            </button>
+          </Link>
         </div>
       </div>
       {/* <div className=" lg:justify-self-center  self-center  xl:justify-self-center xs:order-1 md:order-1 sm:order-1 sm:hidden">

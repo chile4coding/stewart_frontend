@@ -1,12 +1,22 @@
 import React, { useEffect } from "react";
 import Items from "@/components/items/Items";
-import AppLayoout from "@/components/Layout/AppLayoout";
+import AppLayout from "@/components/Layout/AppLayout";
 import { AiOutlineDownCircle } from "react-icons/ai";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { getProductByCategory, searchStore } from "@/redux/storeSlice";
+import {
+  getCategory,
+  getProductByCategory,
+  searchStore,
+  setGlobalLoading,
+  storeGetProducts,
+} from "@/redux/storeSlice";
 import Head from "next/head";
+import AppFooter from "@/components/Footer/Footer";
+import useGetProducts from "@/components/hooks/useGetProducts";
+import { useQuery } from "react-query";
+import { getShopProducts } from "@/services/request";
 
 export function MetaDat() {
   return (
@@ -14,7 +24,7 @@ export function MetaDat() {
       <title>Stewart Collection | Store</title>
       <meta
         name="description"
-        content="   Explore the rise of juggers, the oversized garment defying gender norms. Break the mold! Show how polos infuse personality into formal suits
+        content="   Explore the rise of joggers, the oversized garment defying gender norms. Break the mold! Show how polo infuse personality into formal suits
         Craft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. 
         Move beyond restrictive label"
       />
@@ -28,162 +38,162 @@ export function MetaDat() {
   );
 }
 
-function SortComponent({ products }) {
-  const {
-    shop,
-    toggleMode,
-    singleProduct,
-    category,
-    newArrival,
-    bestSelling,
+function SortComponent({ category, setFilter }) {
+  const { toggleMode } = useSelector((state) => state.store);
 
-    cart,
-
-    products: product,
-  } = useSelector((state) => state.store);
-
-  const dispatch = useDispatch();
   const { isDark } = toggleMode;
 
-  function handleCategory(id) {
-    dispatch(getProductByCategory(id));
-  }
-
-  return (
-    <div
-      className={`card normal-case p-4 absolute  top-14 border right-10  z-50 ${
-        isDark ? " bg-white border-black" : " bg-black text-white"
-      }`}>
+  return category?.length > 0 ? (
+    <div className="dropdown z-50">
       <button
-        onClick={() => dispatch(searchStore({ products, search: "" }))}
-        className={` lowercase btn  btn-sm btn-outline border-0  ${
-          isDark ? " hover:bg-black  hover:text-white" : "text-white"
+        tabIndex={0}
+        role="button"
+        className={` btn btn-outline flex normal-case  ${
+          isDark ? " border-white text-white" : ""
         }`}>
-        All
+        Sort <AiOutlineDownCircle />
       </button>
-      {category &&
-        category.length > 0 &&
-        category.map((item) => (
+      <ul
+        tabIndex={0}
+        className={`dropdown-content menu  rounded-box z-1  p-2 shadow-sm ${
+          isDark ? " bg-slate-100" : " bg-black"
+        }`}>
+        <li>
           <button
-            key={item.id}
-            onClick={handleCategory.bind(this, item.id)}
+            onClick={() => setFilter("")}
             className={` lowercase btn  btn-sm btn-outline border-0  ${
               isDark ? " hover:bg-black  hover:text-white" : "text-white"
             }`}>
-            {item.name}
+            All
           </button>
-        ))}
+        </li>
+        {category &&
+          category.length > 0 &&
+          category.map((item) => (
+            <li key={item.id}>
+              <button
+                key={item.id}
+                onClick={() => {
+                  setFilter(item.name);
+                  // handleCategory.bind(this, item.id);
+                }}
+                className={` lowercase btn  btn-sm btn-outline border-0  ${
+                  isDark ? " hover:bg-black  hover:text-white" : "text-white"
+                }`}>
+                {item.name}
+              </button>
+            </li>
+          ))}
+      </ul>
     </div>
-  );
+  ) : null;
 }
 export default function Shop() {
-  const [show, setShow] = useState(false);
-  const { shop, toggleMode, products } = useSelector((state) => state.store);
+  const { toggleMode } = useSelector((state) => state.store);
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
-  const [count, setCount] = useState(2);
+  const [count, setCount] = useState(10);
+  const [filter, setFilter] = useState("");
 
-  const [more, setMore] = useState([]);
-  const [less, showLess] = useState(false);
   const isDark = toggleMode?.isDark;
-  const router = useRouter();
 
-  useEffect(() => {
-    if (shop.length > 0) {
-      const itemDisplay = shop.slice(0, 10);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["GET_PRODUCTS", search, count, filter],
+    queryFn: async () => {
+      const result = await getShopProducts({ search, count, filter });
 
-      setMore(itemDisplay);
-    }
-  }, [shop]);
+      dispatch(storeGetProducts(result?.products));
+      dispatch(setGlobalLoading(true));
+
+      return result;
+    },
+    enabled: true,
+    keepPreviousData: true,
+  });
 
   function handleSearch(e) {
-    dispatch(searchStore({ products, search: e.target.value }));
     setSearch((prev) => e.target.value);
   }
 
   function loadMore() {
-    const items = 10;
-    const itemDisplay = shop.slice(0, items * count);
-    if (itemDisplay?.length < 10) {
-      return;
-    }
-    setMore((prev) => itemDisplay);
-    setCount((prev) => prev + 1);
-
-    if (itemDisplay.length === shop.length) {
-      showLess(true);
+    if (count <= Number(data?.pagination?.total)) {
+      setCount((prev) => prev + 10);
     }
   }
 
-  function loadLess() {
-    const itemDisplay = shop.slice(0, 10);
-    setMore((prev) => itemDisplay);
-    showLess(false);
-    setCount((prev) => 2);
-  }
-
-  const handleShowState = () => setShow((prev) => !prev);
   return (
     <>
       <MetaDat />
-      <AppLayoout>
-        <main className=" px-10 sm:px-4 ">
-          <div className="flex  justify-between  items-center mt-10 flex-wrap relative ">
-            <h2>Showing {more.length} products</h2>
-            <div className=" ]  xl:w-[322px]  sm:hidden ">
-              <input
-                type="text"
-                placeholder="search "
-                value={search}
-                onChange={handleSearch}
-                className={`input  md:hidden input-bordered border-collapse  w-full   sm:hidden ${
-                  isDark ? "border-white bg-transparent" : " border-[black] "
-                }`}
-                style={{ color: !isDark && "black !important" }}
-              />
-            </div>
-            <button
-              onClick={handleShowState}
-              className={` btn btn-outline flex normal-case  ${
-                isDark ? " border-white text-white" : ""
-              }`}>
-              Sort <AiOutlineDownCircle />
-            </button>
+      <AppLayout>
+        {isLoading && (
+          <div className="flex justify-center items-center h-screen">
+            <div className="loading loading-spinner loading-lg"></div>
+          </div>
+        )}
 
-            {show && <SortComponent products={products} />}
-          </div>
-          <div
-            className={`grid lg:grid-cols-5 xl:grid-cols-5 md:grid-cols-4 md:gap-4 sm:grid-cols-3  gap-5  sm:gap-3 my-8 `}>
-            {more &&
-              more.length > 0 &&
-              more.map((prod) => <Items items={prod} key={prod.id} />)}
-          </div>
-          <div className=" flex justify-center ">
-            {!less && (
-              <button
-                onClick={loadMore}
-                className={` my-4 btn btn-outline  mx-auto normal-case sm:btn-sm ${
-                  isDark
-                    ? "  border-white text-white hover:bg-white  hover:text-black"
-                    : " bg-black text-white hover:border-black hover:bg-white hover:text-black"
-                } `}>
-                Load More
-              </button>
+        {!isLoading && (
+          <main className=" px-10 sm:px-4 max-h-[100vh]  overflow-y-scroll ">
+            <div className="flex  justify-between  items-center mt-10 flex-wrap relative ">
+              <h2>
+                Showing {data?.products?.length}{" "}
+                {data?.products?.length > 1 ? "products" : "product"}
+              </h2>
+              <div className=" ]  xl:w-[322px]  sm:hidden ">
+                <input
+                  type="text"
+                  placeholder="search "
+                  value={search}
+                  onChange={handleSearch}
+                  className={`input  md:hidden input-bordered border-collapse  w-full   sm:hidden ${
+                    isDark ? "border-white bg-transparent" : " border-[black] "
+                  }`}
+                  style={{ color: !isDark && "black !important" }}
+                />
+              </div>
+
+              {
+                <SortComponent
+                  category={data?.categories}
+                  setFilter={setFilter}
+                />
+              }
+            </div>
+
+            {data?.products?.length > 0 ? (
+              <div
+                className={`grid lg:grid-cols-4 xl:grid-cols-5 md:grid-cols-3 md:gap-4 sm:grid-cols-2  gap-5  sm:gap-3 my-8 `}>
+                {data?.products &&
+                  data?.products.length > 0 &&
+                  data?.products.map((prod) => (
+                    <Items items={prod} key={prod.id} />
+                  ))}
+              </div>
+            ) : (
+              <div className=" my-32">
+                <h2 className=" text-center">Not item found</h2>
+              </div>
             )}
-            {less && (
-              <button
-                onClick={loadLess}
-                className={` my-4 btn btn-outline  mx-auto normal-case sm:btn-sm ${
-                  isDark
-                    ? "  border-white text-white hover:bg-white  hover:text-black"
-                    : " bg-black text-white hover:border-black hover:bg-white hover:text-black"
-                } `}>
-                Show less
-              </button>
+
+            {Number(data?.pagination?.total) > 10 && (
+              <div className=" flex justify-center ">
+                {
+                  <button
+                    onClick={loadMore}
+                    className={` my-4 btn btn-outline  mx-auto normal-case sm:btn-sm ${
+                      isDark
+                        ? "  border-white text-white hover:bg-white  hover:text-black"
+                        : " bg-black text-white hover:border-black hover:bg-white hover:text-black"
+                    } `}>
+                    Load More
+                  </button>
+                }
+              </div>
             )}
-          </div>
-        </main>
-      </AppLayoout>
+
+            <AppFooter />
+          </main>
+        )}
+      </AppLayout>
     </>
   );
 }

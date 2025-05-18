@@ -1,4 +1,4 @@
-import AppLayoout from "@/components/Layout/AppLayoout";
+import AppLayout from "@/components/Layout/AppLayout";
 import Spinner from "@/components/spinner/Spinner";
 import { reqOtp, verifyOtp } from "@/services/request";
 import { useRouter } from "next/router";
@@ -46,12 +46,9 @@ function Otpform() {
 
     setOtp(newOtp);
 
-
     submit(newOtp.join(""));
   };
 
-
-  
   async function submit(otp) {
     setLoading(true);
 
@@ -61,12 +58,10 @@ function Otpform() {
     if (response.status === 200) {
       toast.success(<h2>{data.message}</h2>);
       if (Boolean(router?.query?.forgotten_password) === true) {
-        
         router.push("/reset-password");
-        
+
         return;
       } else {
-        
         router.push("/login");
       }
     } else {
@@ -141,19 +136,18 @@ export default function OTP() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
 
   return (
-    <><MetaDataC title="OTP"/>
-    <AppLayoout>
-      <main className={`px-4 ${isDark ? "" : "bg-[#D1D1D1]"}`}>
-        <div className="   flex flex-col items-center justify-center px-10 gap-6 py-10">
-          <div>
-            <img src="otp.png" />
+    <>
+      <MetaDataC title="OTP" />
+      <AppLayout>
+        <main className={`px-4 ${isDark ? "" : "bg-[#D1D1D1]"}`}>
+          <div className="   flex flex-col items-center justify-center px-10 gap-6 py-10">
+            <div>
+              <img src="otp.png" />
+            </div>
+            <Otpform />
           </div>
-          <Otpform />
-        </div>
-      </main>
-    </AppLayoout>
-    
-    
+        </main>
+      </AppLayout>
     </>
   );
 }

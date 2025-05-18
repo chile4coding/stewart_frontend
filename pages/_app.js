@@ -1,17 +1,18 @@
-import '@/styles/globals.css'
-import Providers from '@/redux/Provider';
-import { Toaster } from 'react-hot-toast';
+import "@/styles/globals.css";
+import Providers from "@/redux/Provider";
+import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "react-query";
 
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }) {
-
   return (
-    <Providers>
-    <Toaster/>
- 
-      <Component {...pageProps} />
+    <QueryClientProvider client={queryClient}>
+      <Providers>
+        <Toaster />
 
-  
-    </Providers>
+        <Component {...pageProps} />
+      </Providers>
+    </QueryClientProvider>
   );
 }

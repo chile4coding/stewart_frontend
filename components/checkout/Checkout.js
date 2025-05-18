@@ -9,9 +9,11 @@ import {
   getAllCountryState,
   getSTateCities,
   getUserDistance,
+  isShippingAddressIncomplete,
 } from "@/services/request";
 import { calCulateShippingFee, setUserOrderDetails } from "@/redux/storeSlice";
 import { isEmpty } from "lodash";
+import currency from "currency.js";
 export function Order() {
   // const isDark = useSelector((state) => state.store.toggleMode.isDark);
   const { toggleMode, cart, cartTotal, shippingFee, overallTotal } =
@@ -49,7 +51,11 @@ export function Order() {
               </h2>
 
               <h2 className=" justify-self-end  self-center sm:text-[10px]  font-semibold ">
-                ₦{item.subTotal.toFixed(2)}
+                {currency(item.subTotal).format({
+                  symbol: "₦",
+                  decimal: ".",
+                  separator: ",",
+                })}
               </h2>
             </div>
           ))}
@@ -59,19 +65,31 @@ export function Order() {
             SubTotal
           </h2>
           <h2 className=" justify-self-end self-center sm:text-[14px] font-semibold  text-[18px] ">
-            ₦{Boolean(cartTotal) && cartTotal.toFixed(2)}
+            {currency(cartTotal).format({
+              symbol: "₦",
+              decimal: ".",
+              separator: ",",
+            })}
           </h2>
         </div>
         <div className="grid grid-cols-2   my-4 sm:my-1 sm:text-[14px] font-semibold  text-[18px] ">
           <h2>Shipping</h2>
           <h2 className=" justify-self-end self-center sm:text-[14px] font-semibold">
-            ₦{(Boolean(shippingFee) && parseInt(shippingFee)) || 0}
+            {currency(shippingFee).format({
+              symbol: "₦",
+              decimal: ".",
+              separator: ",",
+            })}
           </h2>
         </div>
         <div className="grid grid-cols-2  my-4 sm:my-1  text-[18px] sm:text-[14px] font-semibold">
           <h2>Total</h2>
-          <h2 className=" justify-self-end self-center sm:self-start sm:text-[14px] font-semibold">
-            ₦{Boolean(overallTotal) && overallTotal?.toFixed(2)}
+          <h2 className=" justify-self-end self-center sm:text-[14px] font-semibold">
+            {currency(overallTotal).format({
+              symbol: "₦",
+              decimal: ".",
+              separator: ",",
+            })}
           </h2>
         </div>
       </div>
@@ -88,7 +106,7 @@ export default function Checkout() {
   const [shippingAddress, setShippingAddress] = useState({
     firstname: "",
     lastname: "",
-    country: [],
+    country: "",
     city: "",
     address: "",
     village: "",
@@ -101,8 +119,57 @@ export default function Checkout() {
     cities: [],
   });
 
+  const [loadingShippingCOst, setloadingSHippingCost] = useState(false);
+
   const dispatch = useDispatch();
   const router = useRouter();
+
+  async function getLocationFromAddress(shipping) {
+    const address = `${shippingAddress.city}  ${shippingAddress.state
+      .split(",")[0]
+      .trim()} ${shippingAddress.country.split(",")[0]}`; // Replace this with the desired address
+
+    try {
+      setloadingSHippingCost(true);
+      const data = await getUserDistance(address);
+
+      setloadingSHippingCost(false);
+
+      if (data?.lat && data?.lon) {
+        // Example usage:
+        const userAddress = {
+          latitude: Number(data?.lat),
+          longitude: Number(data?.lon),
+        }; // User's address coordinates
+        const destination = { latitude: 4.74974, longitude: 6.82766 }; // Given destination coordinates
+        const distance = calculateDistance(
+          userAddress.latitude,
+          userAddress.longitude,
+          destination.latitude,
+          destination.longitude
+        );
+
+        const fee = distance * Number(shipping);
+
+        dispatch(calCulateShippingFee(fee));
+      } else {
+        setloadingSHippingCost(false);
+
+        toast.error(
+          <h2 className=" normal-case">
+            We can't supply to this location at this moment, please select
+            another location
+          </h2>
+        );
+      }
+    } catch (error) {
+      setloadingSHippingCost(false);
+
+      toast.error(
+        <h2 className=" normal-case">Please select another addess</h2>
+      );
+    }
+  }
 
   useEffect(() => {
     async function getCountries() {
@@ -113,9 +180,10 @@ export default function Checkout() {
 
         return;
       }
-      if (shippingAddress.countries.length > 0) {
+
+      if (shippingAddress?.countries?.length > 0) {
         const state = await getAllCountryState(
-          shippingAddress.country.split(",")[1]
+          shippingAddress?.country?.split(",")[1]
         );
         setShippingAddress({ ...shippingAddress, states: state });
       }
@@ -123,56 +191,20 @@ export default function Checkout() {
 
     getCountries();
     const checkAddress = Boolean(
-      shippingAddress.country &&
-        shippingAddress.city &&
-        shippingAddress.state &&
-        shippingAddress.address &&
-        shippingAddress.village
+      shippingAddress.country && shippingAddress.city && shippingAddress.state
+      //  &&
+      // shippingAddress.address &&
+      // shippingAddress.village
     );
 
     if (!checkAddress) {
       return;
     }
 
-    // Function to get the location coordinates from an address using OpenCage Geocoding API
-    async function getLocationFromAddress() {
-      const address = `${shippingAddress.village} ${shippingAddress.state
-        .split(",")[0]
-        .trim()} ${shippingAddress.country.split(",")[0]}`; // Replace this with the desired address
-      console.log(address);
-      const { lat, lng } = await getUserDistance(address);
-      if (location) {
-        // Example usage:
-        const userAddress = { latitude: lat, longitude: lng }; // User's address coordinates
-        const destination = { latitude: 4.74974, longitude: 6.82766 }; // Given destination coordinates
-        const distance = calculateDistance(
-          userAddress.latitude,
-          userAddress.longitude,
-          destination.latitude,
-          destination.longitude
-        );
-
-        const fee = distance * Number(shippingAddress.shipping);
-
-        dispatch(calCulateShippingFee(fee));
-      }
+    if (Boolean(shippingAddress.shipping)) {
+      getLocationFromAddress(shippingAddress.shipping);
     }
-
-    // Example usage:
-    getLocationFromAddress();
-    if (!shippingFee) {
-      toast.error(
-        <h2 className=" normal-case">
-          You need to enter name of a city, village or community where your item
-          will be delivered
-        </h2>
-      );
-    }
-    // setShippingAddress({
-    //   ...shippingAddress,
-    //   deliveryfee: parseInt(shippingFee),
-    // });
-  }, [shippingAddress.shipping, shippingAddress.country]);
+  }, [shippingAddress.city, shippingAddress.country, shippingAddress.state]);
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -180,24 +212,11 @@ export default function Checkout() {
   }
 
   function handlePayment() {
-    // const checkAddress = Boolean(
-    //   shippingAddress.country &&
-    //     shippingAddress.city &&
-    //     shippingAddress.state &&
-    //     shippingAddress.address &&
-    //     shippingAddress.firstname &&
-    //     shippingAddress.lastname &&
-    //     shippingAddress.email &&
-    //     shippingAddress.phone &&
-    //     shippingAddress.deliveryfee
-    // );
-
     let status;
 
     for (let key in shippingAddress) {
       if (isEmpty(shippingAddress[key])) {
         status = true;
-        console.log("this is runing here", key);
         toast.error(
           <div className=" lowercase">{`Please fill in ${key} field`}</div>
         );
@@ -248,10 +267,11 @@ export default function Checkout() {
           <input
             type="text"
             placeholder="First Name"
+            autoComplete={"off"}
             name="firstname"
             onChange={handleInputChange}
             value={shippingAddress.firstname}
-            className={`input input-bordered  w-full max-w-xs sm:max-w-full ${
+            className={`input input-bordered  w-full ${
               isDark ? " bg-black border-white " : " text-black  border-black"
             }`}
           />
@@ -261,7 +281,7 @@ export default function Checkout() {
             name="lastname"
             onChange={handleInputChange}
             value={shippingAddress.lastname}
-            className={`input input-bordered  w-full max-w-xs sm:max-w-full ${
+            className={`input input-bordered  w-full ${
               isDark ? " bg-black border-white " : " text-black  border-black"
             }`}
           />
@@ -370,17 +390,31 @@ export default function Checkout() {
               <input
                 type="radio"
                 name="shipping"
-                onChange={handleInputChange}
+                disabled={
+                  loadingShippingCOst ||
+                  isShippingAddressIncomplete(shippingAddress)
+                }
+                onChange={(e) => {
+                  handleInputChange(e);
+                  getLocationFromAddress(e?.target?.value);
+                }}
                 value="50"
                 className="radio radio-info"
                 style={{ transform: "scale(1)" }}
               />
-              <span>Express</span>
+              <span>Express </span>
             </div>
           </div>
-          <h2 className=" justify-self-end">
-            ₦{Boolean(shippingFee) && parseInt(shippingFee)}
-          </h2>
+
+          {
+            <h2 className=" justify-self-end">
+              {currency(shippingFee).format({
+                symbol: "₦",
+                decimal: ".",
+                separator: ",",
+              })}
+            </h2>
+          }
         </div>
         <div
           className={`grid  grid-cols-2 sm:grid-cols-1 my-4  py-4 ${
@@ -391,8 +425,16 @@ export default function Checkout() {
             <div className=" flex gap-2 items-center">
               <input
                 type="radio"
+                disabled={
+                  loadingShippingCOst ||
+                  isShippingAddressIncomplete(shippingAddress)
+                }
                 name="shipping"
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  handleInputChange(e);
+
+                  getLocationFromAddress(e?.target?.value);
+                }}
                 value="35"
                 className="radio radio-info"
                 style={{ transform: "scale(1)" }}
@@ -404,9 +446,15 @@ export default function Checkout() {
         </div>
         <div className=" grid grid-cols-2">
           <h2>Total</h2>
-          <h2 className=" justify-self-end">
-            ₦{Boolean(overallTotal) && parseInt(overallTotal)}
-          </h2>
+          {
+            <h2 className=" justify-self-end">
+              {currency(overallTotal).format({
+                symbol: "₦",
+                decimal: ".",
+                separator: ",",
+              })}
+            </h2>
+          }
         </div>
         <div className="flex gap-2 my-8">
           <input type="checkbox" className=" cursor-pointer" />

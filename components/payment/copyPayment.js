@@ -1,5 +1,6 @@
 import {
   createOrder,
+  createOrderWithCard,
   createPayWithWallet,
   createRgisteredUserOrder,
   getCurrentUser,
@@ -190,34 +191,28 @@ export default function PaymentDetails() {
     setPaymentMethod(value);
   }
 
-  // const config = {
-  //   amount: `${parseInt(overallTotal)}`,
-  //   currency: "NGN",
-  //   reference: new String(new Date().getTime()),
-  //   customerFullName: `${userOrderDetails.firstname} ${userOrderDetails.lastname}`,
-  //   customerEmail: `${userOrderDetails.email}`,
-  //   apiKey: process.env.NEXT_PUBLIC_MONI_API_KEY,
-  //   contractCode: process.env.NEXT_PUBLIC_contractCode,
-  //   paymentDescription: "Pay for your order",
-  //   metadata: {
-  //     name: `${userOrderDetails.firstname} ${userOrderDetails.lastname}`,
-  //   },
-  //   paymentMethods: ["CARD"],
-  // };
+  async function payWithMonnify() {
+    await createOrderWithCard({
+      email,
+      total: Number(overallTotal.toFixed(2)),
+      orderitem: [...cart, { paymentMethod: paymentMethod }],
+      name: `${firstname} ${lastname}`,
+      state,
+      city,
+      address: `${village} ${address}`,
+      status: "PENDING",
+      country,
+      shipping: Number(shippingFee.toFixed(2)),
+      phone,
+      refNo: `${email}-${new String(new Date().getTime())}`,
+      shippingType: Number(shipping) === 50 ? "express" : "standard",
+      token,
+    });
 
-  // const componentProps = {
-  //   ...config,
-  //   onSuccess: (response) => console.log("==========="),
-  //   onClose: (response) => console.log("hello======"),
-  // };
-
-  // const initializePayment = useMonnifyPayment(componentProps);
-
-  function payWithMonnify() {
     MonnifySDK.initialize({
       amount: `${parseInt(overallTotal)}`,
       currency: "NGN",
-      reference: new String(new Date().getTime()),
+      reference: `${email}-${new String(new Date().getTime())}`,
       customerFullName: `${userOrderDetails.firstname} ${userOrderDetails.lastname}`,
       customerEmail: `${userOrderDetails.email}`,
       apiKey: process.env.NEXT_PUBLIC_MONI_API_KEY,
@@ -228,7 +223,7 @@ export default function PaymentDetails() {
       },
       paymentMethods: ["CARD", "ACCOUNT_TRANSFER"],
 
-      onLoadStart: () => {
+      onLoadStart: async () => {
         console.log("loading ");
       },
       onLoadComplete: () => {
@@ -236,15 +231,14 @@ export default function PaymentDetails() {
       },
 
       onComplete: function (response) {
-        const data = response;
-        setStatus(data);
-
+        // const data = response;
+        // console.log(data);
+        // setStatus(data);
         //Implement what happens when the transaction is completed.
       },
       onClose: function (data) {
         //Implement what should happen when the modal is closed here
-
-        setStatus(data);
+        // setStatus(data);
       },
     });
   }

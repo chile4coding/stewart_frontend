@@ -19,7 +19,7 @@ import {
 import { useEffect } from "react";
 import { socket } from "@/services/request";
 
-export default function AppLayoout({ children }) {
+export default function AppLayout({ children }) {
   const [dark, seDark] = useState(true);
   const {
     shop,
@@ -30,6 +30,7 @@ export default function AppLayoout({ children }) {
     bestSelling,
     products: product,
   } = useSelector((state) => state.store);
+
   //  const { isDark } = toggleMode;
   const isDark = toggleMode?.isDark;
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ export default function AppLayoout({ children }) {
       <div className={isDark ? "bg-black" : "#FAFAFA"}>
         <div
           className={`   h-full  mx-auto  ${
-            isDark ? "turndark" : "turnlight"
+            isDark ? "turn-dark" : "turn-light"
           }`}>
           <div className="drawer lg:drawer-start">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -64,9 +65,7 @@ export default function AppLayoout({ children }) {
                 <Header />
               </div>
               <div className="">{children}</div>
-              <div className="">
-                <AppFooter />
-              </div>
+              <div className=""></div>
             </div>
             <div className="drawer-side  " style={{ zIndex: 999 }}>
               <label htmlFor="my-drawer-2" className="drawer-overlay"></label>

@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { AiFillCloseSquare } from "react-icons/ai";
 import { BsFillChatSquareQuoteFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
+import { NoSavedItems } from "../savedItems/SavedItems";
 export function AddReviewModal({ item }) {
   const { user, toggleMode, orders, orderDetails } = useSelector(
     (state) => state.store
@@ -135,35 +136,6 @@ export function AddReviewModal({ item }) {
     </>
   );
 }
-function NoReviews() {
-  const isDark = useSelector((state) => state.store.toggleMode.isDark);
-  const router = useRouter();
-
-  return (
-    <div className="w-full  flex flex-col justify-center items-center h-[88vh] ">
-      <div className="comment p-1">
-        <BsFillChatSquareQuoteFill className=" text-2xl text-[#0d58af]" />
-      </div>
-
-      <h2 className=" lg:text-[24px] xl:text-[24px] font-semibold mt-6 mb-2">
-        You haven’t reviewed any product yet
-      </h2>
-      <p className=" mb-6 text-center">
-        Your feedback on purchased products will appear here.
-      </p>
-
-      <button
-        className={`btn  shadow-md   normal-case sm:btn-xs sm:my-4 sm:text-[7.98px] mx-auto ${
-          isDark
-            ? "hover:border-white hover:bg-black hover:text-white"
-            : " bg-black text-white hover:border-black"
-        }`}
-        onClick={() => router.push("/shop")}>
-        Continue Shopping
-      </button>
-    </div>
-  );
-}
 
 function Reviews() {
   const { orders, orderDetails, user, toggleMode } = useSelector(
@@ -246,10 +218,17 @@ function Reviews() {
 }
 
 export default function ReviewDetails() {
-  const { orders, orderDetails, user } = useSelector((state) => state.store);
+  const { user } = useSelector((state) => state.store);
   return (
     <div className=" h-[100vh]">
-      {user?.review?.length > 0 ? <Reviews /> : <NoReviews />}
+      {user?.review?.length > 0 ? (
+        <Reviews />
+      ) : (
+        <NoSavedItems
+          message=" Your feedback on purchased products will appear here."
+          title="You haven’t reviewed any product yet"
+        />
+      )}
     </div>
   );
 }

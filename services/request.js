@@ -1,8 +1,8 @@
 import { data } from "autoprefixer";
 import axios from "axios";
 import Cookies from "js-cookie";
-// const base_url = "http://localhost:5000/api/v1";
-const base_url = "https://stewart-r0co.onrender.com/api/v1";
+const base_url = "http://localhost:5000/api/v1";
+//const base_url = "https://stewart-r0co.onrender.com/api/v1";
 import { io } from "socket.io-client";
 
 export async function createCategory(productPhoto, category, bearerId) {
@@ -89,6 +89,20 @@ export async function userImageUpload(avatar, bearerId) {
   }
 }
 
+export async function productSingle(id) {
+  try {
+    const { data } = await axios.get(`${base_url}/product/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function getProducts() {
   try {
     const { data } = await axios.get(`${base_url}/get_category`, {
@@ -102,13 +116,20 @@ export async function getProducts() {
     return error;
   }
 }
-export async function getShopProducts() {
+export async function getShopProducts({
+  search = "",
+  count = 100,
+  filter = "",
+}) {
   try {
-    const { data } = await axios.get(`${base_url}/get_products`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const { data } = await axios.get(
+      `${base_url}/get_products?limit=${count}&search=${search}&key=${filter}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return data;
   } catch (error) {
     console.error(error);
@@ -314,23 +335,19 @@ export function getCookie() {
 }
 
 export async function getUserDistance(address) {
-  const apiKey = process.env.NEXT_PUBLIC_API_KEY; // Replace with your OpenCage API key
-  // const encodedAddress = encodeURIComponent(address);
-  const geocodingEndpoint = `https://api.opencagedata.com/geocode/v1/json?q=${address}&key=${apiKey}`;
-
+  const geocodingEndpoint = `https://nominatim.openstreetmap.org/search?q=${address}&format=json`;
   try {
     const response = await fetch(geocodingEndpoint);
     const data = await response.json();
 
-    if (data.results.length > 0) {
-      const location = data.results[0].geometry;
-      return location;
+    if (data?.length > 0) {
+      return data[0];
     } else {
-      console.log("No results found for the address.");
+      return {};
     }
   } catch (error) {
     console.error(error);
-    return error;
+    throw error;
   }
 }
 
@@ -374,13 +391,17 @@ export async function getAllCountry() {
     redirect: "follow",
   };
 
-  const response = await fetch(
-    "https://api.countrystatecity.in/v1/countries",
-    requestOptions
-  );
-  const data = await response.json();
+  try {
+    const response = await fetch(
+      "https://api.countrystatecity.in/v1/countries",
+      requestOptions
+    );
+    const data = await response.json();
 
-  return data;
+    return data;
+  } catch (error) {
+    throw error;
+  }
 }
 export async function getAllCountryState(state) {
   var headers = new Headers();
@@ -395,13 +416,17 @@ export async function getAllCountryState(state) {
     redirect: "follow",
   };
 
-  const response = await fetch(
-    `https://api.countrystatecity.in/v1/countries/${state}/states`,
-    requestOptions
-  );
+  try {
+    const response = await fetch(
+      `https://api.countrystatecity.in/v1/countries/${state}/states`,
+      requestOptions
+    );
 
-  const data = response.json();
-  return data;
+    const data = response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function getSTateCities(country, state) {
@@ -416,14 +441,17 @@ export async function getSTateCities(country, state) {
     headers: headers,
     redirect: "follow",
   };
+  try {
+    const response = await fetch(
+      `https://api.countrystatecity.in/v1/countries/${country}/states/${state}/cities`,
+      requestOptions
+    );
+    const cities = await response.json();
 
-  const response = await fetch(
-    `https://api.countrystatecity.in/v1/countries/${country}/states/${state}/cities`,
-    requestOptions
-  );
-  const cities = await response.json();
-
-  return cities;
+    return cities;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function createOrder(orderDetails) {
@@ -519,6 +547,63 @@ export async function createRgisteredUserOrder(orderDetails, bearerId) {
     return error;
   }
 }
+
+export async function createOrderWithCard(orderDetails) {
+  const {
+    email,
+    total,
+    orderitem,
+    name,
+    state,
+    city,
+    address,
+    status,
+    country,
+    shipping,
+    phone,
+    shippingType,
+    refNo,
+    token,
+  } = orderDetails;
+  const endpoint = token
+    ? "create_order_user_with_card"
+    : "create_order_visitor_with_card";
+
+  console.log("is this called here  ====== ");
+
+  try {
+    const response = await fetch(`${base_url}/${endpoint}`, {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        total,
+        orderitem,
+        name,
+        state,
+        city,
+        address,
+        status,
+        country,
+        shipping,
+        phone,
+        shippingType,
+        refNo,
+        token,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export async function createPayWithWallet(orderDetails, bearerId) {
   const {
     email,
@@ -1323,3 +1408,7 @@ export async function contactUs(contact) {
 }
 
 export const socket = io("https://stewart-r0co.onrender.com");
+export const isShippingAddressIncomplete = (address) => {
+  const { shipping, countries, states, cities, ...requiredfield } = address;
+  return Object.values(requiredfield).some((value) => value.trim() === "");
+};

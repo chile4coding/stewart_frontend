@@ -8,6 +8,7 @@ import { userSignup } from "@/services/request";
 import toast from "react-hot-toast";
 import Spinner from "../spinner/Spinner";
 import { setCurrentUserEmail } from "@/redux/storeSlice";
+import Link from "next/link";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -26,15 +27,11 @@ export default function SignupForm() {
   });
 
   const dispatch = useDispatch();
-  function handleInputChage(e) {
+  function handleInputChange(e) {
     const { name, value } = e.target;
     setUserDetails({ ...user, [name]: value, passwordSame: false });
   }
   const handleShowPassword = () => setShowPassword((password) => !password);
-
-  function handleLoginNav() {
-    router.replace("/login");
-  }
 
   function formatDateToDayMonthYear(date) {
     const options = { day: "numeric", month: "numeric", year: "numeric" };
@@ -76,7 +73,7 @@ export default function SignupForm() {
       </h2>
       <div className="my-6 sm:mb-0 ">
         <input
-          onChange={handleInputChage}
+          onChange={handleInputChange}
           value={user.name}
           name="name"
           type="text"
@@ -90,7 +87,7 @@ export default function SignupForm() {
       <div className="my-6 sm:mb-0">
         <input
           type="email"
-          onChange={handleInputChage}
+          onChange={handleInputChange}
           value={user.email}
           name="email"
           required
@@ -101,13 +98,13 @@ export default function SignupForm() {
         />
       </div>
 
-      <div className="grid my-6  sm:my-4grid-cols-2 gap-4 sm:grid-cols-1">
+      <div className="grid my-6  sm:my-4 grid-cols-2 gap-4 sm:grid-cols-1">
         <select
-          onChange={handleInputChage}
+          onChange={handleInputChange}
           value={user.gender}
           name="gender"
           required
-          className={`input input-bordered  w-full max-w-xs sm:max-w-full ${
+          className={`input input-bordered  w-full ${
             isDark ? " bg-black border-white " : " text-black  border-black"
           }`}>
           <option selected>Gender</option>
@@ -116,11 +113,11 @@ export default function SignupForm() {
         </select>
         <input
           type="date"
-          onChange={handleInputChage}
+          onChange={handleInputChange}
           required
           value={user.dob}
           name="dob"
-          className={`input input-bordered  w-full max-w-xs sm:max-w-full ${
+          className={`input input-bordered  w-full ${
             isDark
               ? " bg-black border-white nput  "
               : " text-black  border-black"
@@ -142,7 +139,7 @@ export default function SignupForm() {
             required
             name="password"
             value={user.password}
-            onChange={handleInputChage}
+            onChange={handleInputChange}
             className="  text-[16px] p-4 bg-transparent w-full  border-0 outline-0 outline-none border-none sm:text-xs sm:p-3  "
           />
           <div class="flex items-center   ">
@@ -174,7 +171,7 @@ export default function SignupForm() {
             required
             name="confirmPassword"
             value={user.confirmPassword}
-            onChange={handleInputChage}
+            onChange={handleInputChange}
             className="  text-[16px] p-4 bg-transparent w-full  border-0 outline-0 outline-none border-none sm:text-xs sm:p-3  "
           />
           <div class="flex items-center   ">
@@ -225,13 +222,14 @@ export default function SignupForm() {
       <div className="mt-2">
         <p className="text-center normal-case">
           Already have an account?{" "}
-          <span
-            className={` cursor-pointer hover:underline ${
-              isDark ? "text-[#6FEAE2]" : " text-[blue]"
-            }`}
-            onClick={handleLoginNav}>
-            Login
-          </span>
+          <Link href={"/login"}>
+            <span
+              className={` cursor-pointer hover:underline ${
+                isDark ? "text-[#6FEAE2]" : " text-[blue]"
+              }`}>
+              Login
+            </span>
+          </Link>
         </p>
       </div>
     </form>

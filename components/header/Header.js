@@ -46,12 +46,6 @@ export default function Header() {
   function handleShop() {
     dispatch(getShop(product));
   }
-  function handleUserNav() {
-    router.push("/my_account");
-  }
-  function handleUserHome() {
-    router.push("/");
-  }
 
   return (
     <>
@@ -69,14 +63,16 @@ export default function Header() {
             <AiOutlineMenu className=" font-semibold text-2xl hover:cursor-pointer" />
           </label>
 
-          <div className=" w-24 cursor-pointer  " onClick={handleUserHome}>
-            <img src={isDark ? "/stewartw.png" : "/stewart.png"} />
+          <div className=" w-24 cursor-pointer  ">
+            <Link href={"/"}>
+              <img src={isDark ? "/stewartw.png" : "/stewart.png"} />
+            </Link>
           </div>
-          <h2
-            onClick={handleUserHome}
-            className=" cursor-pointer text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
-            Stewart Collections
-          </h2>
+          <Link href={"/"}>
+            <h2 className=" cursor-pointer text-[24px] font-semibold  w-full sm:text-[15px] sm:font-normal ">
+              Stewart Collections
+            </h2>
+          </Link>
         </div>
 
         <nav className="navbar-center sm:hidden md:hidden   gap-6">
@@ -104,16 +100,15 @@ export default function Header() {
 
               {!isEmpty(user) && !Boolean(user?.avatar) && (
                 <div className="sm:hidden md:hidden">
-                  <BiSolidUser
-                    className="text-[24px] cursor-pointer"
-                    onClick={handleUserNav}
-                  />
+                  <Link href={"/my_account"}>
+                    <BiSolidUser className="text-[24px] cursor-pointer" />
+                  </Link>
                 </div>
               )}
               {isEmpty(user) && (
-                <span className="cursor-pointer" onClick={handleUserNav}>
-                  Login
-                </span>
+                <Link href={"/login"}>
+                  <span className="cursor-pointer">Login</span>
+                </Link>
               )}
             </div>
 

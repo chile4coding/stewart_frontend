@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
-import AppLayoout from "@/components/Layout/AppLayoout";
+import AppLayout from "@/components/Layout/AppLayout";
 import Checkout from "@/components/checkout/Checkout";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import Head from "next/head";
 import toast from "react-hot-toast";
 import { isEmpty } from "lodash";
+import AppFooter from "@/components/Footer/Footer";
 function MetaDataN() {
   return (
     <Head>
       <title>Stewart Collection | Checkout</title>
       <meta
         name="description"
-        content="   Explore the rise of juggers, the oversized garment defying gender norms. Break the mold! Show how polos infuse personality into formal suits
+        content="   Explore the rise of joggers, the oversized garment defying gender norms. Break the mold! Show how polo infuse personality into formal suits
         Craft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. 
         Move beyond restrictive label"
       />
@@ -41,11 +42,12 @@ export default function Check() {
   return (
     <>
       <MetaDataN />
-      <AppLayoout>
+      <AppLayout>
         <main className=" max-h-[100vh]  overflow-y-scroll">
           <Checkout />
+          <AppFooter />
         </main>
-      </AppLayoout>
+      </AppLayout>
     </>
   );
 }

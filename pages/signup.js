@@ -1,4 +1,4 @@
-import AppLayoout from "@/components/Layout/AppLayoout";
+import AppLayout from "@/components/Layout/AppLayout";
 import SignupForm from "@/components/signup/SignupForm";
 import React from "react";
 import { MetaDataC } from "./orders";
@@ -6,10 +6,10 @@ export default function Signup() {
   return (
     <>
       <MetaDataC title="Register" />
-      <AppLayoout>
+      <AppLayout>
         <div className=" grid grid-cols-2 sm:grid-cols-1 px-10 gap-6 my-10 sm:my-4 ">
           <div
-            className="login_bg  max-w-[588px] h-[779px] w-full sm:hidden  rounded-lg flex justify-center items-center   "
+            className="login_bg   h-[779px] w-full sm:hidden  rounded-lg flex justify-center items-center   "
             style={{
               backgroundImage: ` url(/assets/loginbg.png)`,
               backgroundPosition: "center",
@@ -26,7 +26,7 @@ export default function Signup() {
 
           <SignupForm />
         </div>
-      </AppLayoout>
+      </AppLayout>
     </>
   );
 }

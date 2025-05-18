@@ -178,7 +178,7 @@ export default function AdminLayout({ children }) {
   return (
     <div className={isDark ? "bg-black" : "#FAFAFA"}>
       <div
-        className={`  h-full  mx-auto  ${isDark ? "turndark" : "turnlight"}`}>
+        className={`  h-full  mx-auto  ${isDark ? "turn-dark" : "turn-light"}`}>
         <div className="drawer lg:drawer-start lg:drawer-open xl:drawer-open">
           <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
           <div className="drawer-content flex flex-col     overflow-hidden  ">

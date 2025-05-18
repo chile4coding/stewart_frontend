@@ -33,7 +33,7 @@ export default function AddProducts() {
     productId: "a",
     salesPrice: "",
     categoryId: "",
-    short_desc:"",
+    short_desc: "",
     loading: false,
   });
 
@@ -91,6 +91,7 @@ export default function AddProducts() {
 
   function isObjectNotEmpty(obj) {
     for (const key in obj) {
+      if (["description", "short_desc"].includes(key)) return true;
       if (obj[key] !== null && obj[key] !== undefined) {
         if (typeof obj[key] === "string" && obj[key].trim() === "") {
           return false; // Empty string
@@ -116,52 +117,48 @@ export default function AddProducts() {
       const uploadImage = await uploadToCloudinary(formData);
 
       if (uploadImage?.url) {
-       
-
         const response = await createProduct(
           { ...image, productImage: uploadImage.url },
           cookie
         );
-      
-        if (response.status === 201) {
+
+        if (response.ok) {
           toast.success("Product added successfully");
 
-             setImage({
-               ...image,
-               loading: false,
-               name: "",
-               description: "",
-               price: "",
-               discount: "",
-               initialColor: "",
-               initialSize: "",
-               productId: "a",
-               categoryId: "",
-               productImage: "",
-               imageInput: "",
-               short_desc:"",
-               loading: false,
-             });
+          setImage({
+            ...image,
+            loading: false,
+            name: "",
+            description: "",
+            price: "",
+            discount: "",
+            initialColor: "",
+            initialSize: "",
+            productId: "a",
+            categoryId: "",
+            productImage: "",
+            imageInput: "",
+            short_desc: "",
+            salesPrice: "",
+          });
 
           if (upadetPage) {
             router.push("/admin/products");
           }
-   
         } else {
           toast.error("Error server error, try again");
+          setImage({
+            ...image,
+
+            loading: false,
+          });
         }
       }
-
     } else {
       toast.error("fill all the field correctly");
     }
-
-    setImage({
-      ...image,
-
-      loading: false,
-    });
   }
+
   return (
     <form onSubmit={handleSubmit}>
       <div className=" grid  grid-cols-2 sm:grid-cols-1 gap-10">
@@ -187,7 +184,8 @@ export default function AddProducts() {
               placeholder="Short  description"
               className={` textarea  w-full ${
                 isDark ? " bg-black border-white " : " text-black  border-black"
-              }`}></textarea>
+              }`}
+            ></textarea>
           </div>
           <div className=" my-8   ">
             <textarea
@@ -198,19 +196,22 @@ export default function AddProducts() {
               placeholder="Product  description"
               className={` textarea  w-full ${
                 isDark ? " bg-black border-white " : " text-black  border-black"
-              }`}></textarea>
+              }`}
+            ></textarea>
           </div>
         </div>
 
         <div
-          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
+          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}
+        >
           <div className=" card-body">
             <h2
               className={
                 isDark
                   ? " text-white border-b  pb-2"
                   : " border-b  text-black border-b-black pb-2"
-              }>
+              }
+            >
               Product image
             </h2>
             <div className=" max-h-[250px] max-w-[250px] mx-auto my-auto">
@@ -231,7 +232,8 @@ export default function AddProducts() {
 
                 <label
                   htmlFor="imageupload"
-                  className="flex items-center gap-2 cursor-pointer">
+                  className="flex items-center gap-2 cursor-pointer"
+                >
                   {" "}
                   <MdModeEdit />
                   Add image
@@ -250,14 +252,16 @@ export default function AddProducts() {
 
       <div className=" grid  grid-cols-1 sm:grid-cols-1 gap-10">
         <div
-          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
+          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}
+        >
           <div className=" card-body">
             <h2
               className={
                 isDark
                   ? " text-white border-b  pb-2"
                   : " border-b  text-black border-b-black pb-2"
-              }>
+              }
+            >
               {" "}
               Product Data
             </h2>
@@ -265,7 +269,8 @@ export default function AddProducts() {
               sx={{
                 backgroundColor: isDark ? "#212121" : "#d1d1d1]",
                 color: isDark ? "#d1d1d1" : "black",
-              }}>
+              }}
+            >
               <AccordionSummary
                 expandIcon={
                   <MdOutlineKeyboardArrowDown
@@ -275,7 +280,8 @@ export default function AddProducts() {
                   />
                 }
                 aria-controls="panel1a-content"
-                id="panel1a-header">
+                id="panel1a-header"
+              >
                 <div className=" flex justify-between items-center w-full">
                   <Typography className="text-[18px] ">Price</Typography>
                 </div>
@@ -332,7 +338,8 @@ export default function AddProducts() {
               sx={{
                 backgroundColor: isDark ? "#212121" : "#d1d1d1]",
                 color: isDark ? "#d1d1d1" : "black",
-              }}>
+              }}
+            >
               <AccordionSummary
                 expandIcon={
                   <MdOutlineKeyboardArrowDown
@@ -342,7 +349,8 @@ export default function AddProducts() {
                   />
                 }
                 aria-controls="panel1a-content"
-                id="panel1a-header">
+                id="panel1a-header"
+              >
                 <div className=" flex justify-between items-center w-full">
                   <Typography className="text-[18px] ">Category</Typography>
                 </div>
@@ -352,7 +360,8 @@ export default function AddProducts() {
                   shop.map((cat) => (
                     <div
                       className=" mb-4   flex  items-center gap-2 "
-                      key={cat.id}>
+                      key={cat.id}
+                    >
                       <input
                         type="radio"
                         name="categoryId"
@@ -365,7 +374,8 @@ export default function AddProducts() {
 
                       <label
                         htmlFor={cat.id}
-                        className=" w-full  cursor-pointer">
+                        className=" w-full  cursor-pointer"
+                      >
                         {cat.name}
                       </label>
                     </div>
@@ -376,7 +386,8 @@ export default function AddProducts() {
               sx={{
                 backgroundColor: isDark ? "#212121" : "#d1d1d1]",
                 color: isDark ? "#d1d1d1" : "black",
-              }}>
+              }}
+            >
               <AccordionSummary
                 expandIcon={
                   <MdOutlineKeyboardArrowDown
@@ -386,7 +397,8 @@ export default function AddProducts() {
                   />
                 }
                 aria-controls="panel1a-content"
-                id="panel1a-header">
+                id="panel1a-header"
+              >
                 <div className=" flex justify-between items-center w-full">
                   <Typography className="text-[18px] ">Size</Typography>
                 </div>
@@ -413,7 +425,8 @@ export default function AddProducts() {
               sx={{
                 backgroundColor: isDark ? "#212121" : "#d1d1d1]",
                 color: isDark ? "#d1d1d1" : "black",
-              }}>
+              }}
+            >
               <AccordionSummary
                 expandIcon={
                   <MdOutlineKeyboardArrowDown
@@ -423,7 +436,8 @@ export default function AddProducts() {
                   />
                 }
                 aria-controls="panel1a-content"
-                id="panel1a-header">
+                id="panel1a-header"
+              >
                 <div className=" flex justify-between items-center w-full">
                   <Typography className="text-[18px] ">Color</Typography>
                 </div>
@@ -456,7 +470,8 @@ export default function AddProducts() {
             isDark
               ? "hover:border-white hover:bg-black hover:text-white"
               : " bg-black text-white hover:border-black "
-          }`}>
+          }`}
+        >
           {image.loading && upadetPage && "Updating Product"}
           {image.loading && !upadetPage && "Adding Product"}
           {image.loading && !upadetPage && <Spinner />}

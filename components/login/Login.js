@@ -7,6 +7,7 @@ import { loginUser } from "@/services/request";
 import toast from "react-hot-toast";
 import { setUser } from "@/redux/storeSlice";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 export default function LoginDetails() {
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
@@ -20,9 +21,7 @@ export default function LoginDetails() {
   });
 
   const dispatch = useDispatch();
-  function handleCreateAccountNav() {
-    router.replace("/signup");
-  }
+
   const handleShowPassword = () => setShowPassword((password) => !password);
 
   function handleForgottenPassword() {
@@ -133,13 +132,14 @@ export default function LoginDetails() {
       <div>
         <p className="text-center normal-case">
           Don’t have an account?{" "}
-          <span
-            className={` cursor-pointer hover:underlin normal-casee ${
-              isDark ? "text-[#6FEAE2]" : " text-[blue]"
-            }`}
-            onClick={handleCreateAccountNav}>
-            Create Account
-          </span>
+          <Link href={"/signup"}>
+            <span
+              className={` cursor-pointer hover:underlin normal-casee ${
+                isDark ? "text-[#6FEAE2]" : " text-[blue]"
+              }`}>
+              Create Account
+            </span>
+          </Link>
         </p>
       </div>
     </form>

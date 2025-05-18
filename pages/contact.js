@@ -1,4 +1,4 @@
-import AppLayoout from "@/components/Layout/AppLayoout";
+import AppLayout from "@/components/Layout/AppLayout";
 import { contactUs } from "@/services/request";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -30,8 +30,7 @@ function ContactUs() {
     const data = await response.json();
     if (response.status === 200) {
       toast.success(<div className=" normal-case">{data?.message}</div>);
-   router.back()
-   
+      router.back();
     } else {
       toast.error(<div className=" normal-case">{data?.message}</div>);
     }
@@ -133,10 +132,10 @@ function ContactUs() {
 
 export default function Contact() {
   return (
-    <AppLayoout>
+    <AppLayout>
       <main className="px-10 sm:px-4 max-h-[100vh]  overflow-y-scroll  h-full mb-10">
         <ContactUs />
       </main>
-    </AppLayoout>
+    </AppLayout>
   );
 }

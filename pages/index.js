@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import AppLayoout from "@/components/Layout/AppLayoout";
+import AppLayout from "@/components/Layout/AppLayout";
 import Hero from "@/components/homepage/Hero";
 
 import {
@@ -22,7 +22,7 @@ import {
   getShop,
   setCartOnLoad,
   storeGetProducts as getStoreProducts,
-  setGlobalLoaoding,
+  setGlobalLoading,
   setUser,
   toggler,
 } from "@/redux/storeSlice";
@@ -39,6 +39,8 @@ import { GrNext, GrPrevious } from "react-icons/gr";
 import { useRouter } from "next/router";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 import Head from "next/head";
+import AppFooter from "@/components/Footer/Footer";
+import Link from "next/link";
 
 export function MetaData() {
   return (
@@ -46,7 +48,7 @@ export function MetaData() {
       <title>Stewart Collection</title>
       <meta
         name="description"
-        content="   Explore the rise of juggers, the oversized garment defying gender norms. Break the mold! Show how polos infuse personality into formal suits
+        content="   Explore the rise of joggers, the oversized garment defying gender norms. Break the mold! Show how polo infuse personality into formal suits
         Craft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. 
         Move beyond restrictive label"
       />
@@ -88,7 +90,7 @@ function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef, items }) {
           breakpoints={{
             // Define breakpoints for different screen sizes
             320: {
-              slidesPerView: 3,
+              slidesPerView: 2,
               spaceBetween: 10,
             },
             760: {
@@ -131,7 +133,7 @@ function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef, items }) {
   }
 }
 
-function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
+function BestSellingSwiper({ swiperNavNexRef, swiperNavPrevRef, items }) {
   const isDark = useSelector((state) => state.store?.toggleMode?.isDark);
 
   return (
@@ -149,7 +151,7 @@ function BestSellingSwippper({ swiperNavNexRef, swiperNavPrevRef, items }) {
         breakpoints={{
           // Define breakpoints for different screen sizes
           320: {
-            slidesPerView: 3,
+            slidesPerView: 2,
             spaceBetween: 10,
           },
           760: {
@@ -230,10 +232,14 @@ export default function Home() {
           dispatch(setUser(user?.user));
         }
       }
-      dispatch(setGlobalLoaoding(true));
+      dispatch(setGlobalLoading(true));
       const { category } = await getProductCategory();
 
-      const { products } = await getShopProducts();
+      const { products } = await getShopProducts({
+        search: "",
+        count: 100,
+        filter: "",
+      });
 
       if (products) {
         dispatch(getStoreProducts(products));
@@ -245,7 +251,7 @@ export default function Home() {
         dispatch(getCategory(category));
       }
     }
-    dispatch(setGlobalLoaoding(false));
+    dispatch(setGlobalLoading(false));
 
     allProduct();
   }, []);
@@ -266,11 +272,11 @@ export default function Home() {
   return (
     <>
       <MetaData />
-      <AppLayoout>
-        <main className="px-10 sm:px-4 max-h-[100vh]  overflow-y-scroll">
-          <secition className=" ">
+      <AppLayout>
+        <main className="px-10 sm:px-4  max-h-[100vh]  overflow-y-scroll">
+          <section className=" ">
             <Hero />
-          </secition>
+          </section>
           <section className="  sm:my-10 pt-14 sm:pt-0">
             <div className="flex  justify-center items-center  gap-8  sm:gap-5  sm:my-0  ">
               <p
@@ -359,7 +365,7 @@ export default function Home() {
             </div>
             <div className="icon-nav-container">
               {bestSelling && (
-                <BestSellingSwippper
+                <BestSellingSwiper
                   items={bestSelling}
                   swiperNavPrevRef={swiperNavSecondPrevRef}
                   swiperNavNexRef={swiperNavSecondNexRef}
@@ -394,7 +400,7 @@ export default function Home() {
               </p>
               <p className="flex-1"></p>
             </div>
-            <div className="  grid  lg:grid-cols-6  xl:grid-cols-6   md:grid-cols-4  sm:grid-cols-3 gap-5 sm:gap-3  ">
+            <div className="  grid  lg:grid-cols-6  xl:grid-cols-6   md:grid-cols-4  sm:grid-cols-2 gap-5 sm:gap-3  ">
               {category &&
                 category.length > 0 &&
                 category.map((cat) => (
@@ -404,8 +410,8 @@ export default function Home() {
           </section>
 
           <section
-            className={`accountbg   card border grid grid-cols-2 p-10 sm:grid-cols-1 sm:gap-4 mb-20 ${
-              isDark ? "turndark" : "turnlight"
+            className={`account-background   card border grid grid-cols-2 p-10 sm:grid-cols-1 sm:gap-4 mb-20 ${
+              isDark ? "turn-dark" : "turn-light"
             }`}>
             <div className=" self-center sm:order-1">
               <h2 className="lg:text-[48px] xl:text-[48px]  sm:text-center font-semibold text-white   sm:text-[26px] sm:font-bold flex  max-w-md  md:text-lg">
@@ -416,11 +422,11 @@ export default function Home() {
                 wardrobe, from the latest trends to timeless classics
               </p>
 
-              <button
-                onClick={handleCreateAccountNav}
-                className="btn sm:btn-sm sm:hidden  btn-outline  border  border-white normal-case font-semibold text-white">
-                Get started
-              </button>
+              <Link href={"/signup"}>
+                <button className="btn sm:btn-sm sm:hidden  btn-outline  border  border-white normal-case font-semibold text-white">
+                  Get started
+                </button>
+              </Link>
             </div>
             <div className=" sm:order-2">
               <Image
@@ -442,8 +448,10 @@ export default function Home() {
               </div>
             </div>
           </section>
+
+          <AppFooter />
         </main>
-      </AppLayoout>
+      </AppLayout>
     </>
   );
 }
