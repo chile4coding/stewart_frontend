@@ -53,9 +53,9 @@ export default function AppLayout({ children }) {
 
   return (
     <>
-      <div className={isDark ? "bg-black" : "#FAFAFA"}>
+      <div className={isDark ? "bg-black max-w" : "#FAFAFA"}>
         <div
-          className={`   h-full  mx-auto  ${
+          className={`max-w-[1440px] mx-auto   h-full  mx-auto  ${
             isDark ? "turn-dark" : "turn-light"
           }`}>
           <div className="drawer lg:drawer-start">
@@ -64,7 +64,7 @@ export default function AppLayout({ children }) {
               <div>
                 <Header />
               </div>
-              <div className="">{children}</div>
+              <div className=" ">{children}</div>
               <div className=""></div>
             </div>
             <div className="drawer-side  " style={{ zIndex: 999 }}>

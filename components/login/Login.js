@@ -35,21 +35,29 @@ export default function LoginDetails() {
 
   async function handleSignup(e) {
     e.preventDefault();
-    setUserDetails({ ...user, loading: true });
 
-    const response = await loginUser(user);
-    const data = await response.json();
-    Cookies.set("_stewart_collection_token", data.token);
-    if (response.status === 200) {
-      dispatch(setUser(data?.findUser));
-      window.location.href = "/my_account";
+    try {
+      setUserDetails({ ...user, loading: true });
 
-      // router.push("/my_account");
-      toast.success(<h className=" normal-case">Login successful</h>);
-    } else {
-      toast.error(<h1 className="  lowercase">{data.message} </h1>);
+      const response = await loginUser(user);
+
+      const data = await response.json();
+      Cookies.set("_stewart_collection_token", data.token);
+      if (response.status === 200) {
+        dispatch(setUser(data?.findUser));
+        // window.location.href = "/my_account";
+
+        router.push("/my_account");
+        toast.success(<h className=" normal-case">Login successful</h>);
+      } else {
+        toast.error(<h1 className="  lowercase">{data.message} </h1>);
+      }
+      setUserDetails({ ...user, loading: false });
+    } catch (error) {
+      console.log("this is the error", error);
+    } finally {
+      setUserDetails({ ...user, loading: false });
     }
-    setUserDetails({ ...user, loading: false });
 
     // router.push("/otp");
   }

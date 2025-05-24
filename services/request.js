@@ -1,8 +1,9 @@
 import { data } from "autoprefixer";
 import axios from "axios";
 import Cookies from "js-cookie";
-const base_url = "http://localhost:5000/api/v1";
-//const base_url = "https://stewart-r0co.onrender.com/api/v1";
+// const base_url = "http://localhost:5000/api/v1";
+
+const base_url = process.env.NEXT_PUBLIC_BACKEND_API;
 import { io } from "socket.io-client";
 
 export async function createCategory(productPhoto, category, bearerId) {
@@ -568,8 +569,6 @@ export async function createOrderWithCard(orderDetails) {
   const endpoint = token
     ? "create_order_user_with_card"
     : "create_order_visitor_with_card";
-
-  console.log("is this called here  ====== ");
 
   try {
     const response = await fetch(`${base_url}/${endpoint}`, {
@@ -1404,6 +1403,23 @@ export async function contactUs(contact) {
     return response;
   } catch (error) {
     return error;
+  }
+}
+export async function getUser() {
+  const token = Cookies.get("_stewart_collection_token");
+  try {
+    const response = await fetch(`${base_url}/get_user`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) throw data;
+    return data;
+  } catch (error) {
+    throw error;
   }
 }
 

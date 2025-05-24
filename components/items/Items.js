@@ -45,12 +45,12 @@ export function ItemCategory({ category }) {
       })}>
       {globalLoading ? (
         <div className=" p-4 sm:p-2  ">
-          <figure className="  sm:max-h-[100px]  xl:max-h-[200px]  lg:max-h-[200px]  md:max-h-[150px] ">
+          <figure className="relative  sm:max-h-[100px]  h-full   w-full lg:max-h-[200px]  xl:max-h-[200px]  md:max-h-[150px]">
             <img
               loading="lazy"
               src={category?.image}
               alt={category?.name}
-              className={`rounded-md   object-contain  sm:h-full w-full   h-full  ${
+              className={`rounded-md w-full    object-cover object-center   h-[200px] ${
                 isDark ? "item-category" : "bg-[#D9D9D9]"
               }`}
             />

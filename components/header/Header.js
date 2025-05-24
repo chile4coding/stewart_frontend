@@ -7,17 +7,15 @@ import Modal from "../modal/Modal";
 import { AiOutlineMenu } from "react-icons/ai";
 
 import { useSelector, useDispatch } from "react-redux";
-import { colors } from "@mui/material";
 import {
-  getBestSelling,
-  getCategory,
-  getNewArrival,
   getShop,
   toggler,
   storeGetProducts as getStoreProducts,
 } from "@/redux/storeSlice";
 import { useRouter } from "next/router";
 import { isEmpty } from "lodash";
+// import { useQuery } from "react-query";
+// import { getUser } from "@/services/request";
 
 export default function Header() {
   const [dark, seDark] = useState(true);
@@ -46,6 +44,11 @@ export default function Header() {
   function handleShop() {
     dispatch(getShop(product));
   }
+
+  // const { data, error, isLoading } = useQuery({
+  //   queryKey: ["GET_USER"],
+  //   queryFn: async () => getUser(),
+  // });
 
   return (
     <>
@@ -90,11 +93,12 @@ export default function Header() {
             <div className="sm:hidden md:hidden">
               {!isEmpty(user) && user.avatar?.trim().length > 1 && (
                 <div className="">
-                  <img
-                    onClick={handleUserNav}
-                    src={user.avatar}
-                    className=" cursor-pointer bg-[white] object-cover rounded-full  h-[30px] w-[30px] "
-                  />
+                  <Link href={"/my_account"}>
+                    <img
+                      src={user.avatar}
+                      className=" cursor-pointer bg-[white] object-cover rounded-full  h-[30px] w-[30px] "
+                    />
+                  </Link>
                 </div>
               )}
 

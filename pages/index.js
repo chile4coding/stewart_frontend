@@ -98,7 +98,7 @@ function ItemSwiper({ swiperNavNexRef, swiperNavPrevRef, items }) {
               spaceBetween: 20,
             },
             1100: {
-              slidesPerView: 6,
+              slidesPerView: 4,
               spaceBetween: 20,
             },
           }}
@@ -159,7 +159,7 @@ function BestSellingSwiper({ swiperNavNexRef, swiperNavPrevRef, items }) {
             spaceBetween: 20,
           },
           1100: {
-            slidesPerView: 6,
+            slidesPerView: 4,
             spaceBetween: 20,
           },
         }}
@@ -277,137 +277,145 @@ export default function Home() {
           <section className=" ">
             <Hero />
           </section>
-          <section className="  sm:my-10 pt-14 sm:pt-0">
-            <div className="flex  justify-center items-center  gap-8  sm:gap-5  sm:my-0  ">
-              <p
-                className={` flex-1  ${
-                  isDark
-                    ? " border-b border-b-white"
-                    : " border-b border-b-black"
-                }`}></p>
-              <p className="text-[30px] font-semibold sm:text-sm  ">New in</p>
-              <p
-                className={` flex-1  ${
-                  isDark
-                    ? " border-b border-b-white"
-                    : " border-b border-b-black"
-                }`}></p>
-            </div>
-            <div className="  flex justify-end items-center   sm:pr-4  normal-case ">
-              <button
-                className={`  btn normal-case   font-normal my-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
-                  isDark
-                    ? "hover:border-white hover:bg-black hover:text-white"
-                    : " bg-black text-white hover:border-black"
-                }  `}
-                onClick={handleSeeAllNewIn}>
-                See All
-              </button>
-            </div>
 
-            <div className="  icon-nav-container ">
-              <div>
-                <ItemSwiper
-                  items={newArrival}
-                  swiperNavPrevRef={swiperNavPrevRef}
-                  swiperNavNexRef={swiperNavNexRef}
-                />
-              </div>
-              <div ref={swiperNavNexRef} className="swiperNavPrev">
-                <MdNavigateBefore
-                  className={` text-2xl font-bold ${
+          {newArrival?.length > 0 ? (
+            <section className="  sm:my-10 pt-14 sm:pt-0">
+              <div className="flex  justify-center items-center  gap-8  sm:gap-5  sm:my-0  ">
+                <p
+                  className={` flex-1  ${
                     isDark
-                      ? "text-black  bg-white rounded-full"
-                      : "text-white bg-black rounded-full"
-                  }`}
-                />
-              </div>
-              <div ref={swiperNavPrevRef} className="swiperNavNext">
-                <MdNavigateNext
-                  className={` text-2xl font-bold ${
+                      ? " border-b border-b-white"
+                      : " border-b border-b-black"
+                  }`}></p>
+                <p className="text-[30px] font-semibold sm:text-sm  ">New in</p>
+                <p
+                  className={` flex-1  ${
                     isDark
-                      ? "text-black  bg-white rounded-full"
-                      : "text-white bg-black rounded-full"
-                  }`}
-                />
+                      ? " border-b border-b-white"
+                      : " border-b border-b-black"
+                  }`}></p>
               </div>
-            </div>
-          </section>
-          <section className="   lg:my-16 xl:my-14">
-            <div className="flex  justify-center items-center   gap-8  sm:gap-5  ">
-              <p
-                className={`  flex-1 ${
-                  isDark
-                    ? " border-b border-b-white"
-                    : " border-b border-b-black"
-                }`}></p>
-              <p className="text-[30px] font-semibold sm:text-sm   sm:mb-0">
-                Best Selling
-              </p>
-              <p
-                className={` flex-1  ${
-                  isDark
-                    ? " border-b border-b-white"
-                    : " border-b border-b-black"
-                }`}></p>
-            </div>
+              <div className="  flex justify-end items-center   sm:pr-4  normal-case ">
+                <button
+                  className={`  btn normal-case   font-normal my-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
+                    isDark
+                      ? "hover:border-white hover:bg-black hover:text-white"
+                      : " bg-black text-white hover:border-black"
+                  }  `}
+                  onClick={handleSeeAllNewIn}>
+                  See All
+                </button>
+              </div>
 
-            <div className="   flex justify-end items-center  sm:pr-4  normal-case">
-              <button
-                className={`  btn normal-case   font-normal my-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
-                  isDark
-                    ? "hover:border-white hover:bg-black hover:text-white"
-                    : " bg-black text-white hover:border-black"
-                }  `}
-                onClick={handleSeeAllBestSelling}>
-                See All
-              </button>
-            </div>
-            <div className="icon-nav-container">
-              {bestSelling && (
-                <BestSellingSwiper
-                  items={bestSelling}
-                  swiperNavPrevRef={swiperNavSecondPrevRef}
-                  swiperNavNexRef={swiperNavSecondNexRef}
-                />
-              )}
+              <div className="  icon-nav-container ">
+                <div>
+                  <ItemSwiper
+                    items={newArrival}
+                    swiperNavPrevRef={swiperNavPrevRef}
+                    swiperNavNexRef={swiperNavNexRef}
+                  />
+                </div>
+                <div ref={swiperNavNexRef} className="swiperNavPrev">
+                  <MdNavigateBefore
+                    className={` text-2xl font-bold ${
+                      isDark
+                        ? "text-black  bg-white rounded-full"
+                        : "text-white bg-black rounded-full"
+                    }`}
+                  />
+                </div>
+                <div ref={swiperNavPrevRef} className="swiperNavNext">
+                  <MdNavigateNext
+                    className={` text-2xl font-bold ${
+                      isDark
+                        ? "text-black  bg-white rounded-full"
+                        : "text-white bg-black rounded-full"
+                    }`}
+                  />
+                </div>
+              </div>
+            </section>
+          ) : null}
 
-              <div ref={swiperNavSecondPrevRef} className="swiperNavPrev">
-                <MdNavigateBefore
-                  className={` text-2xl font-bold ${
+          {bestSelling?.length > 0 ? (
+            <section className="   lg:my-16 xl:my-14">
+              <div className="flex  justify-center items-center   gap-8  sm:gap-5  ">
+                <p
+                  className={`  flex-1 ${
                     isDark
-                      ? "text-black  bg-white rounded-full"
-                      : "text-white bg-black rounded-full"
-                  }`}
-                />
-              </div>
-              <div ref={swiperNavSecondNexRef} className="swiperNavNext">
-                <MdNavigateNext
-                  className={` text-2xl font-bold ${
+                      ? " border-b border-b-white"
+                      : " border-b border-b-black"
+                  }`}></p>
+                <p className="text-[30px] font-semibold sm:text-sm   sm:mb-0">
+                  Best Selling
+                </p>
+                <p
+                  className={` flex-1  ${
                     isDark
-                      ? "text-black  bg-white rounded-full"
-                      : "text-white bg-black rounded-full"
-                  }`}
-                />
+                      ? " border-b border-b-white"
+                      : " border-b border-b-black"
+                  }`}></p>
               </div>
-            </div>
-          </section>
-          <section className=" mb-16 ">
-            <div className="flex  justify-center items-center   gap-8  sm:gap-5  my-8  ">
-              <p className="  flex-1"></p>
-              <p className="text-[30px] font-semibold sm:text-sm  ">
-                Shop by Categories
-              </p>
-              <p className="flex-1"></p>
-            </div>
-            <div className="  grid  lg:grid-cols-6  xl:grid-cols-6   md:grid-cols-4  sm:grid-cols-2 gap-5 sm:gap-3  ">
-              {category &&
-                category.length > 0 &&
-                category.map((cat) => (
-                  <ItemCategory key={cat.id} category={cat} />
-                ))}
-            </div>
-          </section>
+
+              <div className="   flex justify-end items-center  sm:pr-4  normal-case">
+                <button
+                  className={`  btn normal-case   font-normal my-6 sm:mt-0 px-6 sm:btn-sm sm:text-xs    ${
+                    isDark
+                      ? "hover:border-white hover:bg-black hover:text-white"
+                      : " bg-black text-white hover:border-black"
+                  }  `}
+                  onClick={handleSeeAllBestSelling}>
+                  See All
+                </button>
+              </div>
+              <div className="icon-nav-container">
+                {bestSelling && (
+                  <BestSellingSwiper
+                    items={bestSelling}
+                    swiperNavPrevRef={swiperNavSecondPrevRef}
+                    swiperNavNexRef={swiperNavSecondNexRef}
+                  />
+                )}
+
+                <div ref={swiperNavSecondPrevRef} className="swiperNavPrev">
+                  <MdNavigateBefore
+                    className={` text-2xl font-bold ${
+                      isDark
+                        ? "text-black  bg-white rounded-full"
+                        : "text-white bg-black rounded-full"
+                    }`}
+                  />
+                </div>
+                <div ref={swiperNavSecondNexRef} className="swiperNavNext">
+                  <MdNavigateNext
+                    className={` text-2xl font-bold ${
+                      isDark
+                        ? "text-black  bg-white rounded-full"
+                        : "text-white bg-black rounded-full"
+                    }`}
+                  />
+                </div>
+              </div>
+            </section>
+          ) : null}
+          {category?.length > 0 ? (
+            <section className=" mb-16 ">
+              <div className="flex  justify-center items-center   gap-8  sm:gap-5  my-8  ">
+                <p className="  flex-1"></p>
+                <p className="text-[30px] font-semibold sm:text-sm  ">
+                  Shop by Categories
+                </p>
+                <p className="flex-1"></p>
+              </div>
+              <div className="  grid lg:grid-cols-4 xl:grid-cols-5 md:grid-cols-3 md:gap-4 sm:grid-cols-2  gap-5  sm:gap-3  ">
+                {category &&
+                  category?.length > 0 &&
+                  category?.map((cat) => (
+                    <ItemCategory key={cat?.id} category={cat} />
+                  ))}
+              </div>
+            </section>
+          ) : null}
 
           <section
             className={`account-background   card border grid grid-cols-2 p-10 sm:grid-cols-1 sm:gap-4 mb-20 ${
