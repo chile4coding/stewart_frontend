@@ -10,34 +10,42 @@ import {
   deleteProduct,
   getCookie,
   getShopProducts,
+  paginate,
   paginationProduct,
 } from "@/services/request";
-import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-
-
-function ProductList({ products }) {
+import Link from "next/link";
+import { useQuery } from "react-query";
+function ProductList({ products: prod }) {
   const [showcategoryModal, setCategoryModal] = useState(false);
-
+  const [search, setSearch] = useState("");
+  const [count, setCount] = useState(10);
+  const [table, setTable] = useState([]);
+  const [page, setPage] = useState(1);
   const isDark = useSelector((state) => state.store.toggleMode.isDark);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["GET_PRODUCTS_ADMIN", search, page],
+    queryFn: async () => {
+      const result = await getShopProducts({ search, count, page, filter: "" });
+      dispatch(storeGetProducts(result?.products));
+      const pages = paginate(result?.pagination?.totalPages);
+      setTable(pages);
 
-  const dispatch =  useDispatch()
+      return result;
+    },
+    enabled: true,
+    keepPreviousData: true,
+  });
+
+  const dispatch = useDispatch();
   const router = useRouter();
-   const [table, setTable] = useState([]);
-   const [page, setPage] = useState(0);
-    useEffect(() => {
-      const page = paginationProduct(products);
-
-      setTable(page);
-      setPage((prev) => 0);
-    }, []);
 
   function handleNavigation(id, productId) {
-   dispatch(getSingleProduct(productId))
+    dispatch(getSingleProduct(productId));
     router.push(`/admin/products/${id}`);
   }
   function handleProductDetailsNavigation(id, productId) {
-   dispatch(getSingleProduct(productId))
+    dispatch(getSingleProduct(productId));
     router.push(`/admin/products/${id}`);
   }
 
@@ -47,23 +55,16 @@ function ProductList({ products }) {
   function handleCloseCategoryModal() {
     setCategoryModal(false);
   }
-async function handleDeleteProduct(id){
-const cookie = getCookie()
+  async function handleDeleteProduct(id) {
+    const cookie = getCookie();
 
-const response= await deleteProduct( id, cookie)
+    const response = await deleteProduct(id, cookie);
 
-if(response.status===200){
-const products = await getShopProducts()
-  if (products) {
-    dispatch(storeGetProducts(products.products));
+    if (response?.status === 200) {
+      refetch();
+      toast.success("product deleted successfully");
+    }
   }
-  toast.success("product deleted successfully")
-
-}
-
-
-
-}
 
   function handlePageination(pageId) {
     setPage((prev) => pageId);
@@ -86,6 +87,18 @@ const products = await getShopProducts()
             Product List
           </h2>
           <div className=" flex  gap-4">
+            <div className=" ]  xl:w-[322px]  sm:hidden ">
+              <input
+                type="text"
+                placeholder="search "
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className={`input  md:hidden input-bordered border-collapse  w-full   sm:hidden ${
+                  isDark ? "border-white bg-transparent" : " border-[black] "
+                }`}
+                style={{ color: !isDark && "black !important" }}
+              />
+            </div>
             <button
               className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
                 isDark
@@ -95,19 +108,21 @@ const products = await getShopProducts()
               onClick={handleShowCategoryModal}>
               + New Category
             </button>
-            <button
-              onClick={handleNavigation.bind(this, "add_new_product")}
-              className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
-                isDark
-                  ? "hover:border-white hover:bg-black hover:text-white"
-                  : " bg-black text-white hover:border-black"
-              }`}>
-              + New Product
-            </button>
+            <Link href={"/admin/products/add_new_product"}>
+              <button
+                // onClick={()=>handleNavigation(this, "add_new_product")}
+                className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
+                  isDark
+                    ? "hover:border-white hover:bg-black hover:text-white"
+                    : " bg-black text-white hover:border-black"
+                }`}>
+                + New Product
+              </button>
+            </Link>
           </div>
         </div>
 
-        {products.length > 0 ? (
+        {!isLoading && data?.products?.length > 0 && (
           <div className=" overflow-x-auto ">
             <table className="table">
               <thead className="">
@@ -125,8 +140,8 @@ const products = await getShopProducts()
                 </tr>
               </thead>
               <tbody>
-                {table?.length > 0 &&
-                  table[page]?.map((product) => (
+                {data?.products?.length > 0 &&
+                  data?.products?.map((product) => (
                     <tr
                       key={product.id}
                       className={
@@ -184,39 +199,48 @@ const products = await getShopProducts()
               </tbody>
             </table>
           </div>
-        ) : (
+        )}
+
+        {!isLoading && data?.products?.length < 1 && (
           <div className=" h-[50vh] flex justify-center  items-center">
             <h2>No product added </h2>
           </div>
         )}
+        {isLoading && (
+          <div className=" h-[50vh] flex justify-center  items-center">
+            <div className="loading loading-spinner loading-lg"></div>
+          </div>
+        )}
 
-        <div className=" flex items-center gap-3 mt-6">
-          {table?.length > 0 &&
-            table.map((item, i) => (
+        {table?.length > 0 && (
+          <div className=" flex items-center gap-3 mt-6">
+            {table?.length > 0 &&
+              table.map((item, i) => (
+                <button
+                  onClick={handlePageination.bind(this, i + 1)}
+                  className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
+                    isDark
+                      ? "hover:border-white hover:bg-black hover:text-white"
+                      : " bg-black text-white hover:border-black  "
+                  }  ${page === i + 1 ? " bg-[#302999] text-[white]" : ""}`}>
+                  {i + 1}
+                </button>
+              ))}
+
+            {
               <button
-                onClick={handlePageination.bind(this, i)}
-                className={`btn  shadow-md   capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
+                onClick={handlePageination.bind(this, table.length)}
+                className={`btn  flex gap-0  capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
                   isDark
                     ? "hover:border-white hover:bg-black hover:text-white"
-                    : " bg-black text-white hover:border-black  "
-                }  ${page === i ? " bg-[#302999] text-[white]" : ""}`}>
-                {i + 1}
+                    : " bg-black text-white hover:border-black"
+                }`}>
+                <IoIosArrowForward />
+                <IoIosArrowForward />
               </button>
-            ))}
-
-          {
-            <button
-              onClick={handlePageination.bind(this, table.length - 1)}
-              className={`btn  flex gap-0  capitalize sm:btn-xs sm:my-4 sm:text-[7.98px]  ${
-                isDark
-                  ? "hover:border-white hover:bg-black hover:text-white"
-                  : " bg-black text-white hover:border-black"
-              }`}>
-              <IoIosArrowForward />
-              <IoIosArrowForward />
-            </button>
-          }
-        </div>
+            }
+          </div>
+        )}
       </div>
     </div>
   );
@@ -224,7 +248,7 @@ const products = await getShopProducts()
 
 export default function AdminProducts() {
   const { shop, toggleMode, products } = useSelector((state) => state.store);
- const isDark = toggleMode?.isDark;
+  const isDark = toggleMode?.isDark;
 
   return (
     <div>

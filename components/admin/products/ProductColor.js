@@ -38,7 +38,12 @@ function SingleProductList() {
     }
     const cookie = getCookie();
     async function update() {
-      const products = await getShopProducts(cookie);
+      const products = await getShopProducts({
+        search: "",
+        count: 200,
+        page: 1,
+        filter: "",
+      });
 
       dispatch(storeGetProducts(products?.products));
       const product = await getProductColors();
@@ -93,7 +98,12 @@ function SingleProductList() {
     const response = await deleteColor(id, cookie);
 
     if (response.status === 200) {
-      const products = await getShopProducts(cookie);
+      const products = await getShopProducts({
+        search: "",
+        count: 200,
+        page: 1,
+        filter: "",
+      });
 
       dispatch(storeGetProducts(products.products));
       const product = await getProductColors();
@@ -109,8 +119,7 @@ function SingleProductList() {
     <div
       className={` h-[100vh]  pb-3 mb-6  rounded-md ${
         isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"
-      }`}
-    >
+      }`}>
       {showcategoryModal && (
         <SizeModal
           productId={singleProduct?.id}
@@ -121,8 +130,7 @@ function SingleProductList() {
       <div
         className={` card-body overflow-x-auto mb-6  rounded-md ${
           isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"
-        }`}
-      >
+        }`}>
         <div className=" flex justify-between items-center">
           <h2 className=" lg:text-[18px] xl:text-[18px] font-semibold">
             {singleProduct?.name} List
@@ -134,8 +142,7 @@ function SingleProductList() {
                   ? "hover:border-white hover:bg-black hover:text-white"
                   : " bg-black text-white hover:border-black"
               }`}
-              onClick={handleShowCategoryModal}
-            >
+              onClick={handleShowCategoryModal}>
               + New Size
             </button>
             <button
@@ -144,8 +151,7 @@ function SingleProductList() {
                 isDark
                   ? "hover:border-white hover:bg-black hover:text-white"
                   : " bg-black text-white hover:border-black"
-              }`}
-            >
+              }`}>
               + New Color
             </button>
           </div>
@@ -158,8 +164,7 @@ function SingleProductList() {
                   isDark
                     ? " text-white border-b"
                     : "   text-black border-b  border-b-black"
-                }
-              >
+                }>
                 <th>Product name</th>
                 <th>Category</th>
                 <th>Price</th>
@@ -173,8 +178,7 @@ function SingleProductList() {
                 <tr
                   className={
                     isDark ? " text-white border-0" : "  text-black border-0"
-                  }
-                >
+                  }>
                   <td>
                     <div className="flex items-center space-x-3">
                       <div className="avatar">
@@ -208,8 +212,7 @@ function SingleProductList() {
                           this,
                           "update",
                           singleProduct?.id
-                        )}
-                      >
+                        )}>
                         <MdModeEdit /> <span>Edit</span>
                       </div>
                       <AiFillCloseSquare className=" text-xl hover:cursor-pointer" />
@@ -226,8 +229,7 @@ function SingleProductList() {
                         isDark
                           ? " text-white border-0"
                           : "  text-black border-0"
-                      }
-                    >
+                      }>
                       <td>
                         <div className="flex items-center space-x-3">
                           <div className="avatar">
@@ -261,8 +263,7 @@ function SingleProductList() {
                               this,
                               "update_color",
                               color.id
-                            )}
-                          >
+                            )}>
                             <MdModeEdit /> <span>Edit</span>
                           </div>
                           <AiFillCloseSquare

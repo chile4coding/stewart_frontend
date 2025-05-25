@@ -117,7 +117,6 @@ export default function Items({ items }) {
       amount: amount + "",
       status: status + "" || false + "",
     };
-    console.log(details);
     const response = await saveItem(details, token);
     const data = await response.json();
 

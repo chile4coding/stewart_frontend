@@ -121,10 +121,11 @@ export async function getShopProducts({
   search = "",
   count = 100,
   filter = "",
+  page = 1,
 }) {
   try {
     const { data } = await axios.get(
-      `${base_url}/get_products?limit=${count}&search=${search}&key=${filter}`,
+      `${base_url}/get_products?limit=${count}&search=${search}&key=${filter}&page=${page}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -1279,14 +1280,15 @@ export function pagination(totalItems) {
   );
   return data;
 }
-export function paginationProduct(totalItems) {
-  const data = Array.from(
-    { length: Math.ceil(totalItems.length / 6) },
-    (_, index) => totalItems.slice(index * 6, (index + 1) * 6)
-  );
+export function paginationProduct(totalItems, itemsPerPage) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const data = Array.from({ length: totalPages }, (_, index) => index + 1);
   return data;
 }
 
+export function paginate(total = 0) {
+  return Array.from({ length: total }, (_, i) => i);
+}
 export async function adminGetOrders(bearerId) {
   try {
     const response = await fetch(

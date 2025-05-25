@@ -60,7 +60,6 @@ export function AddReviewModal({ item }) {
     });
     const response = await updateReview(review, token);
     const data = await response.json();
-    console.log(data);
 
     if (response.status === 200) {
       toast.success(<div className="  normal-case">{data.message}</div>);

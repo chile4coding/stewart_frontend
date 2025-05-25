@@ -237,8 +237,9 @@ export default function Home() {
 
       const { products } = await getShopProducts({
         search: "",
-        count: 100,
+        count: 300,
         filter: "",
+        page: 1,
       });
 
       if (products) {

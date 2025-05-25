@@ -56,7 +56,12 @@ function AdminHeader() {
       async function getCategory(cookie) {
         const data = await getProducts(cookie);
 
-        const products = await getShopProducts(cookie);
+        const products = await getShopProducts({
+          search: "",
+          count: 200,
+          filter: "",
+          page: 1,
+        });
 
         if (data) {
           dispatch(getShop(data?.category));

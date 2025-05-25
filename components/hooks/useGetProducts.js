@@ -14,7 +14,12 @@ export default function useGetProducts() {
     async function getProd() {
       try {
         setProd({ ...prod, error: false, isloading: true });
-        const { products } = await getShopProducts();
+        const { products } = await getShopProducts({
+          search: "",
+          count: 500,
+          filter: "",
+          page: 1,
+        });
         setProd({ ...prod, data: products, error: false, isloading: false });
         return { products };
       } catch (error) {

@@ -148,16 +148,14 @@ export default function AddProductColor() {
     <form onSubmit={handleSubmit}>
       <div className=" grid  grid-cols-2 sm:grid-cols-1 gap-10">
         <div
-          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}
-        >
+          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
           <div className=" card-body">
             <h2
               className={
                 isDark
                   ? " text-white border-b  pb-2"
                   : " border-b  text-black border-b-black pb-2"
-              }
-            >
+              }>
               {" "}
               Product Data
             </h2>
@@ -165,8 +163,7 @@ export default function AddProductColor() {
               sx={{
                 backgroundColor: isDark ? "#212121" : "#d1d1d1]",
                 color: isDark ? "#d1d1d1" : "black",
-              }}
-            >
+              }}>
               <AccordionSummary
                 expandIcon={
                   <MdOutlineKeyboardArrowDown
@@ -176,8 +173,7 @@ export default function AddProductColor() {
                   />
                 }
                 aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
+                id="panel1a-header">
                 <div className=" flex justify-between items-center w-full">
                   <Typography className="text-[18px] ">Price</Typography>
                 </div>
@@ -240,8 +236,7 @@ export default function AddProductColor() {
               sx={{
                 backgroundColor: isDark ? "#212121" : "#d1d1d1]",
                 color: isDark ? "#d1d1d1" : "black",
-              }}
-            >
+              }}>
               <AccordionSummary
                 expandIcon={
                   <MdOutlineKeyboardArrowDown
@@ -251,8 +246,7 @@ export default function AddProductColor() {
                   />
                 }
                 aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
+                id="panel1a-header">
                 <div className=" flex justify-between items-center w-full">
                   <Typography className="text-[18px] ">Size</Typography>
                 </div>
@@ -281,8 +275,7 @@ export default function AddProductColor() {
               sx={{
                 backgroundColor: isDark ? "#212121" : "#d1d1d1]",
                 color: isDark ? "#d1d1d1" : "black",
-              }}
-            >
+              }}>
               <AccordionSummary
                 expandIcon={
                   <MdOutlineKeyboardArrowDown
@@ -292,8 +285,7 @@ export default function AddProductColor() {
                   />
                 }
                 aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
+                id="panel1a-header">
                 <div className=" flex justify-between items-center w-full">
                   <Typography className="text-[18px] ">Color</Typography>
                 </div>
@@ -321,16 +313,14 @@ export default function AddProductColor() {
         </div>
 
         <div
-          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}
-        >
+          className={`mb-6 card ${isDark ? " bg-[#212121]" : " bg-[#d1d1d1]"}`}>
           <div className=" card-body">
             <h2
               className={
                 isDark
                   ? " text-white border-b  pb-2"
                   : " border-b  text-black border-b-black pb-2"
-              }
-            >
+              }>
               Product image
             </h2>
             <div className=" max-h-[250px] max-w-[250px] mx-auto my-auto">
@@ -346,13 +336,12 @@ export default function AddProductColor() {
                   onChange={handleImageInput}
                   type="file"
                   accept="image/*"
-                  className=" absolute left-[-999px] "
+                  className=" hidden "
                 />
 
                 <label
                   htmlFor="imageupload"
-                  className="flex items-center gap-2 hover:cursor-pointer "
-                >
+                  className="flex items-center gap-2 hover:cursor-pointer ">
                   {" "}
                   <MdModeEdit />
                   Add image
@@ -360,8 +349,7 @@ export default function AddProductColor() {
               </div>
               <div
                 onClick={removeImage}
-                className="flex items-center gap-1  hover:cursor-pointer  hover:text-[#d73300]"
-              >
+                className="flex items-center gap-1  hover:cursor-pointer  hover:text-[#d73300]">
                 <AiFillCloseSquare className=" text-xl hover:cursor-pointer" />
                 <span className=" text-[#D73300] hover:underline">
                   Remove image
@@ -378,8 +366,7 @@ export default function AddProductColor() {
             isDark
               ? "hover:border-white hover:bg-black hover:text-white"
               : " bg-black text-white hover:border-black "
-          }`}
-        >
+          }`}>
           {image.loading && update && "Updating Product"}
           {image.loading && !update && "Adding Product"}
           {image.loading && !update && <Spinner />}

@@ -227,7 +227,11 @@ export default function OverviewDetails() {
 
         const dataC = await getCustomers(token);
         const dataV = await getVisitors(token);
-        const dataP = await getShopProducts();
+        const dataP = await getShopProducts({
+          search: "",
+          count: 2000,
+          filter: "",
+        });
 
         dispatch(initUser(dataC?.users?.length));
         if (data?.orders.length > 0 && dataP?.products?.length > 0) {
