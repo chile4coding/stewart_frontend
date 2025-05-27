@@ -14,6 +14,7 @@ import useGetSingleProduct from "@/components/hooks/useGetSingleProduct";
 import useGetProducts from "@/components/hooks/useGetProducts";
 import { useQuery } from "react-query";
 import { productSingle } from "@/services/request";
+import AppFooter from "@/components/Footer/Footer";
 
 export default function ItemDescription() {
   const router = useRouter();
@@ -100,6 +101,7 @@ export default function ItemDescription() {
           )}
         </div>
       </AppLayout>
+      <AppFooter />
     </>
   );
 }
