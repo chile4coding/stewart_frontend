@@ -17,9 +17,8 @@ export default function Payment() {
             <Order />
           </div>
         </div>
-
-        <AppFooter />
       </AppLayout>
+      <AppFooter />
     </div>
   );
 }

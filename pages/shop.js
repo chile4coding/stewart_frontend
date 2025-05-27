@@ -189,11 +189,10 @@ export default function Shop() {
                 }
               </div>
             )}
-
-            <AppFooter />
           </main>
         )}
       </AppLayout>
+      <AppFooter />
     </>
   );
 }

@@ -45,9 +45,9 @@ export default function Check() {
       <AppLayout>
         <main className=" max-h-[100vh]  overflow-y-scroll">
           <Checkout />
-          <AppFooter />
         </main>
       </AppLayout>
+      <AppFooter />
     </>
   );
 }

@@ -457,10 +457,9 @@ export default function Home() {
               </div>
             </div>
           </section>
-
-          <AppFooter />
         </main>
       </AppLayout>
+      <AppFooter />
     </>
   );
 }
