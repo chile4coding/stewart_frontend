@@ -42,6 +42,23 @@ import Head from "next/head";
 import AppFooter from "@/components/Footer/Footer";
 import Link from "next/link";
 
+export const getServerSideProps = async (context) => {
+  return {
+    props: {
+      eventData: {
+        title:
+          "Stewart Collection | Your best e-commerce store for all your fashion needs",
+        description:
+          "Explore the rise of joggers, the oversized garment defying gender norms. Break the mold! Show how polo infuse personality into formal suitsCraft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. Move beyond restrictive label",
+        pageUrl: `${process.env.NEXT_PUBLIC_FRONTEND}`,
+        banner: {
+          url: "https://res.cloudinary.com/dynkejvim/image/upload/v1748335214/o1kxynt46keabweyl0kp.png",
+        },
+      },
+    },
+  };
+};
+
 export function MetaData() {
   return (
     <Head>

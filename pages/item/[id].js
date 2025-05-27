@@ -10,11 +10,29 @@ import {
   storeGetProducts,
 } from "@/redux/storeSlice";
 import { MetaDataC } from "../orders";
-import useGetSingleProduct from "@/components/hooks/useGetSingleProduct";
-import useGetProducts from "@/components/hooks/useGetProducts";
 import { useQuery } from "react-query";
 import { productSingle } from "@/services/request";
 import AppFooter from "@/components/Footer/Footer";
+
+export const getServerSideProps = async (context) => {
+  const slug = context.params?.id;
+  const data = await await productSingle(slug);
+
+  return {
+    props: {
+      slug,
+      eventData: data?.products
+        ? {
+            ...data?.data?.data,
+            pageUrl: `${process.env.NEXT_PUBLIC_FRONTEND}/item/${slug}`,
+            title: `Stewart Collection | ${data?.products?.name}`,
+            description: data?.products?.description,
+            ogImage: data?.products?.image,
+          }
+        : null,
+    },
+  };
+};
 
 export default function ItemDescription() {
   const router = useRouter();
@@ -101,6 +119,7 @@ export default function ItemDescription() {
           )}
         </div>
       </AppLayout>
+
       <AppFooter />
     </>
   );

@@ -12,32 +12,25 @@ import {
   setGlobalLoading,
   storeGetProducts,
 } from "@/redux/storeSlice";
-import Head from "next/head";
 import AppFooter from "@/components/Footer/Footer";
-import useGetProducts from "@/components/hooks/useGetProducts";
 import { useQuery } from "react-query";
 import { getShopProducts } from "@/services/request";
 
-export function MetaDat() {
-  return (
-    <Head>
-      <title>Stewart Collection | Store</title>
-      <meta
-        name="description"
-        content="   Explore the rise of joggers, the oversized garment defying gender norms. Break the mold! Show how polo infuse personality into formal suits
-        Craft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. 
-        Move beyond restrictive label"
-      />
-      <meta
-        name="keyword"
-        content="Polo   Suit  Tie  Shirt, Skirt, Clothes, Male Wares & Female Wares
-      "
-      />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-    </Head>
-  );
-}
-
+export const getServerSideProps = async (context) => {
+  return {
+    props: {
+      eventData: {
+        title: "Stewart Collection | Shop",
+        description:
+          "Explore the rise of joggers, the oversized garment defying gender norms. Break the mold! Show how polo infuse personality into formal suitsCraft a narrative around a unique outfit. Let a skirt be the protagonist, complemented by a playful printed shirt and a tie that adds a touch of whimsy. Move beyond restrictive label",
+        pageUrl: `${process.env.NEXT_PUBLIC_FRONTEND}/shop`,
+        banner: {
+          url: "https://res.cloudinary.com/dynkejvim/image/upload/v1748335214/o1kxynt46keabweyl0kp.png",
+        },
+      },
+    },
+  };
+};
 function SortComponent({ category, setFilter }) {
   const { toggleMode } = useSelector((state) => state.store);
 
@@ -123,7 +116,6 @@ export default function Shop() {
 
   return (
     <>
-      <MetaDat />
       <AppLayout>
         {isLoading && (
           <div className="flex justify-center items-center h-screen">
